@@ -14,6 +14,4 @@ EXPOSE 5000
 
 RUN npm install
 
-RUN chown -R node:node /client/node_modules
-
 CMD npm start
