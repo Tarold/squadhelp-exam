@@ -1,140 +1,133 @@
+%note-styles
+  color: rgb(55, 125, 255)
+  background-color: rgba(55, 125, 255, 0.1)
+  font-family: Poppins, Helvetica, Arial, sans-serif
+  font-size: 11px
+  font-weight: 400
+  margin-bottom: 0px
+  padding-bottom: 7px
+  padding-left: 15px
+  padding-right: 15px
+  padding-top: 7px
+  text-align: center
+  border-radius: 6.1875rem
+
+@mixin flex-container($jc: center, $ai: center, $fd: row, $gap: 0px)
+  display: flex
+  justify-content: $jc
+  align-items: $ai
+  flex-direction: $fd
+  gap: $gap
+  
+@mixin button($br: 99px)
+  box-sizing: border-box
+  transition: all 0.2s ease-in-out
+  margin: 5px 0 0
+  border-radius: 99px
+  background-color: rgb(55, 125, 255)
+  color: rgb(255, 255, 255)
+  padding: 12px 16px
+  border-radius: $br
+  text-decoration: none
+
+  &:hover 
+    margin: 0 0 5px
+    box-shadow: rgb(55, 125, 255) 0px 5px 15px 
+
+  @media screen and (max-width: 480px)
+    padding: 12px auto
+    width: 100%
+
 .container
   margin: 80px 85px
  
   @media screen and (max-width: 1024px)
     margin: 80px 10px 
+  
+  h1
+    font-weight: 500
+    font-size: 40px
+    margin-bottom: 10px
+
+  h2
+    font-size: 32px
+    
+  h3
+    font-size: 24px
+
+  p
+    font-size: 16px
+    color: #77838F
+    line-height: 27.2px
+
 
 .banerSection
-  display: flex
-  justify-content: space-around
-  align-items: center
+  @include flex-container(space-around)
   
   margin-bottom: 64px
   .baner
-    display: flex
-    flex-direction: column
-    align-items: flex-start
-    gap: 20px
+    @include flex-container($ai: flex-start, $fd: column, $gap: 20px)
+    
     max-width: 40%
+
     @media screen and (max-width: 768px)
       max-width: 100%
-    .banerNote
-      color: rgb(55, 125, 255)
-      background-color: rgba(55, 125, 255, 0.1)
-      font-family: Poppins, Helvetica, Arial, sans-serif
-      font-size: 11px
-      font-weight: 400
-      margin-bottom: 0px
-      padding-bottom: 7px
-      padding-left: 15px
-      padding-right: 15px
-      padding-top: 7px
       text-align: center
-      border-radius: 6.1875rem
+      align-items: center
+
+    .banerNote
+      @extend %note-styles
     
-    h1
-      font-weight: 500
-      font-size: 40px
-      margin-bottom: 10px      
-    p
-      font-size: 16px
-      color: #77838F
-      line-height: 27.2px
-
     .button
-      transition: all 0.2s ease-in-out
-      margin: 5px 0 0
-      border-radius: 99px
+      @include button
+      @include flex-container
 
-      &:hover 
-        margin: 0 0 5px
-        box-shadow: rgb(55, 125, 255) 0px 5px 15px 
-      a
-        display: flex
-        align-items: center
-        background-color: rgb(55, 125, 255)
-        color: rgb(255, 255, 255)
-        padding: 12px 16px
-        border-radius: 99px
-        text-decoration: none
-        img
-          height: 20px
-          filter: invert(1)
+      img
+        height: 20px
+        filter: invert(1)
       
   .banerImg
     height: 350px
     object-fit: contain
 
-    max-width: 40%
     @media screen and (max-width: 768px)
       display: none
 
 .servicesSection
   .services
+    @include flex-container($fd: column, $gap: 8px)
+    
     max-width: 700px
     margin: 0 auto 64px auto
+    text-align: center
 
-    display: flex
-    flex-direction: column
-    align-items: center
-    gap: 8px
     small
-      color: rgb(55, 125, 255)
-      background-color: rgba(55, 125, 255, 0.1)
-      font-family: Poppins, Helvetica, Arial, sans-serif
-      font-size: 11px
-      font-weight: 400
-      margin-bottom: 0px
-      padding-bottom: 7px
-      padding-left: 15px
-      padding-right: 15px
-      padding-top: 7px
-      border-radius: 6.1875rem
-    h2
-      font-size: 32px
-    p
-      font-size: 16px
-      color: #77838F
-      line-height: 27.2px
+      @extend %note-styles
+
 
   .cardContainer
-    display: flex
-    gap: 10px
-    justify-content: center
+    @include flex-container($gap: 10px, $ai: stretch)
+
     @media screen and (max-width: 768px)
       flex-direction: column
-    .card
-      display: flex
-      flex-direction: column
       align-items: center
-      gap: 10px
 
-      text-align: center
+    .card
+      @include flex-container($fd: column, $gap: 15px)
+
       border: 1px solid #e5e7eb
       border-radius: 5px
       padding: 64px 16px
       max-width: 360px
-      h3
 
-        font-size: 24px
-      p
-        font-size: 16px
-        color: #77838F
-        line-height: 27.2px
+      text-align: center
+
       img
         height: 75px
+      
+      p
+        margin-bottom: auto
+
       a
-        transition: all 0.2s ease-in-out
-        margin: 5px 0 0
-        border-radius: 99px
-
-        background-color: rgb(55, 125, 255)
-        color: rgb(255, 255, 255)
-        padding: 12px 16px
-        border-radius: 5px
-        text-decoration: none
-
-        &:hover 
-          margin: 0 0 5px
-          box-shadow: rgb(55, 125, 255) 0px 5px 15px 
+        @include button($br: 5px)
 
