@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 
@@ -56,9 +57,7 @@ const HowItWorksPage = () => {
                 suggestions for your business or brand. All names are
                 auto-checked for URL availability.
               </p>
-              <a className='' href='https://www.squadhelp.com/start-contest'>
-                Launch a Contest
-              </a>
+              <Link to='/startContest'>Launch a Contest</Link>
             </div>
 
             <div className={styles.card}>
@@ -71,12 +70,7 @@ const HowItWorksPage = () => {
                 a complimentary Logo Design
               </p>
 
-              <a
-                className=''
-                href='https://www.squadhelp.com/premium-domains-for-sale/'
-              >
-                Explore Names For Sale
-              </a>
+              <Link to='/'>Explore Names For Sale</Link>
             </div>
 
             <div className={styles.card}>
@@ -89,9 +83,7 @@ const HowItWorksPage = () => {
                 agency-level experience at a fraction of Agency costs
               </p>
 
-              <a className='' href='https://www.squadhelp.com/managed-contests'>
-                Learn More
-              </a>
+              <Link to='/'>Learn More</Link>
             </div>
           </div>
         </div>
