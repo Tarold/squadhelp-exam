@@ -1,18 +1,12 @@
-%note-styles
+%noteStyles
   color: rgb(55, 125, 255)
   background-color: rgba(55, 125, 255, 0.1)
-  font-family: Poppins, Helvetica, Arial, sans-serif
   font-size: 11px
-  font-weight: 400
-  margin-bottom: 0px
-  padding-bottom: 7px
-  padding-left: 15px
-  padding-right: 15px
-  padding-top: 7px
+  padding: 7px 15px
   text-align: center
   border-radius: 6.1875rem
 
-@mixin flex-container($jc: center, $ai: center, $fd: row, $gap: 0px)
+@mixin flexContainer($jc: center, $ai: center, $fd: row, $gap: 0px)
   display: flex
   justify-content: $jc
   align-items: $ai
@@ -32,7 +26,7 @@
 
   &:hover 
     margin: 0 0 5px
-    box-shadow: rgb(55, 125, 255) 0px 5px 15px 
+    box-shadow: rgba(55, 125, 255, 0.5) 0px 5px 15px 
 
   @media screen and (max-width: 480px)
     padding: 12px auto
@@ -62,11 +56,11 @@
 
 
 .banerSection
-  @include flex-container(space-around)
+  @include flexContainer(space-around)
   
   margin-bottom: 64px
   .baner
-    @include flex-container($ai: flex-start, $fd: column, $gap: 20px)
+    @include flexContainer($ai: flex-start, $fd: column, $gap: 20px)
     
     max-width: 40%
 
@@ -76,11 +70,11 @@
       align-items: center
 
     .banerNote
-      @extend %note-styles
+      @extend %noteStyles
     
     .button
       @include button
-      @include flex-container
+      @include flexContainer
 
       img
         height: 20px
@@ -95,25 +89,25 @@
 
 .servicesSection
   .services
-    @include flex-container($fd: column, $gap: 8px)
+    @include flexContainer($fd: column, $gap: 8px)
     
     max-width: 700px
     margin: 0 auto 64px auto
     text-align: center
 
     small
-      @extend %note-styles
+      @extend %noteStyles
 
 
   .cardContainer
-    @include flex-container($gap: 10px, $ai: stretch)
+    @include flexContainer($gap: 10px, $ai: stretch)
 
     @media screen and (max-width: 768px)
       flex-direction: column
       align-items: center
 
     .card
-      @include flex-container($fd: column, $gap: 15px)
+      @include flexContainer($fd: column, $gap: 15px)
 
       border: 1px solid #e5e7eb
       border-radius: 5px
