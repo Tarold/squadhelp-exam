@@ -25,12 +25,14 @@ const HowItWorksPage = () => {
               </p>
             </div>
 
-            <div className={styles.button}>
-              <a data-fancybox='' href='https://vimeo.com/368584367'>
-                <img className={styles.play} src={`${IMAGES_PATH}play.png`} />
-                Play Video
-              </a>
-            </div>
+            <a
+              className={styles.button}
+              data-fancybox=''
+              href='https://vimeo.com/368584367'
+            >
+              <img className={styles.play} src={`${IMAGES_PATH}play.png`} />
+              Play Video
+            </a>
           </div>
 
           <img className={styles.banerImg} src={`${IMAGES_PATH}phoneguy.png`} />
