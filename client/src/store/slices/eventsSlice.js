@@ -1,22 +1,46 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { compareAsc } from 'date-fns';
 
 const EVENT_SLICE_NAME = 'event';
 
 const initialState = {
-  events: [],
+  events: [
+    {
+      eventName: 'moms day',
+      eventDate:
+        'Thu May 25 2023 03:30:00 GMT+0300 (Eastern European Summer Time)',
+      notificationDate:
+        'Thu May 25 2023 03:00:00 GMT+0300 (Eastern European Summer Time)',
+      id: '3ab28ea8-392d-4301-843c-9b8d1dfbdf76',
+      startDate:
+        'Thu May 25 2023 02:45:16 GMT+0300 (Eastern European Summer Time)',
+    },
+    {
+      eventName: 'moms day1',
+      eventDate:
+        'Thu May 25 2023 03:00:00 GMT+0300 (Eastern European Summer Time)',
+      notificationDate:
+        'Thu May 25 2023 02:45:00 GMT+0300 (Eastern European Summer Time)',
+      id: '3ab28ea8-392d-4301-843c-9b8d1dfbdf78',
+      startDate:
+        'Thu May 25 2023 02:45:16 GMT+0300 (Eastern European Summer Time)',
+    },
+  ],
 };
 
 const reducers = {
   addEvent: (state, { payload }) => {
-    state.events = [...state.events, payload];
+    state.events = [...state.events, payload].sort((a, b) =>
+      compareAsc(a.eventDate, b.eventDate)
+    );
   },
   removeEvent: (state, { payload }) => {
     state.events = state.events.filter(event => event.id !== payload);
   },
   updateEvent: (state, { payload }) => {
-    state.events = state.events.map(event =>
-      event.id === payload.id ? payload : event
-    );
+    state.events = state.events
+      .map(event => (event.id === payload.id ? payload : event))
+      .sort((a, b) => compareAsc(a.eventDate, b.eventDate));
   },
   clearEvents: state => {
     state.events = [];
