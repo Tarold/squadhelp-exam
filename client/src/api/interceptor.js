@@ -29,6 +29,7 @@ instance.interceptors.response.use(
       err.response.status === 408 &&
       history.location.pathname !== '/login' &&
       history.location.pathname !== '/registration' &&
+      history.location.pathname !== '/howItWorks' &&
       history.location.pathname !== '/'
     ) {
       history.replace('/login');

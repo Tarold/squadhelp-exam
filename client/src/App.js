@@ -48,11 +48,7 @@ class App extends Component {
             component={OnlyNotAuthorizedUserHoc(RegistrationPage)}
           />
           <Route exact path='/payment' component={PrivateHoc(Payment)} />
-          <Route
-            exact
-            path='/howItWorks'
-            component={PrivateHoc(HowItWorksPage)}
-          />
+          <Route exact path='/howItWorks' component={HowItWorksPage} />
           <Route
             exact
             path='/startContest'
