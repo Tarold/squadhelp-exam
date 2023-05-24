@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 
 import styles from './EventForm.module.sass';
-
+//TODO mix man Date picker. Exept time from date. Return values from form like then. Add key
 const EventForm = ({ onSubmit }) => {
   const initialValues = {
     eventName: '',
@@ -13,20 +13,20 @@ const EventForm = ({ onSubmit }) => {
 
   const validationSchema = yup.object().shape({
     eventName: yup.string().required('Event Name is required'),
-    eventTime: yup.date().required('Event Date is required'),
+    eventTime: yup
+      .date()
+      .min(new Date(), 'Date must be after current date')
+      .required('Event Date is required'),
     notificationTime: yup
       .date()
-      .required('Notification Date is required')
-      .min(new Date(), 'Notification Date must be after current date')
-      .max(
-        yup.ref('eventTime'),
-        'Notification Date must be before or equal to Event Date'
-      ),
+      .required('Date is required')
+      .min(new Date(), 'Date must be after current date')
+      .max(yup.ref('eventTime'), 'Date must be before or equal to Event Date'),
   });
 
   const handleSubmit = (values, { resetForm }) => {
     onSubmit(values);
-    resetForm();
+    resetForm(initialValues);
   };
 
   return (
