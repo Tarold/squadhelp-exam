@@ -19,6 +19,7 @@ import ContestCreationPage from './pages/ContestCreation/ContestCreationPage';
 import CONSTANTS from './constants';
 import browserHistory from './browserHistory';
 import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatContainer';
+import Events from './pages/Events/Events';
 
 class App extends Component {
   render () {
@@ -47,8 +48,9 @@ class App extends Component {
             path='/registration'
             component={OnlyNotAuthorizedUserHoc(RegistrationPage)}
           />
-          <Route exact path='/payment' component={PrivateHoc(Payment)} />
           <Route exact path='/howItWorks' component={HowItWorksPage} />
+          <Route exact path='/events' component={PrivateHoc(Events)} />
+          <Route exact path='/payment' component={PrivateHoc(Payment)} />
           <Route
             exact
             path='/startContest'
