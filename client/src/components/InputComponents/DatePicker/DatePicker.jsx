@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { setHours, setMinutes } from 'date-fns';
 import { useFormikContext } from 'formik';
 
 const DatePickerComponent = ({
@@ -9,11 +8,10 @@ const DatePickerComponent = ({
   setFieldValue,
   after,
   setChange,
+  initialValue,
   ...props
 }) => {
-  const [startDate, setStartDate] = useState(
-    setHours(setMinutes(new Date(), 0), 9)
-  );
+  const [date, setDate] = useState(new Date(initialValue));
   const formikProps = useFormikContext();
 
   const setField = date => {
@@ -38,7 +36,7 @@ const DatePickerComponent = ({
       <div>
         <DatePicker
           name={name}
-          selected={startDate}
+          selected={date}
           showTimeSelect
           minDate={new Date()}
           maxDate={new Date(after)}
@@ -46,7 +44,7 @@ const DatePickerComponent = ({
           dateFormat='MMMM d, yyyy h:mm aa'
           onChange={date => {
             setField(date);
-            return setStartDate(date);
+            return setDate(date);
           }}
           {...props}
         />
