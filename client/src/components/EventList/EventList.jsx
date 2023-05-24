@@ -10,13 +10,13 @@ import {
 import Event from './Event/Event';
 
 const EventList = ({ events, clear, add, del, edit }) => {
-  const [isCreate, setIsCreate] = useState(false); //TODO false->setformData();
-  const [formData, setformData] = useState();
+  const [isCreate, setIsCreate] = useState(); //TODO false->setformData();
+  const [formData, setFormData] = useState();
 
   const handleFormSubmit = values => {
     if (formData) {
       edit(values);
-      setformData();
+      setFormData();
     } else {
       add(values);
     }
@@ -36,12 +36,12 @@ const EventList = ({ events, clear, add, del, edit }) => {
             {events.map(event => (
               <Event
                 key={event.id}
+                {...event}
                 del={() => del(event.id)}
                 enableEdit={() => {
-                  setformData(event);
+                  setFormData(event);
                   setIsCreate(true);
                 }}
-                {...event}
               />
             ))}
           </ul>
