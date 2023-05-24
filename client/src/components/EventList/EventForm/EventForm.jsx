@@ -16,18 +16,12 @@ const EventForm = ({ onSubmit, formData }) => {
   const validationSchema = Schems.EventSchema;
   const [date, setDate] = useState();
 
-  useEffect(() => {
-    setDate(initialValues.eventDate);
-    return () => {};
-  }, []);
-
-  const handleSubmit = (values, { resetForm }) => {
+  const handleSubmit = values => {
     if (!values.id) {
       values.id = uuid();
       values.startDate = String(new Date());
     }
     onSubmit(values);
-    resetForm(cleanValue);
   };
 
   return (
