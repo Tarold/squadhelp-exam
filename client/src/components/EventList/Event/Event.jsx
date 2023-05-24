@@ -39,7 +39,14 @@ function progressBarHelper (eventDate, notificationDate, startDate) {
   return [gradientStyle, countDays];
 }
 //TODO update per minute
-const Event = ({ eventName, eventDate, notificationDate, startDate, id }) => {
+const Event = ({
+  eventName,
+  eventDate,
+  notificationDate,
+  startDate,
+  del,
+  enableEdit,
+}) => {
   const [gradientStyle, countDays] = progressBarHelper(
     eventDate,
     notificationDate,
@@ -47,11 +54,11 @@ const Event = ({ eventName, eventDate, notificationDate, startDate, id }) => {
   );
 
   return (
-    <li className={styles.event} style={gradientStyle} key={id}>
+    <li className={styles.event} style={gradientStyle}>
       <span className={styles.name}>{eventName}</span>
       <span className={styles.countDays}>{countDays}</span>
-      <button>Delete</button>
-      <button>Edit</button>
+      <button onClick={del}>Delete</button>
+      <button onClick={enableEdit}>Edit</button>
     </li>
   );
 };
