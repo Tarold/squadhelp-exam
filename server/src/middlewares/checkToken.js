@@ -8,19 +8,11 @@ module.exports.checkAuth = async (req, res, next) => {
   if (!accessToken) {
     return next(new TokenError('need token'));
   }
+  const tokenData = req.tokenData;
+  if (!tokenData) {
+    return next(new TokenError('need tokenData'));
+  }
   try {
-    let tokenData;
-    try {
-      tokenData = jwt.verify(accessToken, CONSTANTS.JWT_SECRET);
-    } catch (err) {
-      if (err.message === 'jwt expired') {
-        res.status(401).send();
-        return;
-      } else {
-        next(new TokenError());
-      }
-    }
-
     const foundUser = await userQueries.findUser({ id: tokenData.userId });
     res.send({
       firstName: foundUser.firstName,
