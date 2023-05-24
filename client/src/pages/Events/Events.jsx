@@ -1,7 +1,7 @@
-import Events from './../../components/Events/Events';
+import EventList from '../../components/EventList/EventList';
 
 const Eventss = () => {
-  return <Events />;
+  return <EventList />;
 };
 
 export default Eventss;
