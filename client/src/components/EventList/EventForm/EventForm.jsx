@@ -14,7 +14,7 @@ const EventForm = ({ onSubmit, formData }) => {
   };
   const initialValues = formData ? formData : cleanValue;
   const validationSchema = Schems.EventSchema;
-  const [date, setDate] = useState();
+  const [dateEvent, setDateEvent] = useState(initialValues.eventDate);
 
   const handleSubmit = values => {
     if (!values.id) {
@@ -46,7 +46,7 @@ const EventForm = ({ onSubmit, formData }) => {
             id='eventDate'
             name='eventDate'
             initialValue={initialValues.eventDate}
-            setChange={setDate}
+            setChange={setDateEvent}
           ></DatePickerComponent>
           <ErrorMessage
             name='eventDate'
@@ -60,7 +60,7 @@ const EventForm = ({ onSubmit, formData }) => {
             id='notificationDate'
             name='notificationDate'
             initialValue={initialValues.notificationDate}
-            after={date}
+            after={dateEvent}
           ></DatePickerComponent>
           <ErrorMessage
             name='notificationDate'
