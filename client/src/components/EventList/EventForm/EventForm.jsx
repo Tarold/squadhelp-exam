@@ -1,24 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import DatePickerComponent from '../../InputComponents/DatePicker/DatePicker';
 import { v4 as uuid } from 'uuid';
 import Schems from '../../../utils/validators/validationSchems';
 import styles from './EventForm.module.sass';
+import { setHours } from 'date-fns';
 
-const EventForm = ({ onSubmit }) => {
-  const validationSchema = Schems.EventSchema;
-  const initialValues = {
+const EventForm = ({ onSubmit, formData }) => {
+  const cleanValue = {
     eventName: '',
-    eventDate: '',
-    notificationDate: '',
+    eventDate: String(setHours(new Date(), 48)),
+    notificationDate: String(setHours(new Date(), 24)),
   };
+  const initialValues = formData ? formData : cleanValue;
+  const validationSchema = Schems.EventSchema;
+  const [date, setDate] = useState();
 
-  const [date, setDate] = useState(initialValues.eventDate);
+  useEffect(() => {
+    setDate(initialValues.eventDate);
+    return () => {};
+  }, []);
 
   const handleSubmit = (values, { resetForm }) => {
-    values.id = uuid();
+    if (!values.id) {
+      values.id = uuid();
+      values.startDate = String(new Date());
+    }
     onSubmit(values);
-    resetForm(initialValues);
+    resetForm(cleanValue);
   };
 
   return (
@@ -42,6 +51,7 @@ const EventForm = ({ onSubmit }) => {
           <DatePickerComponent
             id='eventDate'
             name='eventDate'
+            initialValue={initialValues.eventDate}
             setChange={setDate}
           ></DatePickerComponent>
           <ErrorMessage
@@ -55,6 +65,7 @@ const EventForm = ({ onSubmit }) => {
           <DatePickerComponent
             id='notificationDate'
             name='notificationDate'
+            initialValue={initialValues.notificationDate}
             after={date}
           ></DatePickerComponent>
           <ErrorMessage
@@ -64,7 +75,7 @@ const EventForm = ({ onSubmit }) => {
           />
         </div>
 
-        <button type='submit'>Create Timer</button>
+        <button type='submit'>Save Timer</button>
       </Form>
     </Formik>
   );
