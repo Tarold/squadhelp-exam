@@ -18,15 +18,15 @@ function getDateBefore (now, length) {
   return `${days} days ${hours} hours left`;
 }
 
-function progressBarHelper (eventTime, notificationTime, startDate) {
-  const getBetweenTime = (startDate, eventTime) => {
+function progressBarHelper (eventDate, notificationDate, startDate) {
+  const getBetweenTime = (startDate, eventDate) => {
     const start = new Date(startDate).getTime();
-    const event = new Date(eventTime).getTime();
+    const event = new Date(eventDate).getTime();
     return event - start;
   };
 
-  const length = getBetweenTime(startDate, eventTime);
-  const triger = getBetweenTime(startDate, notificationTime);
+  const length = getBetweenTime(startDate, eventDate);
+  const triger = getBetweenTime(startDate, notificationDate);
   const now = getBetweenTime(startDate, new Date());
 
   const countDays = getDateBefore(now, length);
@@ -39,19 +39,19 @@ function progressBarHelper (eventTime, notificationTime, startDate) {
   return [gradientStyle, countDays];
 }
 //TODO update per minute
-const Event = ({
-  event: { key, eventName, eventTime, notificationTime, startDate },
-}) => {
+const Event = ({ eventName, eventDate, notificationDate, startDate, id }) => {
   const [gradientStyle, countDays] = progressBarHelper(
-    eventTime,
-    notificationTime,
+    eventDate,
+    notificationDate,
     startDate
   );
 
   return (
-    <li className={styles.event} style={gradientStyle} key={key}>
+    <li className={styles.event} style={gradientStyle} key={id}>
       <span className={styles.name}>{eventName}</span>
       <span className={styles.countDays}>{countDays}</span>
+      <button>Delete</button>
+      <button>Edit</button>
     </li>
   );
 };
