@@ -60,7 +60,7 @@ const EventList = ({ events, clear, add, del, edit, setAlarm }) => {
           <div className={styles.eventList}>
             <h2 className={styles.title}>Event List</h2>
             <ul className={styles.events}>
-              {events.length > 1 ? (
+              {events.length > 0 ? (
                 <>{events.map(eventMap)}</>
               ) : (
                 <li key='nothing'>

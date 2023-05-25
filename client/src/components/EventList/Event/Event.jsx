@@ -4,7 +4,7 @@ import Notification from './Notification/Notification';
 import formatDuration from 'date-fns/formatDuration';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
-
+import variables from './progressBarColors.json';
 import classNames from 'classnames';
 
 function getDateBefore (date) {
@@ -44,13 +44,12 @@ function progressBarHelper (eventDate, notificationDate, startDate) {
   const procentTriger = Math.round((triger / length) * 100);
   const procentNow = Math.round((now / length) * 100);
 
-  let green = '#d1e9cf';
-  const yellow = 'rgb(255, 250, 114)';
-  if (procentNow >= procentTriger) {
-    green = 'lightgreen';
-  }
+  const green = classNames({
+    [variables.going]: procentNow < procentTriger,
+    [variables.goingTriger]: procentNow >= procentTriger,
+  });
   const gradientStyle = {
-    background: `linear-gradient(to right, ${green} 0%, ${green} ${procentNow}%, rgba(0, 0, 0, 0) ${procentNow}%, rgba(0, 0, 0, 0) ${procentTriger}%, ${yellow} ${procentTriger}%,  ${yellow} 100%)`,
+    background: `linear-gradient(to right, ${green} 0%, ${green} ${procentNow}%, ${variables.bg} ${procentNow}%, ${variables.bg} ${procentTriger}%, ${variables.triger} ${procentTriger}%,  ${variables.triger} 100%)`,
   };
   return gradientStyle;
 }
@@ -67,12 +66,12 @@ const Event = ({
   eventsCount,
 }) => {
   const [countDays, setCountDays] = useState();
-  const [progresStyle, setProgresStyle] = useState();
+  const [progressStyle, setProgressStyle] = useState();
   const [isFinish, setIsFinish] = useState(false);
 
   const updateEvent = () => {
     setCountDays(getDateBefore(eventDate));
-    setProgresStyle(progressBarHelper(eventDate, notificationDate, startDate));
+    setProgressStyle(progressBarHelper(eventDate, notificationDate, startDate));
   };
 
   useEffect(() => {
@@ -112,6 +111,7 @@ const Event = ({
       clearInterval(interval);
     }
 
+    console.log('object :>> ');
     return () => {
       clearInterval(interval);
       clearTimeout(timeoutFinish);
@@ -120,7 +120,7 @@ const Event = ({
   }, []);
 
   return (
-    <li style={progresStyle} className={styles.event}>
+    <li className={styles.event} style={progressStyle}>
       <span className={styles.name}>{eventName}</span>
 
       {isFinish ? (
