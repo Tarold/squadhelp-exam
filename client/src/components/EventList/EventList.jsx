@@ -6,11 +6,11 @@ import {
   addEvent,
   updateEvent,
   removeEvent,
-  seeNotification,
+  setNotification,
 } from '../../store/slices/eventsSlice';
 import Event from './Event/Event';
 
-const EventList = ({ events, clear, add, del, edit, seeToTrue }) => {
+const EventList = ({ events, clear, add, del, edit, setAlarm }) => {
   const [isCreate, setIsCreate] = useState();
   const [formData, setFormData] = useState();
 
@@ -44,9 +44,12 @@ const EventList = ({ events, clear, add, del, edit, seeToTrue }) => {
             {events.map(event => (
               <Event
                 key={event.id}
+                eventsCount={events.length}
                 {...event}
+                setNotification={data => {
+                  setAlarm({ id: event.id, notification: data });
+                }}
                 del={() => del(event.id)}
-                seeToTrue={() => seeToTrue(event.id)}
                 enableEdit={() => {
                   setFormData(event);
                   setIsCreate(true);
@@ -56,8 +59,6 @@ const EventList = ({ events, clear, add, del, edit, seeToTrue }) => {
           </ul>
           <button onClick={() => clear()}>Clear All</button>
           <button onClick={() => setIsCreate(true)}>+</button>
-
-          {JSON.stringify(events)}
         </>
       )}
     </div>
@@ -72,7 +73,8 @@ const mapDispatchToProps = dispatch => ({
   add: data => dispatch(addEvent(data)),
   del: id => dispatch(removeEvent(id)),
   edit: data => dispatch(updateEvent(data)),
-  seeToTrue: id => dispatch(seeNotification(id)),
+  setAlarm: ({ id, notification }) =>
+    dispatch(setNotification({ id, notification })),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventList);
