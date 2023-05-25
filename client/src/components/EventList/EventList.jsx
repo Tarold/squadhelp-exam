@@ -46,13 +46,13 @@ const EventList = ({ events, clear, add, del, edit, setAlarm }) => {
           <h2 className={styles.caption}>Event Form</h2>
           <EventForm onSubmit={handleFormSubmit} formData={formData} />
           <button
-            className={styles.formButton}
+            className={styles.formButtonForm}
             onClick={() => {
               setFormData();
               setIsCreate(false);
             }}
           >
-            -
+            <span>&#10006;</span>
           </button>
         </div>
       ) : (
@@ -77,7 +77,7 @@ const EventList = ({ events, clear, add, del, edit, setAlarm }) => {
             )}
 
             <button
-              className={styles.formButton}
+              className={styles.formButtonList}
               onClick={() => setIsCreate(true)}
             >
               <span> +</span>
