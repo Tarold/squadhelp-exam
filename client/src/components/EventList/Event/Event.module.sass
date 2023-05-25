@@ -23,22 +23,26 @@
   border: 1px solid black
   border-radius: 0.75rem
   background-color: black
+  position: relative
 
 
-  button
+  .button
     @extend %button 
     display: none
     padding: 5px
     @media (hover: none) and (pointer: coarse) 
       display: block
     font-size: 20px
-
   &:hover
-    button
+    .button
       display: block
 
-.edit
+.buttonEdit
   margin-right: 5px
+  @extend .button
+.buttonRemove
+  @extend .button
+
 
 .name
   width: 150px

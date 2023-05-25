@@ -68,23 +68,11 @@ const Event = ({
 }) => {
   const [countDays, setCountDays] = useState();
   const [progresStyle, setProgresStyle] = useState();
-  const [eventStyle, setEventStyle] = useState();
   const [isFinish, setIsFinish] = useState(false);
-  const updateStyles = () => {
-    setEventStyle(
-      classNames(
-        [styles.event],
-        { [styles.finish]: new Date() >= eventDate },
-        {
-          [styles.notification]: notification,
-        }
-      )
-    );
-  };
+
   const updateEvent = () => {
     setCountDays(getDateBefore(eventDate));
     setProgresStyle(progressBarHelper(eventDate, notificationDate, startDate));
-    updateStyles();
   };
 
   useEffect(() => {
@@ -132,7 +120,7 @@ const Event = ({
   }, []);
 
   return (
-    <li style={progresStyle} className={eventStyle}>
+    <li style={progresStyle} className={styles.event}>
       <span className={styles.name}>{eventName}</span>
 
       {isFinish ? (
@@ -140,10 +128,7 @@ const Event = ({
           <span className={styles.badge}>eventsCount:{eventsCount}</span>
           <Notification
             notification={notification}
-            setNotification={() => {
-              updateStyles();
-              setNotification('');
-            }}
+            setNotification={() => setNotification('')}
           />
         </>
       ) : (
@@ -151,15 +136,17 @@ const Event = ({
           <span className={styles.countDays}>{countDays}</span>
           <Notification
             notification={notification}
-            setNotification={setNotification}
+            setNotification={() => setNotification('')}
           />
-          <button onClick={enableEdit} className={styles.edit}>
+          <button onClick={enableEdit} className={styles.buttonEdit}>
             Edit
           </button>
         </>
       )}
 
-      <button onClick={del}>Delete</button>
+      <button className={styles.buttonRemove} onClick={del}>
+        Delete
+      </button>
     </li>
   );
 };
