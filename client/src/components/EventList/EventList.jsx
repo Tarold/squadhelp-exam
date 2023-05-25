@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EventForm from './EventForm/EventForm';
 import { connect } from 'react-redux';
 import {
@@ -6,11 +6,12 @@ import {
   addEvent,
   updateEvent,
   removeEvent,
+  seeNotification,
 } from '../../store/slices/eventsSlice';
 import Event from './Event/Event';
 
-const EventList = ({ events, clear, add, del, edit }) => {
-  const [isCreate, setIsCreate] = useState(); //TODO false->setformData();
+const EventList = ({ events, clear, add, del, edit, seeToTrue }) => {
+  const [isCreate, setIsCreate] = useState();
   const [formData, setFormData] = useState();
 
   const handleFormSubmit = values => {
@@ -28,7 +29,14 @@ const EventList = ({ events, clear, add, del, edit }) => {
       {isCreate ? (
         <>
           <EventForm onSubmit={handleFormSubmit} formData={formData} />
-          <button onClick={() => setIsCreate(false)}>-</button>
+          <button
+            onClick={() => {
+              setFormData();
+              setIsCreate(false);
+            }}
+          >
+            -
+          </button>
         </>
       ) : (
         <>
@@ -38,6 +46,7 @@ const EventList = ({ events, clear, add, del, edit }) => {
                 key={event.id}
                 {...event}
                 del={() => del(event.id)}
+                seeToTrue={() => seeToTrue(event.id)}
                 enableEdit={() => {
                   setFormData(event);
                   setIsCreate(true);
@@ -63,6 +72,7 @@ const mapDispatchToProps = dispatch => ({
   add: data => dispatch(addEvent(data)),
   del: id => dispatch(removeEvent(id)),
   edit: data => dispatch(updateEvent(data)),
+  seeToTrue: id => dispatch(seeNotification(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventList);

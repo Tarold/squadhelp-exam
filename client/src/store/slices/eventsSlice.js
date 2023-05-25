@@ -14,6 +14,7 @@ const initialState = {
       id: '3ab28ea8-392d-4301-843c-9b8d1dfbdf76',
       startDate:
         'Thu May 25 2023 02:45:16 GMT+0300 (Eastern European Summer Time)',
+      isSeeNotification: false,
     },
     {
       eventName: 'moms day1',
@@ -24,6 +25,7 @@ const initialState = {
       id: '3ab28ea8-392d-4301-843c-9b8d1dfbdf78',
       startDate:
         'Thu May 25 2023 02:45:16 GMT+0300 (Eastern European Summer Time)',
+      isSeeNotification: false,
     },
   ],
 };
@@ -42,6 +44,14 @@ const reducers = {
       .map(event => (event.id === payload.id ? payload : event))
       .sort((a, b) => compareAsc(a.eventDate, b.eventDate));
   },
+  seeNotification: (state, { payload }) => {
+    state.events = state.events.map(event => {
+      if (event.id === payload) {
+        event.isSeeNotification = true;
+      }
+      return event;
+    });
+  },
   clearEvents: state => {
     state.events = [];
   },
@@ -55,6 +65,12 @@ const eventSlice = createSlice({
 
 const { actions, reducer } = eventSlice;
 
-export const { addEvent, removeEvent, updateEvent, clearEvents } = actions;
+export const {
+  addEvent,
+  removeEvent,
+  updateEvent,
+  clearEvents,
+  seeNotification,
+} = actions;
 
 export default reducer;

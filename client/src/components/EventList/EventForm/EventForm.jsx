@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import DatePickerComponent from '../../InputComponents/DatePicker/DatePicker';
 import { v4 as uuid } from 'uuid';
@@ -20,6 +20,7 @@ const EventForm = ({ onSubmit, formData }) => {
     if (!values.id) {
       values.id = uuid();
       values.startDate = String(new Date());
+      values.isSeeNotification = false;
     }
     onSubmit(values);
   };
