@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import EventForm from './EventForm/EventForm';
+import styles from './EventList.module.sass';
 import { connect } from 'react-redux';
 import {
   clearEvents,
@@ -23,13 +24,29 @@ const EventList = ({ events, clear, add, del, edit, setAlarm }) => {
     }
     setIsCreate(false);
   };
-
+  const eventMap = event => (
+    <Event
+      key={event.id}
+      eventsCount={events.length}
+      {...event}
+      setNotification={data => {
+        setAlarm({ id: event.id, notification: data });
+      }}
+      del={() => del(event.id)}
+      enableEdit={() => {
+        setFormData(event);
+        setIsCreate(true);
+      }}
+    />
+  );
   return (
     <div>
       {isCreate ? (
-        <>
+        <div className={styles.formContainer}>
+          <h2 className={styles.caption}>Event Form</h2>
           <EventForm onSubmit={handleFormSubmit} formData={formData} />
           <button
+            className={styles.formButton}
             onClick={() => {
               setFormData();
               setIsCreate(false);
@@ -37,28 +54,35 @@ const EventList = ({ events, clear, add, del, edit, setAlarm }) => {
           >
             -
           </button>
-        </>
+        </div>
       ) : (
         <>
-          <ul>
-            {events.map(event => (
-              <Event
-                key={event.id}
-                eventsCount={events.length}
-                {...event}
-                setNotification={data => {
-                  setAlarm({ id: event.id, notification: data });
-                }}
-                del={() => del(event.id)}
-                enableEdit={() => {
-                  setFormData(event);
-                  setIsCreate(true);
-                }}
-              />
-            ))}
-          </ul>
-          <button onClick={() => clear()}>Clear All</button>
-          <button onClick={() => setIsCreate(true)}>+</button>
+          <div className={styles.eventList}>
+            <h2 className={styles.caption}>Event List</h2>
+            <ul className={styles.events}>
+              {events.length > 1 ? (
+                <>{events.map(eventMap)}</>
+              ) : (
+                <li key='nothing'>
+                  <span>Nothing</span>
+                </li>
+              )}
+            </ul>
+            {events.length > 1 ? (
+              <button className={styles.clearButton} onClick={() => clear()}>
+                Clear All
+              </button>
+            ) : (
+              ''
+            )}
+
+            <button
+              className={styles.formButton}
+              onClick={() => setIsCreate(true)}
+            >
+              <span> +</span>
+            </button>
+          </div>
         </>
       )}
     </div>
