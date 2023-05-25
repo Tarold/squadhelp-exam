@@ -6,6 +6,7 @@ import paymentReducer from './slices/paymentSlice';
 import contestsReducer from './slices/contestsSlice';
 import contestCreationReducer from './slices/contestCreationSlice';
 import bundleReducer from './slices/bundleSlice';
+import eventsReducer from './slices/eventsSlice';
 import contestByIdReducer from './slices/contestByIdSlice';
 import contestUpdationReducer from './slices/contestUpdationSlice';
 import chatReducer from './slices/chatSlice';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   contestsList: contestsReducer,
   contestCreationStore: contestCreationReducer,
   bundleStore: bundleReducer,
+  eventsStore: eventsReducer,
   contestUpdationStore: contestUpdationReducer,
   chatStore: chatReducer,
   userProfile: userProfileReducer,

@@ -1,0 +1,73 @@
+%button 
+  position: absolute
+  display: flex
+  justify-content: center
+  align-items: center
+  border-radius: 100px
+  cursor: pointer
+  transition: transform 250ms
+  border: 1px solid black
+  color: white
+  &:hover 
+   transform: scale(1.05) 
+
+.eventList
+  max-width: 700px
+  position: relative
+  padding: 20px 5px
+  margin: 18px auto 58px
+  border: 1px solid grey
+  border-radius: 0.75rem 
+  min-height: 200px
+
+.events
+  display: flex
+  flex-direction: column
+  gap: 10px
+
+.formContainer
+  position: relative
+  padding: 24px 5px
+  margin: 0 auto
+  display: flex
+  align-items:  center
+  flex-direction: column
+  max-width: 410px 
+
+.title
+  font-size: 24px
+  margin-bottom: 10px
+  text-align: center
+
+.clearButton
+  @extend %button 
+  color: white
+  bottom: -18px
+  right: 84px
+  height: 32px
+  width: 108px
+  background-color: rgb(255, 107, 107)
+  font-size: 20px
+  &:hover 
+    box-shadow: rgba(187, 44, 44, 0.35) 0 -25px 18px -14px inset,rgba(187, 44, 44, 0.25) 0 1px 2px,rgba(187, 44, 44, 0.25) 0 2px 4px,rgba(187, 44, 44, 0.25) 0 4px 8px,rgba(187, 44, 44, 0.25) 0 8px 16px,rgba(187, 44, 44, 0.25) 0 16px 32px
+
+.formButton
+  @extend %button 
+  background-color: rgb(55, 125, 255)
+  &Form
+    @extend .formButton 
+    bottom: 0
+    right: 0
+    height: 54px
+    width: 54px
+    font-size: 32px
+  &List
+    @extend .formButton 
+    bottom: -32px
+    right: 8px  
+    height: 64px
+    width: 64px
+    font-size: 64px
+  &:hover 
+    box-shadow: rgba(44, 73, 187, 0.35) 0 -25px 18px -14px inset,rgba(44, 77, 187, 0.25) 0 1px 2px,rgba(44, 87, 187, 0.25) 0 2px 4px,rgba(44, 144, 187, 0.25) 0 4px 8px,rgba(44, 87, 187, 0.25) 0 8px 16px,rgba(44, 106, 187, 0.25) 0 16px 32px
+
