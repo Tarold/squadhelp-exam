@@ -221,8 +221,8 @@ export default {
       .required('Event Date is required'),
     notificationDate: yup
       .date()
-      .required('Date is required')
       .min(new Date(), 'Date must be after current date')
-      .max(yup.ref('eventDate'), 'Date must be before or equal to Event Date'),
+      .max(yup.ref('eventDate'), 'Date must be before or equal to Event Date')
+      .required('Date is required'),
   }),
 };
