@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
 import { updateBundle } from '../../store/slices/bundleSlice';
 import BundleBox from '../../components/BundleBox/BundleBox';
 import CONSTANTS from '../../constants';
@@ -8,7 +7,7 @@ import styles from './StartContestPage.module.sass';
 import Footer from '../../components/Footer/Footer';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import Header from '../../components/Header/Header';
-
+import ButtonGroup from '../../components/ButtonGroup/ButtonGroup';
 const StartContestPage = props => {
   if (props.userStore.data.role !== CONSTANTS.CUSTOMER) {
     props.history.replace('/');
@@ -110,6 +109,7 @@ const StartContestPage = props => {
           />
         </div>
       </div>
+      <ButtonGroup />
       <Footer />
     </div>
   );
