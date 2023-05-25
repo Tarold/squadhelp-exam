@@ -43,7 +43,7 @@ const EventList = ({ events, clear, add, del, edit, setAlarm }) => {
     <div>
       {isCreate ? (
         <div className={styles.formContainer}>
-          <h2 className={styles.caption}>Event Form</h2>
+          <h2 className={styles.title}>Event Form</h2>
           <EventForm onSubmit={handleFormSubmit} formData={formData} />
           <button
             className={styles.formButtonForm}
@@ -58,7 +58,7 @@ const EventList = ({ events, clear, add, del, edit, setAlarm }) => {
       ) : (
         <>
           <div className={styles.eventList}>
-            <h2 className={styles.caption}>Event List</h2>
+            <h2 className={styles.title}>Event List</h2>
             <ul className={styles.events}>
               {events.length > 1 ? (
                 <>{events.map(eventMap)}</>
