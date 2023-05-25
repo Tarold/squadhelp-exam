@@ -1,6 +1,6 @@
 {
-  "going": "#d1e9cf",
-  "triger": "rgb(255, 250, 114)",
-  "bg": "rgba(253, 242, 242, 0)",
-  "goingTriger": "lightgreen"
+  "going": "#9AD3BC",
+  "triger": "#F3EAC2",
+  "bg": "#fff",
+  "goingTriger": "#F5B461"
 }
