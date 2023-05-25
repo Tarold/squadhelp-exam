@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import DatePickerComponent from '../../InputComponents/DatePicker/DatePicker';
-import { v4 as uuid } from 'uuid';
 import Schems from '../../../utils/validators/validationSchems';
 import styles from './EventForm.module.sass';
 import { setHours } from 'date-fns';
@@ -18,9 +17,6 @@ const EventForm = ({ onSubmit, formData }) => {
 
   const handleSubmit = values => {
     if (!values.id) {
-      values.id = uuid();
-      values.startDate = String(new Date());
-      values.isSeeNotification = false;
     }
     onSubmit(values);
   };

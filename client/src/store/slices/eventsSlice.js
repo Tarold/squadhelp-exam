@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { compareAsc } from 'date-fns';
+import { v4 as uuid } from 'uuid';
 
 const EVENT_SLICE_NAME = 'event';
 
@@ -14,7 +15,7 @@ const initialState = {
       id: '3ab28ea8-392d-4301-843c-9b8d1dfbdf76',
       startDate:
         'Thu May 25 2023 02:45:16 GMT+0300 (Eastern European Summer Time)',
-      isSeeNotification: false,
+      notification: '',
     },
     {
       eventName: 'moms day1',
@@ -25,13 +26,16 @@ const initialState = {
       id: '3ab28ea8-392d-4301-843c-9b8d1dfbdf78',
       startDate:
         'Thu May 25 2023 02:45:16 GMT+0300 (Eastern European Summer Time)',
-      isSeeNotification: false,
+      notification: '',
     },
   ],
 };
 
 const reducers = {
   addEvent: (state, { payload }) => {
+    payload.id = uuid();
+    payload.startDate = String(new Date());
+    payload.notification = '';
     state.events = [...state.events, payload].sort((a, b) =>
       compareAsc(a.eventDate, b.eventDate)
     );
@@ -44,10 +48,10 @@ const reducers = {
       .map(event => (event.id === payload.id ? payload : event))
       .sort((a, b) => compareAsc(a.eventDate, b.eventDate));
   },
-  seeNotification: (state, { payload }) => {
+  setNotification: (state, { payload }) => {
     state.events = state.events.map(event => {
-      if (event.id === payload) {
-        event.isSeeNotification = true;
+      if (event.id === payload.id) {
+        event.notification = payload.notification;
       }
       return event;
     });
@@ -70,7 +74,7 @@ export const {
   removeEvent,
   updateEvent,
   clearEvents,
-  seeNotification,
+  setNotification,
 } = actions;
 
 export default reducer;
