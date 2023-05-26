@@ -43,7 +43,7 @@ module.exports.dataForContest = async (req, res, next) => {
 module.exports.getContestById = async (req, res, next) => {
   try {
     let contestInfo = await db.Contests.findOne({
-      where: { id: req.headers.contestid },
+      where: { id: req.params.contestId },
       order: [[db.Offers, 'id', 'asc']],
       include: [
         {
@@ -253,9 +253,9 @@ module.exports.setOfferStatus = async (req, res, next) => {
 
 module.exports.getCustomersContests = (req, res, next) => {
   db.Contests.findAll({
-    where: { status: req.headers.status, userId: req.tokenData.userId },
-    limit: req.body.limit,
-    offset: req.body.offset ? req.body.offset : 0,
+    where: { status: req.query.contestStatus, userId: req.tokenData.userId },
+    limit: req.query.limit,
+    offset: req.query.offset ? req.query.offset : 0,
     order: [['id', 'DESC']],
     include: [
       {
@@ -312,4 +312,21 @@ module.exports.getContests = (req, res, next) => {
     .catch(err => {
       next(new ServerError());
     });
+};
+
+module.exports.getAllOffers = async (req, res, next) => {
+  const {
+    query: { limit = 10, offset = 0 },
+  } = req;
+
+  try {
+    const foundOffers = await db.Offers.findAll(
+      { limit, offset },
+      { raw: true }
+    );
+
+    res.status(200).send(foundOffers);
+  } catch (err) {
+    next(new ServerError());
+  }
 };
