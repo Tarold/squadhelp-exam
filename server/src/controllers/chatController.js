@@ -1,4 +1,11 @@
-const { Conversation, Message, Catalog } = require('../models/mongoModels');
+const Catalog = require('../models/mongoModels/Catalog');
+const Message = require('../models/mongoModels/Message');
+const Conversation = require('../models/mongoModels/conversation');
+const {
+  Catalog,
+  Message,
+  Conversation,
+} = require('../models/mongoModels/Message');
 const moment = require('moment');
 const db = require('../models');
 const userQueries = require('./queries/userQueries');
