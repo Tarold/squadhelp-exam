@@ -8,27 +8,27 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      interlocutor: {
+      participant1: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      recipient: {
+      participant2: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      blackListInterlocutor: {
+      isBlack1: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      blackListRecipient: {
+      isBlack2: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      favoriteListInterlocutor: {
+      isFavorite1: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      favoriteListRecipient: {
+      isFavorite2: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
@@ -46,8 +46,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Conversations.associate = function (models) {
-    Conversations.belongsTo(models.Users, { foreignKey: 'interlocutor' });
-    Conversations.belongsTo(models.Users, { foreignKey: 'recipient' });
+    Conversations.belongsTo(models.Users, { foreignKey: 'participant1' });
+    Conversations.belongsTo(models.Users, { foreignKey: 'participant2' });
   };
   return Conversations;
 };

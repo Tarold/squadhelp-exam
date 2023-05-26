@@ -7,7 +7,7 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-      interlocutor: {
+      participant1: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -15,7 +15,7 @@ module.exports = {
           key: 'id',
         },
       },
-      recipient: {
+      participant2: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -23,19 +23,19 @@ module.exports = {
           key: 'id',
         },
       },
-      blackListInterlocutor: {
+      isBlack1: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
-      blackListRecipient: {
+      isBlack2: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
-      favoriteListInterlocutor: {
+      isFavorite1: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
-      favoriteListRecipient: {
+      isFavorite2: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
