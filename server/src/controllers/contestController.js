@@ -98,12 +98,13 @@ module.exports.downloadFile = async (req, res, next) => {
 };
 
 module.exports.updateContest = async (req, res, next) => {
+  const { contestId } = req.params;
+
   if (req.file) {
     req.body.fileName = req.file.filename;
     req.body.originalFileName = req.file.originalname;
   }
-  const contestId = req.body.contestId;
-  delete req.body.contestId;
+
   try {
     const updatedContest = await contestQueries.updateContest(req.body, {
       id: contestId,
@@ -279,22 +280,41 @@ module.exports.getCustomersContests = (req, res, next) => {
 };
 
 module.exports.getContests = (req, res, next) => {
+  const {
+    limit = 10,
+    offset = 0,
+    typeIndex,
+    contestId,
+    industry,
+    awardSort,
+    ownEntries,
+  } = req.query;
+  const { userId } = req.tokenData;
+  console.log('object :>> ', {
+    limit,
+    offset,
+    typeIndex,
+    contestId,
+    industry,
+    awardSort,
+    ownEntries,
+  });
   const predicates = UtilFunctions.createWhereForAllContests(
-    req.body.typeIndex,
-    req.body.contestId,
-    req.body.industry,
-    req.body.awardSort
+    typeIndex,
+    contestId,
+    industry,
+    awardSort
   );
   db.Contests.findAll({
     where: predicates.where,
     order: predicates.order,
-    limit: req.body.limit,
-    offset: req.body.offset ? req.body.offset : 0,
+    limit,
+    offset,
     include: [
       {
         model: db.Offers,
-        required: req.body.ownEntries,
-        where: req.body.ownEntries ? { userId: req.tokenData.userId } : {},
+        required: ownEntries,
+        where: ownEntries ? { userId } : {},
         attributes: ['id'],
       },
     ],

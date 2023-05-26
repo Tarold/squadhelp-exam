@@ -33,18 +33,6 @@ router.use('/contests', contestsRouter);
 
 router.post('/dataForContest', contestController.dataForContest);
 
-router.post(
-  '/getAllContests',
-  basicMiddlewares.onlyForCreative,
-  contestController.getContests
-);
-
-router.post(
-  '/updateContest',
-  upload.updateContestFile,
-  contestController.updateContest
-);
-
 router.get('/downloadFile/:fileName', contestController.downloadFile);
 
 router.post(

@@ -9,16 +9,6 @@ const contestController = require('../controllers/contestController');
 
 const contestsRouter = Router();
 
-contestsRouter.post(
-  '/',
-  checkToken.checkToken,
-  basicMiddlewares.onlyForCustomer,
-  upload.uploadContestFiles,
-  basicMiddlewares.parseBody,
-  validators.validateContestCreation,
-  userController.payment
-);
-
 contestsRouter.get(
   '/byCustomer',
   checkToken.checkToken,
@@ -31,11 +21,41 @@ contestsRouter.get(
   contestController.getCustomersContests
 );
 
-contestsRouter.get(
-  '/:contestId',
-  checkToken.checkToken,
-  basicMiddlewares.canGetContest,
-  contestController.getContestById
-);
+contestsRouter
+  .route('/:contestId')
+  .get(
+    checkToken.checkToken,
+    basicMiddlewares.canGetContest,
+    contestController.getContestById
+  )
+  .patch(
+    // /updateContest
+    checkToken.checkToken,
+    upload.updateContestFile,
+    contestController.updateContest
+  );
+
+contestsRouter
+  .route('/')
+  .post(
+    checkToken.checkToken,
+    basicMiddlewares.onlyForCustomer,
+    upload.uploadContestFiles,
+    basicMiddlewares.parseBody,
+    validators.validateContestCreation,
+    userController.payment
+  )
+  .get(
+    //getAllContests
+    checkToken.checkToken,
+    basicMiddlewares.onlyForCreative,
+    queryParser({
+      parseNull: true,
+      parseUndefined: true,
+      parseBoolean: true,
+      parseNumber: true,
+    }),
+    contestController.getContests
+  );
 
 module.exports = contestsRouter;
