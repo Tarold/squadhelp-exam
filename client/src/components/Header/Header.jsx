@@ -53,6 +53,11 @@ class Header extends React.Component {
                 </Link>
               </li>
               <li>
+                <Link to='/transactions' style={{ textDecoration: 'none' }}>
+                  <span>My Transactions</span>
+                </Link>
+              </li>
+              <li>
                 <Link
                   to='http:/www.google.com'
                   style={{ textDecoration: 'none' }}
