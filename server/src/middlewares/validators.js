@@ -1,5 +1,4 @@
-const schems = require('../validationSchemes/schems');
-const ServerError = require('../errors/ServerError');
+const schems = require('../utils/validationSchemes/schems');
 const BadRequestError = require('../errors/BadRequestError');
 
 module.exports.validateRegistrationData = async (req, res, next) => {
