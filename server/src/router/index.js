@@ -7,7 +7,10 @@ const checkToken = require('../middlewares/checkToken');
 const validators = require('../middlewares/validators');
 const chatController = require('../controllers/chatController');
 const upload = require('../utils/fileUpload');
+const contestsRouter = require('./contestRouter');
 const router = express.Router();
+
+router.get('/offers', contestController.getAllOffers);
 
 router.post(
   '/registration',
@@ -17,25 +20,18 @@ router.post(
 );
 
 router.post('/login', validators.validateLogin, userController.login);
+
 router.use(checkToken.checkToken);
+
+router.post('/getUser', checkToken.checkAuth);
+
+router.post('/updateUser', upload.uploadAvatar, userController.updateUser);
+
+router.get('/users/id/transactions', userController.getTransactions);
+
+router.use('/contests', contestsRouter);
+
 router.post('/dataForContest', contestController.dataForContest);
-
-router.post(
-  '/pay',
-  basicMiddlewares.onlyForCustomer,
-  upload.uploadContestFiles,
-  basicMiddlewares.parseBody,
-  validators.validateContestCreation,
-  userController.payment
-);
-
-router.post('/getCustomersContests', contestController.getCustomersContests);
-
-router.get(
-  '/getContestById',
-  basicMiddlewares.canGetContest,
-  contestController.getContestById
-);
 
 router.post(
   '/getAllContests',
@@ -43,15 +39,13 @@ router.post(
   contestController.getContests
 );
 
-router.post('/getUser', checkToken.checkAuth);
-
-router.get('/downloadFile/:fileName', contestController.downloadFile);
-
 router.post(
   '/updateContest',
   upload.updateContestFile,
   contestController.updateContest
 );
+
+router.get('/downloadFile/:fileName', contestController.downloadFile);
 
 router.post(
   '/setNewOffer',
@@ -71,8 +65,6 @@ router.post(
   basicMiddlewares.onlyForCustomer,
   userController.changeMark
 );
-
-router.post('/updateUser', upload.uploadAvatar, userController.updateUser);
 
 router.post(
   '/cashout',
