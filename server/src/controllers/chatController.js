@@ -121,40 +121,47 @@ module.exports.getChat = async (req, res, next) => {
 
 module.exports.getPreview = async (req, res, next) => {
   try {
-    const conversations = await Messages.findAll({
+    const conversations = await Conversations.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          { participant1: req.tokenData.userId },
+          { participant2: req.tokenData.userId },
+        ],
+      },
       include: [
         {
-          model: Conversations,
-          where: {
-            [Sequelize.Op.or]: [
-              { participant1: req.tokenData.userId },
-              { participant2: req.tokenData.userId },
-            ],
-          },
-          attributes: [
-            'participant1',
-            'participant2',
-            'isBlack1',
-            'isBlack2',
-            'isFavorite1',
-            'isFavorite2',
-          ],
+          model: Messages,
+          attributes: ['sender', 'body', 'createdAt'],
+          order: [['createdAt', 'DESC']],
+          limit: 1,
         },
       ],
-      attributes: ['id', 'sender', 'body', 'createdAt'],
-      order: [[sequelize.col('createdAt'), 'DESC']],
-      group: ['Messages.id', 'Conversation.id'],
+      attributes: [
+        'id',
+        'participant1',
+        'participant2',
+        'isBlack1',
+        'isBlack2',
+      ],
     });
+    const preview = conversations.map(conversation => ({
+      id: conversation.id,
+      sender: conversation.Messages[0].sender,
+      text: conversation.Messages[0].body,
+      createAt: conversation.Messages[0].createdAt,
+      participants: [conversation.participant1, conversation.participant2],
+      blackList: [conversation.isBlack1, conversation.isBlack2],
+      favoriteList: [conversation.isFavorite1, conversation.isFavorite2],
+    }));
 
     const interlocutors = [];
-    conversations.forEach(conversation => {
-      interlocutors.push(
-        conversation.participant1 !== req.tokenData.userId
-          ? conversation.participant1
-          : conversation.participant2
+    preview.map(conversation => {
+      const interlocutor = conversation.participants.find(
+        participant => participant !== req.tokenData.userId
       );
+      interlocutors.push(interlocutor);
+      return (conversation.interlocutor = interlocutor);
     });
-
     const senders = await Users.findAll({
       where: {
         id: {
@@ -163,24 +170,7 @@ module.exports.getPreview = async (req, res, next) => {
       },
       attributes: ['id', 'firstName', 'lastName', 'displayName', 'avatar'],
     });
-    const preview = conversations.map(conversation => ({
-      id: conversation.Conversation.id,
-      sender: conversation.sender,
-      text: conversation.body,
-      createAt: conversation.createdAt,
-      participants: [
-        conversation.Conversation.participant1,
-        conversation.Conversation.participant2,
-      ],
-      blackList: [
-        conversation.Conversation.isBlack1,
-        conversation.Conversation.isBlack2,
-      ],
-      favoriteList: [
-        conversation.Conversation.isFavorite1,
-        conversation.Conversation.isFavorite2,
-      ],
-    }));
+
     preview.forEach(conversation => {
       senders.forEach(sender => {
         if (conversation.participants.includes(sender.dataValues.id)) {
@@ -202,37 +192,52 @@ module.exports.getPreview = async (req, res, next) => {
 };
 
 module.exports.blackList = async (req, res, next) => {
-  // const predicate =
-  //   'blackList.' + req.body.participants.indexOf(req.tokenData.userId);
-  // try {
-  //   const chat = await Conversation.findOneAndUpdate(
-  //     { participants: req.body.participants },
-  //     { $set: { [predicate]: req.body.blackListFlag } },
-  //     { new: true }
-  //   );
-  //   res.send(chat);
-  //   const interlocutorId = req.body.participants.filter(
-  //     participant => participant !== req.tokenData.userId
-  //   )[0];
-  //   controller.getChatController().emitChangeBlockStatus(interlocutorId, chat);
-  // } catch (err) {
-  //   res.send(err);
-  // }
+  const predicate =
+    'isBlack' + req.body.participants.indexOf(req.tokenData.userId);
+  try {
+    const chat = await Conversations.update(
+      { [predicate]: req.body.blackListFlag },
+      {
+        where: {
+          [Sequelize.Op.and]: [
+            { participant1: req.body.participants[0] },
+            { participant2: req.body.participants[1] },
+          ],
+        },
+        returning: true,
+      }
+    );
+    res.send(chat);
+    const interlocutorId = req.body.participants.filter(
+      participant => participant !== req.tokenData.userId
+    )[0];
+    controller.getChatController().emitChangeBlockStatus(interlocutorId, chat);
+  } catch (err) {
+    res.send(err);
+  }
 };
 
 module.exports.favoriteChat = async (req, res, next) => {
-  // const predicate =
-  //   'favoriteList.' + req.body.participants.indexOf(req.tokenData.userId);
-  // try {
-  //   const chat = await Conversation.findOneAndUpdate(
-  //     { participants: req.body.participants },
-  //     { $set: { [predicate]: req.body.favoriteFlag } },
-  //     { new: true }
-  //   );
-  //   res.send(chat);
-  // } catch (err) {
-  //   res.send(err);
-  // }
+  const predicate =
+    'isFavorite' + req.body.participants.indexOf(req.tokenData.userId);
+  try {
+    const chat = await Conversations.update(
+      { [predicate]: req.body.favoriteFlag },
+      {
+        where: {
+          [Sequelize.Op.and]: [
+            { participant1: req.body.participants[0] },
+            { participant2: req.body.participants[1] },
+          ],
+        },
+        returning: true,
+      }
+    );
+    res.send(chat);
+  } catch (err) {
+    console.log('err :>> ', err);
+    res.send(err);
+  }
 };
 
 module.exports.createCatalog = async (req, res, next) => {
