@@ -23,11 +23,11 @@ module.exports = {
           key: 'id',
         },
       },
-      isBlack1: {
+      isBlock1: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
-      isBlack2: {
+      isBlock2: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },

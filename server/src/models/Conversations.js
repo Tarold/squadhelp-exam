@@ -16,11 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      isBlack1: {
+      isBlock1: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      isBlack2: {
+      isBlock2: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
