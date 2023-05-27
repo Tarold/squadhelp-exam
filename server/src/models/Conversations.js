@@ -38,7 +38,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       updatedAt: {
         type: DataTypes.DATE,
-        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: sequelize.literal(
+          'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
+        ),
       },
     },
     {
@@ -47,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Conversations.associate = function (models) {
     Conversations.hasMany(models.Messages, { foreignKey: 'conversationId' });
+    Conversations.hasMany(models.Chats, { foreignKey: 'conversationId' });
     Conversations.belongsTo(models.Users, { foreignKey: 'participant1' });
     Conversations.belongsTo(models.Users, { foreignKey: 'participant2' });
   };
