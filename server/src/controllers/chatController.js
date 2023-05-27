@@ -1,5 +1,12 @@
 const db = require('../models');
-const { Conversations, Messages, User, Catalog } = require('../models');
+const {
+  Conversations,
+  Messages,
+  Users,
+  sequelize,
+  Catalog,
+  Sequelize,
+} = require('../models');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
 const _ = require('lodash');
@@ -68,130 +75,130 @@ module.exports.addMessage = async (req, res, next) => {
 };
 
 module.exports.getChat = async (req, res, next) => {
-  // const participants = [req.tokenData.userId, req.body.interlocutorId];
-  // participants.sort(
-  //   (participant1, participant2) => participant1 - participant2
-  // );
-  // try {
-  //   const messages = await Message.findAll({
-  //     where: {
-  //       conversationId: {
-  //         [Op.in]: [
-  //           Sequelize.literal(
-  //             `SELECT id FROM Conversations WHERE participants = ARRAY[${participants}]`
-  //           ),
-  //         ],
-  //       },
-  //     },
-  //     order: [['created_at', 'ASC']],
-  //   });
-  //   const messages = await Messages.aggregate([
-  //     {
-  //       $lookup: {
-  //         from: 'conversations',
-  //         localField: 'conversation',
-  //         foreignField: '_id',
-  //         as: 'conversationData',
-  //       },
-  //     },
-  //     { $match: { 'conversationData.participants': participants } },
-  //     { $sort: { createdAt: 1 } },
-  //     {
-  //       $project: {
-  //         _id: 1,
-  //         sender: 1,
-  //         body: 1,
-  //         conversation: 1,
-  //         createdAt: 1,
-  //         updatedAt: 1,
-  //       },
-  //     },
-  //   ]);
-  //   const interlocutor = await userQueries.findUser({
-  //     id: req.body.interlocutorId,
-  //   });
-  //   res.send({
-  //     messages,
-  //     interlocutor: {
-  //       firstName: interlocutor.firstName,
-  //       lastName: interlocutor.lastName,
-  //       displayName: interlocutor.displayName,
-  //       id: interlocutor.id,
-  //       avatar: interlocutor.avatar,
-  //     },
-  //   });
-  // } catch (err) {
-  //   next(err);
-  // }
+  const participants = [req.tokenData.userId, req.body.interlocutorId];
+  participants.sort(
+    (participant1, participant2) => participant1 - participant2
+  );
+  try {
+    const messages = await Messages.findAll({
+      include: [
+        {
+          model: Conversations,
+          as: 'Conversation',
+          where: {
+            participant1: participants[0],
+            participant2: participants[1],
+          },
+        },
+      ],
+      order: [['createdAt', 'ASC']],
+      attributes: [
+        'id',
+        'sender',
+        'body',
+        'conversationId',
+        'createdAt',
+        'updatedAt',
+      ],
+    });
+    const interlocutor = await Users.findByPk(req.body.interlocutorId);
+
+    res.send({
+      messages,
+      interlocutor: {
+        firstName: interlocutor.firstName,
+        lastName: interlocutor.lastName,
+        displayName: interlocutor.displayName,
+        id: interlocutor.id,
+        avatar: interlocutor.avatar,
+      },
+    });
+  } catch (err) {
+    console.log('err :>> ', err);
+    next(err);
+  }
 };
 
 module.exports.getPreview = async (req, res, next) => {
-  // try {
-  //   const conversations = await Messages.aggregate([
-  //     {
-  //       $lookup: {
-  //         from: 'conversations',
-  //         localField: 'conversation',
-  //         foreignField: '_id',
-  //         as: 'conversationData',
-  //       },
-  //     },
-  //     {
-  //       $unwind: '$conversationData',
-  //     },
-  //     {
-  //       $match: {
-  //         'conversationData.participants': req.tokenData.userId,
-  //       },
-  //     },
-  //     {
-  //       $sort: {
-  //         createdAt: -1,
-  //       },
-  //     },
-  //     {
-  //       $group: {
-  //         _id: '$conversationData._id',
-  //         sender: { $first: '$sender' },
-  //         text: { $first: '$body' },
-  //         createAt: { $first: '$createdAt' },
-  //         participants: { $first: '$conversationData.participants' },
-  //         blackList: { $first: '$conversationData.blackList' },
-  //         favoriteList: { $first: '$conversationData.favoriteList' },
-  //       },
-  //     },
-  //   ]);
-  //   const interlocutors = [];
-  //   conversations.forEach(conversation => {
-  //     interlocutors.push(
-  //       conversation.participants.find(
-  //         participant => participant !== req.tokenData.userId
-  //       )
-  //     );
-  //   });
-  //   const senders = await db.Users.findAll({
-  //     where: {
-  //       id: interlocutors,
-  //     },
-  //     attributes: ['id', 'firstName', 'lastName', 'displayName', 'avatar'],
-  //   });
-  //   conversations.forEach(conversation => {
-  //     senders.forEach(sender => {
-  //       if (conversation.participants.includes(sender.dataValues.id)) {
-  //         conversation.interlocutor = {
-  //           id: sender.dataValues.id,
-  //           firstName: sender.dataValues.firstName,
-  //           lastName: sender.dataValues.lastName,
-  //           displayName: sender.dataValues.displayName,
-  //           avatar: sender.dataValues.avatar,
-  //         };
-  //       }
-  //     });
-  //   });
-  //   res.send(conversations);
-  // } catch (err) {
-  //   next(err);
-  // }
+  try {
+    const conversations = await Messages.findAll({
+      include: [
+        {
+          model: Conversations,
+          where: {
+            [Sequelize.Op.or]: [
+              { participant1: req.tokenData.userId },
+              { participant2: req.tokenData.userId },
+            ],
+          },
+          attributes: [
+            'participant1',
+            'participant2',
+            'isBlack1',
+            'isBlack2',
+            'isFavorite1',
+            'isFavorite2',
+          ],
+        },
+      ],
+      attributes: ['id', 'sender', 'body', 'createdAt'],
+      order: [[sequelize.col('createdAt'), 'DESC']],
+      group: ['Messages.id', 'Conversation.id'],
+    });
+
+    const interlocutors = [];
+    conversations.forEach(conversation => {
+      interlocutors.push(
+        conversation.participant1 !== req.tokenData.userId
+          ? conversation.participant1
+          : conversation.participant2
+      );
+    });
+
+    const senders = await Users.findAll({
+      where: {
+        id: {
+          [Sequelize.Op.in]: interlocutors,
+        },
+      },
+      attributes: ['id', 'firstName', 'lastName', 'displayName', 'avatar'],
+    });
+    const preview = conversations.map(conversation => ({
+      id: conversation.Conversation.id,
+      sender: conversation.sender,
+      text: conversation.body,
+      createAt: conversation.createdAt,
+      participants: [
+        conversation.Conversation.participant1,
+        conversation.Conversation.participant2,
+      ],
+      blackList: [
+        conversation.Conversation.isBlack1,
+        conversation.Conversation.isBlack2,
+      ],
+      favoriteList: [
+        conversation.Conversation.isFavorite1,
+        conversation.Conversation.isFavorite2,
+      ],
+    }));
+    preview.forEach(conversation => {
+      senders.forEach(sender => {
+        if (conversation.participants.includes(sender.dataValues.id)) {
+          conversation.interlocutor = {
+            id: sender.dataValues.id,
+            firstName: sender.dataValues.firstName,
+            lastName: sender.dataValues.lastName,
+            displayName: sender.dataValues.displayName,
+            avatar: sender.dataValues.avatar,
+          };
+        }
+      });
+    });
+    res.send(preview);
+  } catch (err) {
+    console.log('err :>> ', err);
+    next(err);
+  }
 };
 
 module.exports.blackList = async (req, res, next) => {
