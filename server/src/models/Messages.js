@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      sender: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       conversationId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -30,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Messages.associate = function (models) {
     Messages.belongsTo(models.Conversations, { foreignKey: 'conversationId' });
+    Messages.belongsTo(models.Users, { foreignKey: 'sender' });
   };
 
   return Messages;

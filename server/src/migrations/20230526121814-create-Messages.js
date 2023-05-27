@@ -6,6 +6,14 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
+      sender: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+      },
       conversationId: {
         type: Sequelize.INTEGER,
         allowNull: false,
