@@ -46,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Conversations.associate = function (models) {
+    Conversations.hasMany(models.Messages, { foreignKey: 'conversationId' });
     Conversations.belongsTo(models.Users, { foreignKey: 'participant1' });
     Conversations.belongsTo(models.Users, { foreignKey: 'participant2' });
   };
