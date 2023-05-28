@@ -195,7 +195,7 @@ const addChatToCatalogExtraReducers = createExtraReducers({
     const { catalogList } = state;
     for (let i = 0; i < catalogList.length; i++) {
       if (catalogList[i].id === payload.id) {
-        catalogList[i].Chats = payload.Chats;
+        catalogList[i].chats = payload.chats;
         break;
       }
     }
@@ -268,7 +268,7 @@ const removeChatFromCatalogExtraReducers = createExtraReducers({
     const { catalogList } = state;
     for (let i = 0; i < catalogList.length; i++) {
       if (catalogList[i].id === payload.id) {
-        catalogList[i].Chats = payload.Chats;
+        catalogList[i].chats = payload.chats;
         break;
       }
     }

@@ -265,7 +265,7 @@ module.exports.createCatalog = async (req, res, next) => {
       }
     );
 
-    catalog.dataValues.Chats = [chat];
+    catalog.dataValues.chats = [chat];
 
     res.send(catalog);
   } catch (err) {
@@ -296,7 +296,7 @@ module.exports.updateNameCatalog = async (req, res, next) => {
       attributes: ['conversationId'],
     });
 
-    catalog[1][0].dataValues.Chats = chats;
+    catalog[1][0].dataValues.chats = chats;
     res.send(catalog[1][0]);
   } catch (err) {
     next(err);
@@ -324,7 +324,7 @@ module.exports.addNewChatToCatalog = async (req, res, next) => {
       }
     );
 
-    catalog.dataValues.Chats = [chat];
+    catalog.dataValues.chats = [chat];
 
     res.send(catalog);
   } catch (err) {
@@ -354,7 +354,7 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
       attributes: ['conversationId'],
     });
 
-    catalog.dataValues.Chats = chats;
+    catalog.dataValues.chats = chats;
     res.send(catalog);
   } catch (err) {
     next(err);
@@ -391,6 +391,7 @@ module.exports.getCatalogs = async (req, res, next) => {
       include: [
         {
           model: Chats,
+          as: 'Chats',
           where: {
             catalogId: { [Sequelize.Op.col]: 'Catalogs.id' },
           },
@@ -401,8 +402,21 @@ module.exports.getCatalogs = async (req, res, next) => {
       attributes: ['id', 'catalogName'],
     });
 
-    res.send(catalogs);
+    const keyMapping = {
+      Chats: 'chats',
+    };
+
+    const prepCatalog = catalogs.map(catalog => {
+      catalog.dataValues = _.mapKeys(
+        catalog.dataValues,
+        (value, key) => keyMapping[key] || key
+      );
+      return catalog;
+    });
+
+    res.send(prepCatalog);
   } catch (err) {
+    console.log('err :>> ', err);
     next(err);
   }
 };
