@@ -141,11 +141,8 @@ module.exports.getPreview = async (req, res, next) => {
         'participant2',
         'isBlock1',
         'isBlock2',
-        'isFavorite1',
-        'isFavorite2',
       ],
     });
-
     const preview = conversations.map(conversation => ({
       id: conversation.id,
       sender: conversation.Messages[0].sender,
@@ -164,7 +161,6 @@ module.exports.getPreview = async (req, res, next) => {
       interlocutors.push(interlocutor);
       return (conversation.interlocutor = interlocutor);
     });
-
     const senders = await Users.findAll({
       where: {
         id: {
@@ -195,7 +191,7 @@ module.exports.getPreview = async (req, res, next) => {
 
 module.exports.blackList = async (req, res, next) => {
   const predicate =
-    'isBlock' + (req.body.participants.indexOf(req.tokenData.userId) + 1);
+    'isBlock' + req.body.participants.indexOf(req.tokenData.userId);
   try {
     const chat = await Conversations.update(
       { [predicate]: req.body.blackListFlag },
@@ -209,17 +205,11 @@ module.exports.blackList = async (req, res, next) => {
         returning: true,
       }
     );
-    const response = {
-      blackListFlag: req.body.blackListFlag,
-      participants: req.body.participants,
-    };
-    res.send(response);
+    res.send(chat);
     const interlocutorId = req.body.participants.filter(
       participant => participant !== req.tokenData.userId
     )[0];
-    controller
-      .getChatController()
-      .emitChangeBlockStatus(interlocutorId, response);
+    controller.getChatController().emitChangeBlockStatus(interlocutorId, chat);
   } catch (err) {
     res.send(err);
   }
@@ -227,7 +217,7 @@ module.exports.blackList = async (req, res, next) => {
 
 module.exports.favoriteChat = async (req, res, next) => {
   const predicate =
-    'isFavorite' + (req.body.participants.indexOf(req.tokenData.userId) + 1);
+    'isFavorite' + req.body.participants.indexOf(req.tokenData.userId);
   try {
     const chat = await Conversations.update(
       { [predicate]: req.body.favoriteFlag },
@@ -241,10 +231,7 @@ module.exports.favoriteChat = async (req, res, next) => {
         returning: true,
       }
     );
-    res.send({
-      blackListFlag: req.body.blackListFlag,
-      participants: req.body.participants,
-    });
+    res.send(chat[1][0]);
   } catch (err) {
     console.log('err :>> ', err);
     res.send(err);
