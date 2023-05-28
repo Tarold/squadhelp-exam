@@ -114,7 +114,6 @@ module.exports.getChat = async (req, res, next) => {
       },
     });
   } catch (err) {
-    console.log('err :>> ', err);
     next(err);
   }
 };
@@ -186,7 +185,6 @@ module.exports.getPreview = async (req, res, next) => {
     });
     res.send(preview);
   } catch (err) {
-    console.log('err :>> ', err);
     next(err);
   }
 };
@@ -233,7 +231,7 @@ module.exports.favoriteChat = async (req, res, next) => {
         returning: true,
       }
     );
-    res.send(chat);
+    res.send(chat[1][0]);
   } catch (err) {
     console.log('err :>> ', err);
     res.send(err);
@@ -310,20 +308,36 @@ module.exports.addNewChatToCatalog = async (req, res, next) => {
     if (catalog.userId !== req.tokenData.userId) {
       throw new Error('Unauthorized');
     }
-
-    const chat = await Chats.create(
-      {
+    const chat = Chats.findAll({
+      where: {
         catalogId: req.body.catalogId,
         conversationId: req.body.chatId,
       },
-      {
-        attributes: ['conversationId'],
-      },
-      {
-        returning: true,
+    }).then(chats => {
+      const isExist = chats.some(
+        chat =>
+          chat.catalogId === req.body.catalogId &&
+          chat.conversationId === req.body.chatId
+      );
+      if (!isExist) {
+        return chats.push(
+          Chats.create(
+            {
+              catalogId: req.body.catalogId,
+              conversationId: req.body.chatId,
+            },
+            {
+              attributes: ['conversationId'],
+            },
+            {
+              returning: true,
+            }
+          )
+        );
+      } else {
+        return chats;
       }
-    );
-
+    });
     catalog.dataValues.chats = [chat];
 
     res.send(catalog);
