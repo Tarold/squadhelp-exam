@@ -78,9 +78,9 @@ class Dialog extends React.Component {
     }
     return <span className={styles.messageBlock}>{message}</span>;
   };
-
   render () {
     const { chatData, userId } = this.props;
+    console.log('chatData :>> ', chatData);
     return (
       <>
         <ChatHeader userId={userId} />

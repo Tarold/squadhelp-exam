@@ -17,7 +17,7 @@ module.exports.addMessage = async (req, res, next) => {
     (participant1, participant2) => participant1 - participant2
   );
   try {
-    const [newConversation, created] = await Conversations.findOrCreate({
+    const [newConversation] = await Conversations.findOrCreate({
       where: {
         participant1: participants[0],
         participant2: participants[1],
@@ -200,21 +200,24 @@ module.exports.blockList = async (req, res, next) => {
       { [predicate]: req.body.blackListFlag },
       {
         where: {
-          [Sequelize.Op.and]: [
-            { participant1: req.body.participants[0] },
-            { participant2: req.body.participants[1] },
-          ],
+          participant1: req.body.participants[0],
+          participant2: req.body.participants[1],
         },
         returning: true,
       }
     );
-    res.send(req.body);
+    const responseData = {
+      participants: req.body.participants,
+      blockList: [chat[1][0].isBlock1, chat[1][0].isBlock2],
+      favoriteList: [chat[1][0].isFavorite1, chat[1][0].isFavorite2],
+    };
+    res.send(responseData);
     const interlocutorId = req.body.participants.filter(
       participant => participant !== req.tokenData.userId
     )[0];
     controller
       .getChatController()
-      .emitChangeBlockStatus(interlocutorId, response);
+      .emitChangeBlockStatus(interlocutorId, responseData);
   } catch (err) {
     res.send(err);
   }
@@ -228,18 +231,18 @@ module.exports.favoriteChat = async (req, res, next) => {
       { [predicate]: req.body.favoriteFlag },
       {
         where: {
-          [Sequelize.Op.and]: [
-            { participant1: req.body.participants[0] },
-            { participant2: req.body.participants[1] },
-          ],
+          participant1: req.body.participants[0],
+          participant2: req.body.participants[1],
         },
         returning: true,
       }
     );
-    req.body.participantIndex = req.body.participants.indexOf(
-      req.tokenData.userId
-    );
-    res.send(req.body);
+    const responseData = {
+      participants: req.body.participants,
+      blockList: [chat[1][0].isBlock1, chat[1][0].isBlock2],
+      favoriteList: [chat[1][0].isFavorite1, chat[1][0].isFavorite2],
+    };
+    res.send(responseData);
   } catch (err) {
     console.log('err :>> ', err);
     res.send(err);

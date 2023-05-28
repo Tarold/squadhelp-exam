@@ -126,9 +126,8 @@ const changeChatFavoriteExtraReducers = createExtraReducers({
   fulfilledReducer: (state, { payload }) => {
     const { messagesPreview } = state;
     messagesPreview.forEach(preview => {
-      if (isEqual(preview.participants, payload.participants)) {
-        preview.favoriteList[payload.participantIndex] = payload.favoriteFlag;
-      }
+      if (isEqual(preview.participants, payload.participants))
+        preview.favoriteList = payload.favoriteList;
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;
@@ -324,17 +323,18 @@ const reducers = {
   addMessage: (state, { payload }) => {
     const { message, preview } = payload;
     const { messagesPreview } = state;
+
     let isNew = true;
-    messagesPreview.forEach(preview => {
-      if (isEqual(preview.participants, message.participants)) {
-        preview.text = message.body;
-        preview.sender = message.sender;
-        preview.createAt = message.createdAt;
+    messagesPreview.forEach(previewPrev => {
+      if (isEqual(previewPrev.participants, preview.preview.participants)) {
+        previewPrev.text = message.body;
+        previewPrev.sender = message.sender;
+        previewPrev.createAt = message.createdAt;
         isNew = false;
       }
     });
     if (isNew) {
-      messagesPreview.push(preview);
+      messagesPreview.push(preview.preview);
     }
     state.messagesPreview = messagesPreview;
     state.messages = [...state.messages, payload.message];
