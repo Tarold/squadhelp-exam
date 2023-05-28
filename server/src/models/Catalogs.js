@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      conversationId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
     },
     {
       timestamps: false,
@@ -27,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
   Catalogs.associate = function (models) {
     Catalogs.hasMany(models.Chats, { foreignKey: 'catalogId' });
     Catalogs.belongsTo(models.Users, { foreignKey: 'userId' });
-    Catalogs.belongsTo(models.Conversations, { foreignKey: 'conversationId' });
   };
 
   return Catalogs;

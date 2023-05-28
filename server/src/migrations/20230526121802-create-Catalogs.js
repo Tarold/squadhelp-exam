@@ -19,14 +19,6 @@ module.exports = {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      conversationId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Conversations',
-          key: 'id',
-        },
-      },
     });
   },
 
