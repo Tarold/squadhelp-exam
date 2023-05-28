@@ -101,7 +101,7 @@ const sendMessageExtraReducers = createExtraReducers({
       id: payload.preview.id,
       participants: payload.preview.participants,
       favoriteList: payload.preview.favoriteList,
-      blackList: payload.preview.blackList,
+      blockList: payload.preview.blockList,
     };
     state.chatData = { ...state.chatData, ...chatData };
     state.messagesPreview = messagesPreview;
@@ -152,7 +152,7 @@ const changeChatBlockExtraReducers = createExtraReducers({
     const { messagesPreview } = state;
     messagesPreview.forEach(preview => {
       if (isEqual(preview.participants, payload.participants))
-        preview.blackList = payload.blackList;
+        preview.blockList = payload.blockList;
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;
@@ -314,7 +314,7 @@ const reducers = {
     const { messagesPreview } = state;
     messagesPreview.forEach(preview => {
       if (isEqual(preview.participants, payload.participants))
-        preview.blackList = payload.blackList;
+        preview.blockList = payload.blockList;
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;

@@ -66,7 +66,7 @@ router.post('/getChat', chatController.getChat);
 
 router.post('/getPreview', chatController.getPreview);
 
-router.post('/blackList', chatController.blackList);
+router.post('/blockList', chatController.blockList);
 
 router.post('/favorite', chatController.favoriteChat);
 

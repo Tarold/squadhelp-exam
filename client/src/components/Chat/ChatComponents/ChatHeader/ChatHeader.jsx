@@ -26,8 +26,8 @@ const ChatHeader = props => {
   };
 
   const isBlocked = (chatData, userId) => {
-    const { participants, blackList } = chatData;
-    return blackList[participants.indexOf(userId)];
+    const { participants, blockList } = chatData;
+    return blockList[participants.indexOf(userId)];
   };
 
   const { avatar, firstName } = props.interlocutor;

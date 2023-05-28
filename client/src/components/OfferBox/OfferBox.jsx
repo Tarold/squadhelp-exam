@@ -28,7 +28,7 @@ const OfferBox = props => {
         return {
           participants: messagesPreview[i].participants,
           id: messagesPreview[i].id,
-          blackList: messagesPreview[i].blackList,
+          blockList: messagesPreview[i].blockList,
           favoriteList: messagesPreview[i].favoriteList,
         };
       }

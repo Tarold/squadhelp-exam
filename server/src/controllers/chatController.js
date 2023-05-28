@@ -47,7 +47,7 @@ module.exports.addMessage = async (req, res, next) => {
       text: req.body.messageBody,
       createAt: message.createdAt,
       participants,
-      blackList: [newConversation.isBlock1, newConversation.isBlock2],
+      blockList: [newConversation.isBlock1, newConversation.isBlock2],
       favoriteList: [newConversation.isFavorite1, newConversation.isFavorite2],
     };
     controller.getChatController().emitNewMessage(interlocutorId, {
@@ -149,7 +149,7 @@ module.exports.getPreview = async (req, res, next) => {
       text: conversation.Messages[0].body,
       createAt: conversation.Messages[0].createdAt,
       participants: [conversation.participant1, conversation.participant2],
-      blackList: [conversation.isBlock1, conversation.isBlock2],
+      blockList: [conversation.isBlock1, conversation.isBlock2],
       favoriteList: [conversation.isFavorite1, conversation.isFavorite2],
     }));
 
@@ -189,7 +189,7 @@ module.exports.getPreview = async (req, res, next) => {
   }
 };
 
-module.exports.blackList = async (req, res, next) => {
+module.exports.blockList = async (req, res, next) => {
   const predicate =
     'isBlock' + req.body.participants.indexOf(req.tokenData.userId);
   try {
