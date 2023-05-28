@@ -3,8 +3,8 @@ const {
   Conversations,
   Messages,
   Users,
-  sequelize,
-  Catalog,
+  Chats,
+  Catalogs,
   Sequelize,
 } = require('../models');
 const userQueries = require('./queries/userQueries');
@@ -25,8 +25,8 @@ module.exports.addMessage = async (req, res, next) => {
       defaults: {
         participant1: participants[0],
         participant2: participants[1],
-        isBlack1: false,
-        isBlack2: false,
+        isBlock1: false,
+        isBlock2: false,
         isFavorite1: false,
         isFavorite2: false,
       },
@@ -47,7 +47,7 @@ module.exports.addMessage = async (req, res, next) => {
       text: req.body.messageBody,
       createAt: message.createdAt,
       participants,
-      blackList: [newConversation.isBlack1, newConversation.isBlack2],
+      blackList: [newConversation.isBlock1, newConversation.isBlock2],
       favoriteList: [newConversation.isFavorite1, newConversation.isFavorite2],
     };
     controller.getChatController().emitNewMessage(interlocutorId, {
@@ -140,8 +140,8 @@ module.exports.getPreview = async (req, res, next) => {
         'id',
         'participant1',
         'participant2',
-        'isBlack1',
-        'isBlack2',
+        'isBlock1',
+        'isBlock2',
       ],
     });
     const preview = conversations.map(conversation => ({
@@ -150,7 +150,7 @@ module.exports.getPreview = async (req, res, next) => {
       text: conversation.Messages[0].body,
       createAt: conversation.Messages[0].createdAt,
       participants: [conversation.participant1, conversation.participant2],
-      blackList: [conversation.isBlack1, conversation.isBlack2],
+      blackList: [conversation.isBlock1, conversation.isBlock2],
       favoriteList: [conversation.isFavorite1, conversation.isFavorite2],
     }));
 
@@ -193,7 +193,7 @@ module.exports.getPreview = async (req, res, next) => {
 
 module.exports.blackList = async (req, res, next) => {
   const predicate =
-    'isBlack' + req.body.participants.indexOf(req.tokenData.userId);
+    'isBlock' + req.body.participants.indexOf(req.tokenData.userId);
   try {
     const chat = await Conversations.update(
       { [predicate]: req.body.blackListFlag },
@@ -241,31 +241,63 @@ module.exports.favoriteChat = async (req, res, next) => {
 };
 
 module.exports.createCatalog = async (req, res, next) => {
-  // console.log(req.body);
-  // const catalog = new Catalog({
-  //   userId: req.tokenData.userId,
-  //   catalogName: req.body.catalogName,
-  //   chats: [req.body.chatId],
-  // });
-  // try {
-  //   await catalog.save();
-  //   res.send(catalog);
-  // } catch (err) {
-  //   next(err);
-  // }
+  try {
+    const catalog = await Catalogs.create(
+      {
+        userId: req.tokenData.userId,
+        catalogName: req.body.catalogName,
+      },
+      {
+        returning: true,
+      }
+    );
+
+    const chat = await Chats.create(
+      {
+        catalogId: catalog.id,
+        conversationId: req.body.chatId,
+      },
+      {
+        attributes: ['conversationId'],
+      },
+      {
+        returning: true,
+      }
+    );
+
+    catalog.dataValues.Chats = [chat];
+
+    res.send(catalog);
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports.updateNameCatalog = async (req, res, next) => {
   try {
-    // const catalog = await Catalog.findOneAndUpdate(
-    //   {
-    //     _id: req.body.catalogId,
-    //     userId: req.tokenData.userId,
-    //   },
-    //   { catalogName: req.body.catalogName },
-    //   { new: true }
-    // );
-    res.send(catalog);
+    const catalog = await Catalogs.update(
+      {
+        catalogName: req.body.catalogName,
+      },
+      {
+        where: {
+          [Sequelize.Op.and]: [
+            { id: req.body.catalogId },
+            { userId: req.tokenData.userId },
+          ],
+        },
+        returning: true,
+      }
+    );
+    const chats = await Chats.findAll({
+      where: {
+        catalogId: catalog[1][0].id,
+      },
+      attributes: ['conversationId'],
+    });
+
+    catalog[1][0].dataValues.Chats = chats;
+    res.send(catalog[1][0]);
   } catch (err) {
     next(err);
   }
@@ -273,15 +305,28 @@ module.exports.updateNameCatalog = async (req, res, next) => {
 
 module.exports.addNewChatToCatalog = async (req, res, next) => {
   try {
-    // const catalog = await Catalog.findOneAndUpdate(
-    //   {
-    //     _id: req.body.catalogId,
-    //     userId: req.tokenData.userId,
-    //   },
-    //   { $addToSet: { chats: req.body.chatId } },
-    //   { new: true }
-    // );
-    // res.send(catalog);
+    const catalog = await Catalogs.findByPk(req.body.catalogId);
+
+    if (catalog.userId !== req.tokenData.userId) {
+      throw new Error('Unauthorized');
+    }
+
+    const chat = await Chats.create(
+      {
+        catalogId: req.body.catalogId,
+        conversationId: req.body.chatId,
+      },
+      {
+        attributes: ['conversationId'],
+      },
+      {
+        returning: true,
+      }
+    );
+
+    catalog.dataValues.Chats = [chat];
+
+    res.send(catalog);
   } catch (err) {
     next(err);
   }
@@ -289,15 +334,28 @@ module.exports.addNewChatToCatalog = async (req, res, next) => {
 
 module.exports.removeChatFromCatalog = async (req, res, next) => {
   try {
-    // const catalog = await Catalog.findOneAndUpdate(
-    //   {
-    //     _id: req.body.catalogId,
-    //     userId: req.tokenData.userId,
-    //   },
-    //   { $pull: { chats: req.body.chatId } },
-    //   { new: true }
-    // );
-    // res.send(catalog);
+    const catalog = await Catalogs.findByPk(req.body.catalogId);
+
+    if (catalog.userId !== req.tokenData.userId) {
+      throw new Error('Unauthorized');
+    }
+
+    await Chats.destroy({
+      where: {
+        catalogId: req.body.catalogId,
+        conversationId: req.body.chatId,
+      },
+    });
+
+    const chats = await Chats.findAll({
+      where: {
+        catalogId: catalog.id,
+      },
+      attributes: ['conversationId'],
+    });
+
+    catalog.dataValues.Chats = chats;
+    res.send(catalog);
   } catch (err) {
     next(err);
   }
@@ -305,11 +363,20 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
 
 module.exports.deleteCatalog = async (req, res, next) => {
   try {
-    // await Catalog.remove({
-    //   _id: req.body.catalogId,
-    //   userId: req.tokenData.userId,
-    // });
-    // res.end();
+    await Chats.destroy({
+      where: {
+        catalogId: req.body.catalogId,
+      },
+    });
+
+    await Catalogs.destroy({
+      where: {
+        id: req.body.catalogId,
+        userId: req.tokenData.userId,
+      },
+    });
+
+    res.end();
   } catch (err) {
     next(err);
   }
@@ -317,17 +384,24 @@ module.exports.deleteCatalog = async (req, res, next) => {
 
 module.exports.getCatalogs = async (req, res, next) => {
   try {
-    // const catalogs = await Catalog.aggregate([
-    //   { $match: { userId: req.tokenData.userId } },
-    //   {
-    //     $project: {
-    //       _id: 1,
-    //       catalogName: 1,
-    //       chats: 1,
-    //     },
-    //   },
-    // ]);
-    // res.send(catalogs);
+    const catalogs = await Catalogs.findAll({
+      where: {
+        userId: req.tokenData.userId,
+      },
+      include: [
+        {
+          model: Chats,
+          where: {
+            catalogId: { [Sequelize.Op.col]: 'Catalogs.id' },
+          },
+          attributes: ['conversationId'],
+          required: false,
+        },
+      ],
+      attributes: ['id', 'catalogName'],
+    });
+
+    res.send(catalogs);
   } catch (err) {
     next(err);
   }
