@@ -126,8 +126,9 @@ const changeChatFavoriteExtraReducers = createExtraReducers({
   fulfilledReducer: (state, { payload }) => {
     const { messagesPreview } = state;
     messagesPreview.forEach(preview => {
-      if (isEqual(preview.participants, payload.participants))
-        preview.favoriteList = payload.favoriteList;
+      if (isEqual(preview.participants, payload.participants)) {
+        preview.favoriteList[payload.participantIndex] = payload.favoriteFlag;
+      }
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;
