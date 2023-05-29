@@ -86,7 +86,7 @@ module.exports.getContestById = async (req, res, next) => {
       }
       delete offer.Rating;
     });
-    res.send(contestInfo);
+    res.status(200).send(contestInfo);
   } catch (e) {
     next(new ServerError());
   }
@@ -110,7 +110,7 @@ module.exports.updateContest = async (req, res, next) => {
       id: contestId,
       userId: req.tokenData.userId,
     });
-    res.send(updatedContest);
+    res.status(200).send(updatedContest);
   } catch (e) {
     next(e);
   }
@@ -274,7 +274,7 @@ module.exports.getCustomersContests = (req, res, next) => {
       if (contests.length === 0) {
         haveMore = false;
       }
-      res.send({ contests, haveMore });
+      res.status(200).send({ contests, haveMore });
     })
     .catch(err => next(new ServerError(err)));
 };
@@ -327,7 +327,7 @@ module.exports.getContests = (req, res, next) => {
       if (contests.length === 0) {
         haveMore = false;
       }
-      res.send({ contests, haveMore });
+      res.status(200).send({ contests, haveMore });
     })
     .catch(err => {
       next(new ServerError());

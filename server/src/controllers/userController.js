@@ -29,7 +29,7 @@ module.exports.login = async (req, res, next) => {
       { expiresIn: CONSTANTS.ACCESS_TOKEN_TIME }
     );
     await userQueries.updateUser({ accessToken }, foundUser.id);
-    res.send({ token: accessToken });
+    res.status(200).send({ token: accessToken });
   } catch (err) {
     next(err);
   }
@@ -55,7 +55,7 @@ module.exports.registration = async (req, res, next) => {
       { expiresIn: CONSTANTS.ACCESS_TOKEN_TIME }
     );
     await userQueries.updateUser({ accessToken }, newUser.id);
-    res.send({ token: accessToken });
+    res.status(200).send({ token: accessToken });
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       next(new NotUniqueEmail());
@@ -176,7 +176,7 @@ module.exports.payment = async (req, res, next) => {
 
     transaction.commit();
 
-    res.send();
+    res.status(204).send();
   } catch (err) {
     transaction.rollback();
     next(err);
