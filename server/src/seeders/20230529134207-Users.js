@@ -22,6 +22,14 @@ module.exports = {
           email: 'creative@gmail.com',
           role: CREATOR,
         },
+        {
+          firstName: 'moderatorfn',
+          lastName: 'moderatorln',
+          displayName: 'moderator',
+          password: bcrypt.hashSync('123456', SALT_ROUNDS),
+          email: 'moderator@gmail.com',
+          role: MODERATOR,
+        },
       ],
       {}
     );
