@@ -19,18 +19,36 @@ module.exports.findUser = async (predicate, transaction) => {
   const result = await bd.Users.findOne({ where: predicate, transaction });
   if (!result) {
     throw new NotFound('user with this data didn`t exist');
-  } else {
-    return result.get({ plain: true });
   }
+  return result.get({ plain: true });
 };
-
-module.exports.userCreation = async data => {
-  const newUser = await bd.Users.create(data);
-  if (!newUser) {
-    throw new ServerError('server error on user creation');
-  } else {
-    return newUser.get({ plain: true });
+module.exports.findUserByPk = async interlocutorId => {
+  const result = await bd.Users.findByPk(interlocutorId);
+  if (!result) {
+    throw new NotFound('user with this data didn`t exist');
   }
+  return result;
+};
+module.exports.findUserByPk = async interlocutorId => {
+  const result = await bd.Users.findByPk(interlocutorId);
+  if (!result) {
+    throw new NotFound('user with this data didn`t exist');
+  }
+  return result;
+};
+module.exports.findUsers = async interlocutors => {
+  const result = await bd.Users.findAll({
+    where: {
+      id: {
+        [bd.Sequelize.Op.in]: interlocutors,
+      },
+    },
+    attributes: ['id', 'firstName', 'lastName', 'displayName', 'avatar'],
+  });
+  if (!result) {
+    throw new ServerError('server error on search users');
+  }
+  return result;
 };
 
 module.exports.passwordCompare = async (pass1, pass2) => {
