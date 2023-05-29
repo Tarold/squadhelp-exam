@@ -44,4 +44,21 @@ contestsRouter
     contestController.getContests
   );
 
+contestsRouter.post('/data', contestController.dataForContest);
+
+contestsRouter.get('/file/:fileName', contestController.downloadFile);
+
+contestsRouter
+  .route('/offers')
+  .get(contestController.getAllOffers)
+  .post(
+    upload.uploadLogoFiles,
+    basicMiddlewares.canSendOffer,
+    contestController.setNewOffer
+  )
+  .patch(
+    basicMiddlewares.onlyForCustomerWhoCreateContest,
+    contestController.setOfferStatus
+  );
+
 module.exports = contestsRouter;

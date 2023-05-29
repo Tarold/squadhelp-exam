@@ -1,15 +1,15 @@
 import queryString from 'query-string';
 import http from '../interceptor';
 
-export const registerRequest = data => http.post('registration', data);
-export const loginRequest = data => http.post('login', data);
-export const getUser = () => http.post('getUser');
-export const setNewOffer = data => http.post('setNewOffer', data);
-export const setOfferStatus = data => http.post('setOfferStatus', data);
+export const registerRequest = data => http.post('user/registration', data);
+export const loginRequest = data => http.post('user/login', data);
+export const getUser = () => http.get('user');
+export const setNewOffer = data => http.post('contests/offers', data);
+export const setOfferStatus = data => http.patch('contests/offers', data);
 export const downloadContestFile = data =>
-  http.get(`downloadFile/${data.fileName}`);
+  http.get(`contests/file/${data.fileName}`);
 export const payMent = data => http.post('contests', data.formData);
-export const dataForContest = data => http.post('dataForContest', data);
+export const dataForContest = data => http.post('contests/data', data);
 
 export const getCustomersContests = data =>
   http.get(`contests/byCustomer?${queryString.stringify(data)}`);

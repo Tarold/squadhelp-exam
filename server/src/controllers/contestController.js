@@ -33,7 +33,7 @@ module.exports.dataForContest = async (req, res, next) => {
       }
       response[characteristic.type].push(characteristic.describe);
     });
-    res.send(response);
+    res.status(200).send(response);
   } catch (err) {
     console.log(err);
     next(new ServerError('cannot get contest preferences'));
@@ -94,7 +94,7 @@ module.exports.getContestById = async (req, res, next) => {
 
 module.exports.downloadFile = async (req, res, next) => {
   const file = CONSTANTS.CONTESTS_DEFAULT_DIR + req.params.fileName;
-  res.download(file);
+  res.status(200).download(file);
 };
 
 module.exports.updateContest = async (req, res, next) => {
@@ -134,7 +134,7 @@ module.exports.setNewOffer = async (req, res, next) => {
       .getNotificationController()
       .emitEntryCreated(req.body.customerId);
     const User = Object.assign({}, req.tokenData, { id: req.tokenData.userId });
-    res.send(Object.assign({}, result, { User }));
+    res.status(201).send(Object.assign({}, result, { User }));
   } catch (e) {
     return next(new ServerError());
   }
@@ -229,7 +229,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
         req.body.creatorId,
         req.body.contestId
       );
-      res.send(offer);
+      res.status(200).send(offer);
     } catch (err) {
       next(err);
     }
@@ -244,7 +244,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
         req.body.priority,
         transaction
       );
-      res.send(winningOffer);
+      res.status(200).send(winningOffer);
     } catch (err) {
       transaction.rollback();
       next(err);
