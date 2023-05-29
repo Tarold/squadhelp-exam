@@ -111,7 +111,7 @@ module.exports.changeMark = async (req, res, next) => {
     await userQueries.updateUser({ rating: avg }, creatorId, transaction);
     transaction.commit();
     controller.getNotificationController().emitChangeMark(creatorId);
-    res.send({ userId: creatorId, rating: avg });
+    res.status(200).send({ userId: creatorId, rating: avg });
   } catch (err) {
     transaction.rollback();
     next(err);
@@ -192,7 +192,7 @@ module.exports.updateUser = async (req, res, next) => {
       req.body,
       req.tokenData.userId
     );
-    res.send({
+    res.status(200).send({
       firstName: updatedUser.firstName,
       lastName: updatedUser.lastName,
       displayName: updatedUser.displayName,
@@ -207,61 +207,48 @@ module.exports.updateUser = async (req, res, next) => {
   }
 };
 
-//Додати код для додавання інформації в табл. Transactions  при виведенні коштів кастомером
 module.exports.cashout = async (req, res, next) => {
   let transaction;
-
-  const { number, expiry, cvc, sum } = req.body;
-  const { userId } = req.tokenData;
-
   try {
     transaction = await bd.sequelize.transaction();
-
     const updatedUser = await userQueries.updateUser(
-      { balance: bd.sequelize.literal('balance - ' + sum) },
-      userId,
+      { balance: bd.sequelize.literal('balance - ' + req.body.sum) },
+      req.tokenData.userId,
       transaction
     );
     await bankQueries.updateBankBalance(
       {
-        balance: bd.sequelize.literal(`
-        CASE 
-          WHEN "cardNumber"='${number.replace(/ /g, '')}'
-            AND "expiry"='${expiry}' 
-            AND "cvc"='${cvc}'
-              THEN "balance"+${sum}
-          WHEN "cardNumber"='${CONSTANTS.SQUADHELP_BANK_NUMBER}' 
-            AND "expiry"='${CONSTANTS.SQUADHELP_BANK_EXPIRY}' 
-            AND "cvc"='${CONSTANTS.SQUADHELP_BANK_CVC}'
-              THEN "balance"-${sum}
-        END`),
+        balance: bd.sequelize.literal(`CASE 
+                WHEN "cardNumber"='${req.body.number.replace(
+                  / /g,
+                  ''
+                )}' AND "expiry"='${req.body.expiry}' AND "cvc"='${
+          req.body.cvc
+        }'
+                    THEN "balance"+${req.body.sum}
+                WHEN "cardNumber"='${
+                  CONSTANTS.SQUADHELP_BANK_NUMBER
+                }' AND "expiry"='${
+          CONSTANTS.SQUADHELP_BANK_EXPIRY
+        }' AND "cvc"='${CONSTANTS.SQUADHELP_BANK_CVC}'
+                    THEN "balance"-${req.body.sum}
+                 END
+                `),
       },
       {
         cardNumber: {
           [bd.Sequelize.Op.in]: [
             CONSTANTS.SQUADHELP_BANK_NUMBER,
-            number.replace(/ /g, ''),
+            req.body.number.replace(/ /g, ''),
           ],
         },
       },
       transaction
     );
-
-    // test: create offer by creator
-    //       resolve offer by buyer
-    //       cashout by creator
-    // ToDo "INCOME" to constants
-    const newTransaction = {
-      amount: sum, // req.body.sum
-      operationType: 'INCOME',
-      userId, // req.tokenData.userId
-    };
-
-    await bd.Transactions.create(newTransaction, { transaction });
-
     transaction.commit();
-    res.send({ balance: updatedUser.balance });
+    res.status(200).send({ balance: updatedUser.balance });
   } catch (err) {
+    console.log('err :>> ', err);
     transaction.rollback();
     next(err);
   }

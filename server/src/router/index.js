@@ -8,6 +8,7 @@ const validators = require('../middlewares/validators');
 const upload = require('../utils/fileUpload');
 const contestsRouter = require('./contestRouter');
 const chatRouter = require('./chatRouter');
+const userRouter = require('./userRouter');
 const router = express.Router();
 
 router.get('/offers', contestController.getAllOffers);
@@ -25,11 +26,9 @@ router.use(checkToken.checkToken);
 
 router.post('/getUser', checkToken.checkAuth);
 
-router.post('/updateUser', upload.uploadAvatar, userController.updateUser);
+router.use('/contests', contestsRouter);
 
 router.get('/users/id/transactions', userController.getTransactions);
-
-router.use('/contests', contestsRouter);
 
 router.post('/dataForContest', contestController.dataForContest);
 
@@ -48,17 +47,7 @@ router.post(
   contestController.setOfferStatus
 );
 
-router.post(
-  '/changeMark',
-  basicMiddlewares.onlyForCustomer,
-  userController.changeMark
-);
-
-router.post(
-  '/cashout',
-  basicMiddlewares.onlyForCreative,
-  userController.cashout
-);
+router.use('/user', userRouter);
 
 router.use('/chat', chatRouter);
 
