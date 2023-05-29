@@ -41,7 +41,7 @@ module.exports = {
         defaultValue: 'pending',
       },
       isApproved: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         allowNull: true,
         defaultValue: false,
       },
