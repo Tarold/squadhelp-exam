@@ -54,7 +54,7 @@ module.exports.addMessage = async (req, res, next) => {
       },
     });
 
-    res.send({
+    res.status(201).send({
       message,
       preview: Object.assign(preview, { interlocutor }),
     });
@@ -65,7 +65,7 @@ module.exports.addMessage = async (req, res, next) => {
 
 module.exports.getChat = async (req, res, next) => {
   const { userId } = req.tokenData;
-  const { interlocutorId } = req.body;
+  const { interlocutorId } = req.params;
 
   const participants = [userId, interlocutorId];
   participants.sort(
@@ -76,7 +76,7 @@ module.exports.getChat = async (req, res, next) => {
 
     const interlocutor = await userQueries.findUserByPk(interlocutorId);
 
-    res.send({
+    res.status(200).send({
       messages,
       interlocutor: {
         firstName: interlocutor.firstName,
@@ -87,6 +87,7 @@ module.exports.getChat = async (req, res, next) => {
       },
     });
   } catch (err) {
+    console.log('err :>> ', err);
     next(err);
   }
 };
@@ -131,7 +132,7 @@ module.exports.getPreview = async (req, res, next) => {
       });
     });
 
-    res.send(preview);
+    res.status(200).send(preview);
   } catch (err) {
     next(err);
   }
@@ -155,7 +156,7 @@ module.exports.blockList = async (req, res, next) => {
       favoriteList: [chat.isFavorite1, chat.isFavorite2],
     };
 
-    res.send(responseData);
+    res.status(200).send(responseData);
 
     const interlocutorId = participants.filter(
       participant => participant !== userId
@@ -187,7 +188,7 @@ module.exports.favoriteChat = async (req, res, next) => {
       favoriteList: [chat.isFavorite1, chat.isFavorite2],
     };
 
-    res.send(responseData);
+    res.status(200).send(responseData);
   } catch (err) {
     res.send(err);
   }
@@ -204,7 +205,7 @@ module.exports.createCatalog = async (req, res, next) => {
 
     catalog.dataValues.chats = [chat];
 
-    res.send(catalog);
+    res.status(201).send(catalog);
   } catch (err) {
     next(err);
   }
@@ -212,7 +213,9 @@ module.exports.createCatalog = async (req, res, next) => {
 
 module.exports.updateNameCatalog = async (req, res, next) => {
   const { userId } = req.tokenData;
-  const { catalogId, catalogName } = req.body;
+  const { catalogId } = req.params;
+  const { catalogName } = req.body;
+
   try {
     const catalog = await catalogQueries.updateCatalog(
       catalogId,
@@ -223,7 +226,7 @@ module.exports.updateNameCatalog = async (req, res, next) => {
 
     catalog.dataValues.chats = chats;
 
-    res.send(catalog);
+    res.status(200).send(catalog);
   } catch (err) {
     next(err);
   }
@@ -231,22 +234,20 @@ module.exports.updateNameCatalog = async (req, res, next) => {
 
 module.exports.addNewChatToCatalog = async (req, res, next) => {
   const { userId } = req.tokenData;
-  const { catalogId, chatId } = req.body;
+  const { catalogId, chatId } = req.params;
 
   try {
     const catalog = await catalogQueries.findCatalog(catalogId, userId);
 
     const chats = await chatQueries.findChats(catalogId, chatId);
 
-    const isExist = chats.some(
-      chat => chat.catalogId === catalogId && chat.conversationId === chatId
-    );
+    const isExist = chats.some(chat => chat.conversationId === Number(chatId));
     if (!isExist) {
       chats.push(await chatQueries.createChat(catalogId, chatId));
     }
     catalog.dataValues.chats = chats;
 
-    res.send(catalog);
+    res.status(201).send(catalog);
   } catch (err) {
     next(err);
   }
@@ -254,7 +255,7 @@ module.exports.addNewChatToCatalog = async (req, res, next) => {
 
 module.exports.removeChatFromCatalog = async (req, res, next) => {
   const { userId } = req.tokenData;
-  const { catalogId, chatId } = req.body;
+  const { catalogId, chatId } = req.params;
 
   try {
     const catalog = await catalogQueries.findCatalog(catalogId, userId);
@@ -264,22 +265,22 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
     const chats = await chatQueries.findChats(catalogId);
 
     catalog.dataValues.chats = chats;
-    res.send(catalog);
+    res.status(200).send(catalog);
   } catch (err) {
     next(err);
   }
 };
 
 module.exports.deleteCatalog = async (req, res, next) => {
+  const { catalogId } = req.params;
   const { userId } = req.tokenData;
-  const { catalogId } = req.body;
 
   try {
     await chatQueries.removeChats(catalogId);
 
     await catalogQueries.removeCatalogs(catalogId, userId);
 
-    res.end();
+    res.status(204).send();
   } catch (err) {
     next(err);
   }
@@ -303,7 +304,7 @@ module.exports.getCatalogs = async (req, res, next) => {
       return catalog;
     });
 
-    res.send(prepCatalog);
+    res.status(200).send(prepCatalog);
   } catch (err) {
     next(err);
   }

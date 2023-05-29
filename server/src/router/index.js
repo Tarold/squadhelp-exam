@@ -5,9 +5,9 @@ const userController = require('../controllers/userController');
 const contestController = require('../controllers/contestController');
 const checkToken = require('../middlewares/checkToken');
 const validators = require('../middlewares/validators');
-const chatController = require('../controllers/chatController');
 const upload = require('../utils/fileUpload');
 const contestsRouter = require('./contestRouter');
+const chatRouter = require('./chatRouter');
 const router = express.Router();
 
 router.get('/offers', contestController.getAllOffers);
@@ -60,26 +60,6 @@ router.post(
   userController.cashout
 );
 
-router.post('/newMessage', chatController.addMessage);
-
-router.post('/getChat', chatController.getChat);
-
-router.post('/getPreview', chatController.getPreview);
-
-router.post('/blockList', chatController.blockList);
-
-router.post('/favorite', chatController.favoriteChat);
-
-router.post('/createCatalog', chatController.createCatalog);
-
-router.post('/updateNameCatalog', chatController.updateNameCatalog);
-
-router.post('/addNewChatToCatalog', chatController.addNewChatToCatalog);
-
-router.post('/removeChatFromCatalog', chatController.removeChatFromCatalog);
-
-router.post('/deleteCatalog', chatController.deleteCatalog);
-
-router.post('/getCatalogs', chatController.getCatalogs);
+router.use('/chat', chatRouter);
 
 module.exports = router;
