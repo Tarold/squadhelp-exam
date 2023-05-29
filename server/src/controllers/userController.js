@@ -120,8 +120,6 @@ module.exports.changeMark = async (req, res, next) => {
 
 module.exports.payment = async (req, res, next) => {
   let transaction;
-
-  // ToDo Destructuring
   try {
     transaction = await db.sequelize.transaction();
     await bankQueries.updateBankBalance(
@@ -163,21 +161,13 @@ module.exports.payment = async (req, res, next) => {
         prize,
       });
     });
-    await db.Contests.bulkCreate(req.body.contests, { transaction });
-
-    // ToDo "EXPENSE" to constants
-    const newTransaction = {
-      amount: req.body.price,
-      operationType: 'EXPENSE',
-      userId: req.tokenData.userId,
-    };
-
-    await db.Transactions.create(newTransaction, { transaction });
+    await db.Contests.bulkCreate(req.body.contests, transaction);
 
     transaction.commit();
 
     res.status(204).send();
   } catch (err) {
+    console.log('err :>> ', err);
     transaction.rollback();
     next(err);
   }
@@ -218,22 +208,17 @@ module.exports.cashout = async (req, res, next) => {
     );
     await bankQueries.updateBankBalance(
       {
-        balance: db.sequelize.literal(`CASE 
-                WHEN "cardNumber"='${req.body.number.replace(
-                  / /g,
-                  ''
-                )}' AND "expiry"='${req.body.expiry}' AND "cvc"='${
-          req.body.cvc
-        }'
-                    THEN "balance"+${req.body.sum}
-                WHEN "cardNumber"='${
-                  CONSTANTS.SQUADHELP_BANK_NUMBER
-                }' AND "expiry"='${
-          CONSTANTS.SQUADHELP_BANK_EXPIRY
-        }' AND "cvc"='${CONSTANTS.SQUADHELP_BANK_CVC}'
-                    THEN "balance"-${req.body.sum}
-                 END
-                `),
+        balance: db.sequelize.literal(`
+        CASE 
+          WHEN "cardNumber"='${req.body.number.replace(/ /g, '')}' 
+            AND "expiry"='${req.body.expiry}' 
+            AND "cvc"='${req.body.cvc}'
+              THEN "balance"+${req.body.sum}
+          WHEN "cardNumber"='${CONSTANTS.SQUADHELP_BANK_NUMBER}' 
+            AND "expiry"='${CONSTANTS.SQUADHELP_BANK_EXPIRY}' 
+            AND "cvc"='${CONSTANTS.SQUADHELP_BANK_CVC}'
+              THEN "balance"-${req.body.sum} END
+        `),
       },
       {
         cardNumber: {
@@ -248,23 +233,7 @@ module.exports.cashout = async (req, res, next) => {
     transaction.commit();
     res.status(200).send({ balance: updatedUser.balance });
   } catch (err) {
-    console.log('err :>> ', err);
     transaction.rollback();
-    next(err);
-  }
-};
-
-module.exports.getTransactions = async (req, res, next) => {
-  const { userId } = req.tokenData;
-
-  try {
-    const foundTransactions = await db.Transactions.findAll({
-      where: { userId },
-      raw: true,
-    });
-
-    res.status(200).send(foundTransactions);
-  } catch (err) {
     next(err);
   }
 };

@@ -32,6 +32,6 @@ userRouter.patch(
 
 userRouter.patch('/', upload.uploadAvatar, userController.updateUser);
 
-userRouter.get('/', checkToken.checkAuth); //getUser
+userRouter.get('/', checkToken.checkAuth);
 
 module.exports = userRouter;

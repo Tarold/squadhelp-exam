@@ -1,26 +1,23 @@
 import queryString from 'query-string';
 import http from '../interceptor';
 
+export const getUser = () => http.get('user');
 export const registerRequest = data => http.post('user/registration', data);
 export const loginRequest = data => http.post('user/login', data);
-export const getUser = () => http.get('user');
+
+export const payMent = data => http.post('contests', data.formData);
+export const dataForContest = data => http.post('contests/data', data);
 export const setNewOffer = data => http.post('contests/offers', data);
 export const setOfferStatus = data => http.patch('contests/offers', data);
 export const downloadContestFile = data =>
   http.get(`contests/file/${data.fileName}`);
-export const payMent = data => http.post('contests', data.formData);
-export const dataForContest = data => http.post('contests/data', data);
-
 export const getCustomersContests = data =>
   http.get(`contests/byCustomer?${queryString.stringify(data)}`);
-
 export const getActiveContests = data =>
   http.get(`contests?${queryString.stringify(data)}`);
-
 export const updateContest = ({ contestId, data }) => {
   return http.patch(`contests/${contestId}`, data);
 };
-
 export const getContestById = ({ contestId }) =>
   http.get(`contests/${contestId}`);
 
@@ -44,5 +41,3 @@ export const addChatToCatalog = data =>
   http.post(`chat/catalog/${data.catalogId}/${data.chatId}`);
 export const removeChatFromCatalog = data =>
   http.delete(`chat/catalog/${data.catalogId}/${data.chatId}`);
-
-export const getTransactions = () => http.get('users/id/transactions');

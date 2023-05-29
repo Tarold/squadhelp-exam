@@ -12,7 +12,6 @@ module.exports.dataForContest = async (req, res, next) => {
     const {
       body: { characteristic1, characteristic2 },
     } = req;
-    console.log(req.body, characteristic1, characteristic2);
     const types = [characteristic1, characteristic2, 'industry'].filter(
       Boolean
     );
@@ -35,7 +34,6 @@ module.exports.dataForContest = async (req, res, next) => {
     });
     res.status(200).send(response);
   } catch (err) {
-    console.log(err);
     next(new ServerError('cannot get contest preferences'));
   }
 };
@@ -165,15 +163,13 @@ const resolveOffer = async (
 ) => {
   const finishedContest = await contestQueries.updateContestStatus(
     {
-      status: db.sequelize.literal(`   CASE
-            WHEN "id"=${contestId}  AND "orderId"='${orderId}' THEN '${
-        CONSTANTS.CONTEST_STATUS_FINISHED
-      }'
-            WHEN "orderId"='${orderId}' AND "priority"=${priority + 1}  THEN '${
-        CONSTANTS.CONTEST_STATUS_ACTIVE
-      }'
-            ELSE '${CONSTANTS.CONTEST_STATUS_PENDING}'
-            END
+      status: db.sequelize.literal(`
+        CASE
+          WHEN "id"=${contestId} AND "orderId"='${orderId}' 
+            THEN '${CONSTANTS.CONTEST_STATUS_FINISHED}'
+          WHEN "orderId"='${orderId}' AND "priority"=${priority + 1} 
+            THEN '${CONSTANTS.CONTEST_STATUS_ACTIVE}'
+            ELSE '${CONSTANTS.CONTEST_STATUS_PENDING}' END
     `),
     },
     { orderId },
@@ -186,10 +182,11 @@ const resolveOffer = async (
   );
   const updatedOffers = await contestQueries.updateOfferStatus(
     {
-      status: db.sequelize.literal(` CASE
-            WHEN "id"=${offerId} THEN '${CONSTANTS.OFFER_STATUS_WON}'
-            ELSE '${CONSTANTS.OFFER_STATUS_REJECTED}'
-            END
+      status: db.sequelize.literal(` 
+      CASE
+        WHEN "id"=${offerId} 
+          THEN '${CONSTANTS.OFFER_STATUS_WON}'
+          ELSE '${CONSTANTS.OFFER_STATUS_REJECTED}' END
     `),
     },
     {
@@ -290,15 +287,6 @@ module.exports.getContests = (req, res, next) => {
     ownEntries,
   } = req.query;
   const { userId } = req.tokenData;
-  console.log('object :>> ', {
-    limit,
-    offset,
-    typeIndex,
-    contestId,
-    industry,
-    awardSort,
-    ownEntries,
-  });
   const predicates = UtilFunctions.createWhereForAllContests(
     typeIndex,
     contestId,

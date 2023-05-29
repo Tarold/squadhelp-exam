@@ -80,7 +80,6 @@ class Dialog extends React.Component {
   };
   render () {
     const { chatData, userId } = this.props;
-    console.log('chatData :>> ', chatData);
     return (
       <>
         <ChatHeader userId={userId} />
