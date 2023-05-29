@@ -14,15 +14,15 @@ module.exports.updateContest = async (data, predicate, transaction) => {
 };
 
 module.exports.updateContestStatus = async (data, predicate, transaction) => {
-  const updateResult = await bd.Contests.update(data, {
+  const [updatedCount, [updateResult]] = await bd.Contests.update(data, {
     where: predicate,
     returning: true,
     transaction,
   });
-  if (updateResult[0] < 1) {
+  if (updatedCount < 1) {
     throw new ServerError('cannot update Contest');
   }
-  return updateResult[1][0].dataValues;
+  return updateResult.dataValues;
 };
 
 module.exports.updateOffer = async (data, predicate, transaction) => {
