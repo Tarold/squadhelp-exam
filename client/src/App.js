@@ -20,6 +20,8 @@ import CONSTANTS from './constants';
 import browserHistory from './browserHistory';
 import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatContainer';
 import Events from './pages/Events/Events';
+import ModeratorHoc from './components/ModeratorHoc/ModeratorHoc';
+import OffersPage from './pages/OffersPage/OffersPage';
 
 class App extends Component {
   render () {
@@ -50,6 +52,11 @@ class App extends Component {
           />
           <Route exact path='/howItWorks' component={HowItWorksPage} />
           <Route exact path='/events' component={PrivateHoc(Events)} />
+          <Route
+            exact
+            path='/offersPage'
+            component={ModeratorHoc(OffersPage)}
+          />
           <Route exact path='/payment' component={PrivateHoc(Payment)} />
           <Route
             exact
