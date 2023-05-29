@@ -27,8 +27,8 @@ const OfferBox = props => {
       if (isEqual(participants, messagesPreview[i].participants)) {
         return {
           participants: messagesPreview[i].participants,
-          _id: messagesPreview[i]._id,
-          blackList: messagesPreview[i].blackList,
+          id: messagesPreview[i].id,
+          blockList: messagesPreview[i].blockList,
           favoriteList: messagesPreview[i].favoriteList,
         };
       }

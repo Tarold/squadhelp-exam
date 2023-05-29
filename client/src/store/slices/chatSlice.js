@@ -87,7 +87,7 @@ const sendMessageExtraReducers = createExtraReducers({
     const { messagesPreview } = state;
     let isNew = true;
     messagesPreview.forEach(preview => {
-      if (isEqual(preview.participants, payload.message.participants)) {
+      if (isEqual(preview.participants, payload.preview.participants)) {
         preview.text = payload.message.body;
         preview.sender = payload.message.sender;
         preview.createAt = payload.message.createdAt;
@@ -98,10 +98,10 @@ const sendMessageExtraReducers = createExtraReducers({
       messagesPreview.push(payload.preview);
     }
     const chatData = {
-      _id: payload.preview._id,
+      id: payload.preview.id,
       participants: payload.preview.participants,
       favoriteList: payload.preview.favoriteList,
-      blackList: payload.preview.blackList,
+      blockList: payload.preview.blockList,
     };
     state.chatData = { ...state.chatData, ...chatData };
     state.messagesPreview = messagesPreview;
@@ -152,7 +152,7 @@ const changeChatBlockExtraReducers = createExtraReducers({
     const { messagesPreview } = state;
     messagesPreview.forEach(preview => {
       if (isEqual(preview.participants, payload.participants))
-        preview.blackList = payload.blackList;
+        preview.blockList = payload.blockList;
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;
@@ -194,7 +194,7 @@ const addChatToCatalogExtraReducers = createExtraReducers({
   fulfilledReducer: (state, { payload }) => {
     const { catalogList } = state;
     for (let i = 0; i < catalogList.length; i++) {
-      if (catalogList[i]._id === payload._id) {
+      if (catalogList[i].id === payload.id) {
         catalogList[i].chats = payload.chats;
         break;
       }
@@ -244,7 +244,7 @@ const deleteCatalogExtraReducers = createExtraReducers({
     const { catalogList } = state;
     const newCatalogList = remove(
       catalogList,
-      catalog => payload.catalogId !== catalog._id
+      catalog => payload.catalogId !== catalog.id
     );
     state.catalogList = [...newCatalogList];
   },
@@ -267,7 +267,7 @@ const removeChatFromCatalogExtraReducers = createExtraReducers({
   fulfilledReducer: (state, { payload }) => {
     const { catalogList } = state;
     for (let i = 0; i < catalogList.length; i++) {
-      if (catalogList[i]._id === payload._id) {
+      if (catalogList[i].id === payload.id) {
         catalogList[i].chats = payload.chats;
         break;
       }
@@ -294,7 +294,7 @@ const changeCatalogNameExtraReducers = createExtraReducers({
   fulfilledReducer: (state, { payload }) => {
     const { catalogList } = state;
     for (let i = 0; i < catalogList.length; i++) {
-      if (catalogList[i]._id === payload._id) {
+      if (catalogList[i].id === payload.id) {
         catalogList[i].catalogName = payload.catalogName;
         break;
       }
@@ -314,7 +314,7 @@ const reducers = {
     const { messagesPreview } = state;
     messagesPreview.forEach(preview => {
       if (isEqual(preview.participants, payload.participants))
-        preview.blackList = payload.blackList;
+        preview.blockList = payload.blockList;
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;
@@ -323,17 +323,18 @@ const reducers = {
   addMessage: (state, { payload }) => {
     const { message, preview } = payload;
     const { messagesPreview } = state;
+
     let isNew = true;
-    messagesPreview.forEach(preview => {
-      if (isEqual(preview.participants, message.participants)) {
-        preview.text = message.body;
-        preview.sender = message.sender;
-        preview.createAt = message.createdAt;
+    messagesPreview.forEach(previewPrev => {
+      if (isEqual(previewPrev.participants, preview.preview.participants)) {
+        previewPrev.text = message.body;
+        previewPrev.sender = message.sender;
+        previewPrev.createAt = message.createdAt;
         isNew = false;
       }
     });
     if (isNew) {
-      messagesPreview.push(preview);
+      messagesPreview.push(preview.preview);
     }
     state.messagesPreview = messagesPreview;
     state.messages = [...state.messages, payload.message];

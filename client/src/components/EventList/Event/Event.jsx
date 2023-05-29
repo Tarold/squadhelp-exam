@@ -111,7 +111,6 @@ const Event = ({
       clearInterval(interval);
     }
 
-    console.log('object :>> ');
     return () => {
       clearInterval(interval);
       clearTimeout(timeoutFinish);

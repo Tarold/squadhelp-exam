@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       userId: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
       },
       contestType: {
         allowNull: false,
@@ -89,6 +85,11 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
     }
   );
+
+  Contest.associate = function (models) {
+    Contest.belongsTo(models.Users, { foreignKey: 'userId' });
+    Contest.hasMany(models.Offers, { foreignKey: 'contestId' });
+  };
 
   return Contest;
 };
