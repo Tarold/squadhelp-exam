@@ -15,8 +15,7 @@ const PrivateHoc = (Component, props) => {
     render () {
       if (this.props.isFetching) {
         return <Spinner />;
-      }
-      if (this.props.data) {
+      } else if (this.props.data) {
         return (
           <Component
             history={this.props.history}
@@ -24,11 +23,9 @@ const PrivateHoc = (Component, props) => {
             {...props}
           />
         );
-      }
-      if (!this.props.data) {
+      } else {
         return <Redirect to='/login' />;
       }
-      return null;
     }
   }
 
