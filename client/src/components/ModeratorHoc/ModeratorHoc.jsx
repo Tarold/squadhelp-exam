@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getUser } from '../../store/slices/userSlice';
 import Spinner from '../Spinner/Spinner';
 import CONSTANTS from '../../constants';
+import NotFound from '../NotFound/NotFound';
 
 const ModeratorHoc = (Component, props) => {
   class Hoc extends React.Component {
@@ -26,7 +27,7 @@ const ModeratorHoc = (Component, props) => {
           />
         );
       }
-      return null;
+      return NotFound();
     }
   }
 
