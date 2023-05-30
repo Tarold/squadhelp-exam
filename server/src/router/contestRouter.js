@@ -21,6 +21,8 @@ contestsRouter.get(
 
 contestsRouter.get('/file/:fileName', contestController.downloadFile);
 
+contestsRouter.use(basicMiddlewares.onlyForCustomerOrCreator);
+
 contestsRouter.get(
   '/byCustomer',
   queryParser({
