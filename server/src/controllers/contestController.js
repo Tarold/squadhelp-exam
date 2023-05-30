@@ -373,7 +373,10 @@ module.exports.getOffers = (req, res, next) => {
     awardSort
   );
   db.Offers.findAll({
-    where: { isApproved: 'verifying', status: 'pending' },
+    where: {
+      isApproved: CONSTANTS.OFFER_APPROVED_VERIFYING,
+      status: CONSTANTS.OFFER_STATUS_PENDING,
+    },
     limit,
     offset,
     include: [
