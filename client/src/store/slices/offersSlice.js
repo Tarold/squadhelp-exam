@@ -57,16 +57,9 @@ export const setOfferApprove = decorateAsyncThunk({
 const setOfferApproveExtraReducers = createExtraReducers({
   thunk: setOfferApprove,
   fulfilledReducer: (state, { payload }) => {
-    state.offers.forEach(offer => {
-      if (payload.isAppoved === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
-        offer.isAppoved =
-          payload.id === offer.id
-            ? CONSTANTS.OFFER_APPROVED_ACCEPTED
-            : CONSTANTS.OFFER_APPROVED_DENIED;
-      } else if (payload.id === offer.id) {
-        offer.status = CONSTANTS.OFFER_APPROVED_DENIED;
-      }
-    });
+    if (payload.isApproved !== CONSTANTS.OFFER_APPROVED_VERIFYING) {
+      state.offers = state.offers.filter(offer => payload.id !== offer.id);
+    }
     state.error = null;
   },
   rejectedReducer: (state, { payload }) => {
