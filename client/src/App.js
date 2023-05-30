@@ -54,7 +54,7 @@ class App extends Component {
           <Route exact path='/events' component={PrivateHoc(Events)} />
           <Route
             exact
-            path='/offersPage'
+            path='/offersApprove'
             component={ModeratorHoc(OffersPage)}
           />
           <Route exact path='/payment' component={PrivateHoc(Payment)} />
