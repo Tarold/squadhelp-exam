@@ -55,7 +55,7 @@ module.exports.getContestById = async (req, res, next) => {
           where:
             req.tokenData.role === CONSTANTS.CREATOR
               ? { userId: req.tokenData.userId }
-              : {},
+              : { isApproved: CONSTANTS.OFFER_APPROVED_ACCEPTED },
           attributes: { exclude: ['userId', 'contestId'] },
           include: [
             {
