@@ -5,7 +5,7 @@ import Spinner from '../Spinner/Spinner';
 import CONSTANTS from '../../constants';
 import NotFound from '../NotFound/NotFound';
 
-const CustomerCreatorHoc = (Component, props) => {
+const CustomerOrCreatorHoc = (Component, props) => {
   class Hoc extends React.Component {
     componentDidMount () {
       if (!this.props.data) {
@@ -44,4 +44,4 @@ const CustomerCreatorHoc = (Component, props) => {
   return connect(mapStateToProps, mapDispatchToProps)(Hoc);
 };
 
-export default CustomerCreatorHoc;
+export default CustomerOrCreatorHoc;
