@@ -9,7 +9,9 @@ export const cashOut = data => http.post('user/cashout', data);
 export const updateUser = data => http.patch('user', data);
 
 export const payMent = data => http.post('contests', data.formData);
-export const dataForContest = data => http.post('contests/data', data);
+export const dataForContest = data =>
+  http.get(`contests/data?${queryString.stringify(data)}`);
+
 export const downloadContestFile = data =>
   http.get(`contests/file/${data.fileName}`);
 export const getCustomersContests = data =>
