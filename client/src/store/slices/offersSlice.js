@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import * as restController from '../../api/rest/restController';
-import { decorateAsyncThunk, pendingReducer } from '../../utils/store';
+import {
+  decorateAsyncThunk,
+  pendingReducer,
+  createExtraReducers,
+} from '../../utils/store';
+import CONSTANTS from '../../constants';
 
 const OFFERS_SLICE_NAME = 'offers';
 
@@ -26,6 +31,48 @@ export const getOffers = decorateAsyncThunk({
   },
 });
 
+const getOffersExtraReducers = createExtraReducers({
+  thunk: getOffers,
+  pendingReducer: pendingReducer,
+  fulfilledReducer: (state, { payload }) => {
+    state.isFetching = false;
+    state.offers = [...state.offers, ...payload.offers];
+    state.haveMore = payload.haveMore;
+  },
+  rejectedReducer: (state, { payload }) => {
+    state.isFetching = false;
+    state.error = payload;
+    state.offers = [];
+  },
+});
+
+export const setOfferApprove = decorateAsyncThunk({
+  key: `${OFFERS_SLICE_NAME}/setOfferApprove`,
+  thunk: async payload => {
+    const { data } = await restController.setOfferApprove(payload);
+    return data;
+  },
+});
+
+const setOfferApproveExtraReducers = createExtraReducers({
+  thunk: setOfferApprove,
+  fulfilledReducer: (state, { payload }) => {
+    state.offers.forEach(offer => {
+      if (payload.isAppoved === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
+        offer.isAppoved =
+          payload.id === offer.id
+            ? CONSTANTS.OFFER_APPROVED_ACCEPTED
+            : CONSTANTS.OFFER_APPROVED_DENIED;
+      } else if (payload.id === offer.id) {
+        offer.status = CONSTANTS.OFFER_APPROVED_DENIED;
+      }
+    });
+    state.error = null;
+  },
+  rejectedReducer: (state, { payload }) => {
+    state.setOfferApproveError = payload;
+  },
+});
 const reducers = {
   clearOffersList: state => {
     state.error = null;
@@ -39,17 +86,8 @@ const reducers = {
 };
 
 const extraReducers = builder => {
-  builder.addCase(getOffers.pending, pendingReducer);
-  builder.addCase(getOffers.fulfilled, (state, { payload }) => {
-    state.isFetching = false;
-    state.offers = [...state.offers, ...payload.offers];
-    state.haveMore = payload.haveMore;
-  });
-  builder.addCase(getOffers.rejected, (state, { payload }) => {
-    state.isFetching = false;
-    state.error = payload;
-    state.offers = [];
-  });
+  getOffersExtraReducers(builder);
+  setOfferApproveExtraReducers(builder);
 };
 
 const offersSlice = createSlice({
