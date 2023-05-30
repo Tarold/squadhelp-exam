@@ -106,9 +106,9 @@ const Offer = props => {
       conversationData: findConversationInfo(),
     });
   };
-
+  const { data } = props;
+  const { contestType, industry } = props.data.Contest;
   const { avatar, firstName, lastName, email, rating } = props.data.User;
-  const { id: contestId } = props.data.Contest;
   return (
     <div className={styles.offerContainer}>
       {offerStatus()}
@@ -155,12 +155,15 @@ const Offer = props => {
             />
           </div>
         </div>
-        <div className={styles.responseConainer}></div>
+        <div className={styles.responseConainer}>
+          <span className={styles.response}>Offer text: {data.text}</span>
+          <div className={styles.contestData}>
+            <p>Contest type: {contestType}</p>
+            <p>Contest industry: {industry}</p>
+          </div>
+        </div>
 
         <i onClick={goChat} className='fas fa-comments' />
-        <Link to={`contest/${contestId}`} target='_blank'>
-          Watch on contest
-        </Link>
       </div>
       {
         <div className={styles.btnsContainer}>

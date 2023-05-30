@@ -373,7 +373,7 @@ module.exports.getOffers = (req, res, next) => {
     awardSort
   );
   db.Offers.findAll({
-    where: { isApproved: 'verifying' },
+    where: { isApproved: 'verifying', status: 'pending' },
     limit,
     offset,
     include: [
@@ -381,7 +381,7 @@ module.exports.getOffers = (req, res, next) => {
         model: db.Contests,
         where: predicates.where,
         order: predicates.order,
-        attributes: ['id'],
+        attributes: ['contestType', 'industry'],
       },
       {
         model: db.Users,
