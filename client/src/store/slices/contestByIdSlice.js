@@ -101,6 +101,35 @@ const setOfferStatusExtraReducers = createExtraReducers({
   },
 });
 
+//---------- setOfferApprove
+export const setOfferApprove = decorateAsyncThunk({
+  key: `${CONTEST_BY_ID_SLICE_NAME}/setOfferApprove`,
+  thunk: async payload => {
+    const { data } = await restController.setOfferApprove(payload);
+    return data;
+  },
+});
+
+const setOfferApproveExtraReducers = createExtraReducers({
+  thunk: setOfferApprove,
+  fulfilledReducer: (state, { payload }) => {
+    state.offers.forEach(offer => {
+      if (payload.isAppoved === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
+        offer.isAppoved =
+          payload.id === offer.id
+            ? CONSTANTS.OFFER_APPROVED_ACCEPTED
+            : CONSTANTS.OFFER_APPROVED_DENIED;
+      } else if (payload.id === offer.id) {
+        offer.status = CONSTANTS.OFFER_APPROVED_DENIED;
+      }
+    });
+    state.error = null;
+  },
+  rejectedReducer: (state, { payload }) => {
+    state.setOfferApproveError = payload;
+  },
+});
+
 //---------- changeMark
 export const changeMark = decorateAsyncThunk({
   key: `${CONTEST_BY_ID_SLICE_NAME}/changeMark`,
@@ -162,6 +191,7 @@ const extraReducers = builder => {
   getContestByIdExtraReducers(builder);
   addOfferExtraReducers(builder);
   setOfferStatusExtraReducers(builder);
+  setOfferApproveExtraReducers(builder);
   changeMarkExtraReducers(builder);
 };
 
