@@ -14,6 +14,7 @@ export default {
   OFFER_STATUS_REJECTED: 'rejected',
   OFFER_STATUS_WON: 'won',
   OFFER_STATUS_PENDING: 'pending',
+  OFFER_APPROVED_VERIFYING: 'verifying',
   OFFER_APPROVED_ACCEPTED: 'accepted',
   OFFER_APPROVED_DENIED: 'denied',
   STATIC_IMAGES_PATH: '/staticImages/',
