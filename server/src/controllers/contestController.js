@@ -3,6 +3,7 @@ const ServerError = require('../errors/ServerError');
 const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
+const emailController = require('../controllers/emailController');
 const UtilFunctions = require('../utils/functions');
 const CONSTANTS = require('../constants');
 
@@ -254,6 +255,10 @@ const acceptedOffer = async (offerId, creatorId, email) => {
   controller
     .getNotificationController()
     .emitChangeOfferStatus(creatorId, 'Someone of yours offers was accepted');
+  emailController.sendOfferMessage({
+    email,
+    offer: acceptedOffer,
+  });
   return acceptedOffer;
 };
 
@@ -265,6 +270,11 @@ const deniedOffer = async (offerId, creatorId, email) => {
   controller
     .getNotificationController()
     .emitChangeOfferStatus(creatorId, 'Someone of yours offers was denied');
+  emailController.sendOfferMessage({
+    email,
+    offer: deniedOffer,
+  });
+
   return deniedOffer;
 };
 
