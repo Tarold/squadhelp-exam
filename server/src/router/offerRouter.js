@@ -7,6 +7,10 @@ const contestController = require('../controllers/contestController');
 const offersRouter = Router();
 
 offersRouter
+  .route('/approve')
+  .patch(basicMiddlewares.onlyForModerator, contestController.setOfferApprove);
+
+offersRouter
   .route('/')
   .get(
     basicMiddlewares.onlyForModerator,

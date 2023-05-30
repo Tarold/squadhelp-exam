@@ -7,11 +7,9 @@ const UtilFunctions = require('../utils/functions');
 const CONSTANTS = require('../constants');
 
 module.exports.dataForContest = async (req, res, next) => {
+  const { characteristic1, characteristic2 } = req.query;
   const response = {};
   try {
-    const {
-      body: { characteristic1, characteristic2 },
-    } = req;
     const types = [characteristic1, characteristic2, 'industry'].filter(
       Boolean
     );
@@ -137,7 +135,6 @@ module.exports.setNewOffer = async (req, res, next) => {
     return next(new ServerError());
   }
 };
-
 const rejectOffer = async (offerId, creatorId, contestId) => {
   const rejectedOffer = await contestQueries.updateOffer(
     { status: CONSTANTS.OFFER_STATUS_REJECTED },
@@ -151,6 +148,28 @@ const rejectOffer = async (offerId, creatorId, contestId) => {
       contestId
     );
   return rejectedOffer;
+};
+
+const acceptedOffer = async (offerId, creatorId, email) => {
+  const acceptedOffer = await contestQueries.updateOffer(
+    { isApproved: CONSTANTS.OFFER_APPROVED_ACCEPTED },
+    { id: offerId }
+  );
+  controller
+    .getNotificationController()
+    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was accepted');
+  return acceptedOffer;
+};
+
+const deniedOffer = async (offerId, creatorId, email) => {
+  const deniedOffer = await contestQueries.updateOffer(
+    { isApproved: CONSTANTS.OFFER_APPROVED_DENIED },
+    { id: offerId }
+  );
+  controller
+    .getNotificationController()
+    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was denied');
+  return deniedOffer;
 };
 
 const resolveOffer = async (
@@ -249,6 +268,38 @@ module.exports.setOfferStatus = async (req, res, next) => {
   }
 };
 
+module.exports.setOfferApprove = async (req, res, next) => {
+  let transaction;
+  if (req.body.command === CONSTANTS.OFFER_APPROVED_DENIED) {
+    try {
+      const offer = await deniedOffer(
+        req.body.offerId,
+        req.body.creatorId,
+        req.body.contestId
+      );
+      res.status(200).send(offer);
+    } catch (err) {
+      next(err);
+    }
+  } else if (req.body.command === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
+    try {
+      transaction = await db.sequelize.transaction();
+      const winningOffer = await acceptedOffer(
+        req.body.contestId,
+        req.body.creatorId,
+        req.body.orderId,
+        req.body.offerId,
+        req.body.priority,
+        transaction
+      );
+      res.status(200).send(winningOffer);
+    } catch (err) {
+      transaction.rollback();
+      next(err);
+    }
+  }
+};
+
 module.exports.getCustomersContests = (req, res, next) => {
   db.Contests.findAll({
     where: { status: req.query.contestStatus, userId: req.tokenData.userId },
@@ -322,19 +373,54 @@ module.exports.getContests = (req, res, next) => {
     });
 };
 
-module.exports.getAllOffers = async (req, res, next) => {
+module.exports.getOffers = (req, res, next) => {
   const {
-    query: { limit = 10, offset = 0 },
-  } = req;
-
-  try {
-    const foundOffers = await db.Offers.findAll(
-      { limit, offset },
-      { raw: true }
-    );
-
-    res.status(200).send(foundOffers);
-  } catch (err) {
-    next(new ServerError());
-  }
+    limit = 10,
+    offset = 0,
+    typeIndex,
+    contestId,
+    industry,
+    awardSort,
+  } = req.query;
+  const predicates = UtilFunctions.createWhereForAllContests(
+    typeIndex,
+    contestId,
+    industry,
+    awardSort
+  );
+  db.Offers.findAll({
+    where: { isApproved: 'verifying' },
+    limit,
+    offset,
+    include: [
+      {
+        model: db.Contests,
+        where: predicates.where,
+        order: predicates.order,
+        attributes: ['id'],
+      },
+      {
+        model: db.Users,
+        attributes: [
+          'id',
+          'firstName',
+          'lastName',
+          'displayName',
+          'email',
+          'avatar',
+          'rating',
+        ],
+      },
+    ],
+  })
+    .then(offers => {
+      let haveMore = true;
+      if (offers.length === 0) {
+        haveMore = false;
+      }
+      res.status(200).send({ offers, haveMore });
+    })
+    .catch(err => {
+      next(new ServerError());
+    });
 };
