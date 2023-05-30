@@ -9,6 +9,19 @@ const contestController = require('../controllers/contestController');
 const contestsRouter = Router();
 
 contestsRouter.get(
+  '/data',
+  queryParser({
+    parseNull: true,
+    parseUndefined: true,
+    parseBoolean: true,
+    parseNumber: true,
+  }),
+  contestController.dataForContest
+);
+
+contestsRouter.get('/file/:fileName', contestController.downloadFile);
+
+contestsRouter.get(
   '/byCustomer',
   queryParser({
     parseNull: true,
@@ -43,9 +56,5 @@ contestsRouter
     }),
     contestController.getContests
   );
-
-contestsRouter.post('/data', contestController.dataForContest);
-
-contestsRouter.get('/file/:fileName', contestController.downloadFile);
 
 module.exports = contestsRouter;
