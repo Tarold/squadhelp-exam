@@ -35,6 +35,18 @@ module.exports.canGetContest = async (req, res, next) => {
           },
         },
       });
+    } else if (req.tokenData.role === CONSTANTS.MODERATOR) {
+      result = await db.Contests.findOne({
+        where: {
+          id: req.params.contestId,
+          status: {
+            [db.Sequelize.Op.or]: [
+              CONSTANTS.CONTEST_STATUS_ACTIVE,
+              CONSTANTS.CONTEST_STATUS_FINISHED,
+            ],
+          },
+        },
+      });
     }
     result ? next() : next(new RightsError());
   } catch (e) {
@@ -43,7 +55,7 @@ module.exports.canGetContest = async (req, res, next) => {
 };
 
 module.exports.onlyForCreative = (req, res, next) => {
-  if (req.tokenData.role === CONSTANTS.CUSTOMER) {
+  if (req.tokenData.role !== CONSTANTS.CREATOR) {
     next(new RightsError());
   } else {
     next();
@@ -51,13 +63,19 @@ module.exports.onlyForCreative = (req, res, next) => {
 };
 
 module.exports.onlyForCustomer = (req, res, next) => {
-  if (req.tokenData.role === CONSTANTS.CREATOR) {
+  if (req.tokenData.role !== CONSTANTS.CUSTOMER) {
     return next(new RightsError('this page only for customers'));
   } else {
     next();
   }
 };
-
+module.exports.onlyForModerator = (req, res, next) => {
+  if (req.tokenData.role !== CONSTANTS.MODERATOR) {
+    return next(new RightsError('this page only for moderator'));
+  } else {
+    next();
+  }
+};
 module.exports.canSendOffer = async (req, res, next) => {
   if (req.tokenData.role === CONSTANTS.CUSTOMER) {
     return next(new RightsError());
