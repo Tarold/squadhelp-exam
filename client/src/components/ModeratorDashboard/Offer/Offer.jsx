@@ -45,11 +45,12 @@ const Offer = props => {
         {
           label: 'Yes',
           onClick: () =>
-            props.setOfferApprove(
-              props.data.User.id,
-              props.data.id,
-              CONSTANTS.OFFER_APPROVED_ACCEPTED
-            ),
+            props.setOfferApprove({
+              creatorId: props.data.User.id,
+              email: props.data.User.email,
+              offerId: props.data.id,
+              command: CONSTANTS.OFFER_APPROVED_ACCEPTED,
+            }),
         },
         {
           label: 'No',
@@ -66,11 +67,12 @@ const Offer = props => {
         {
           label: 'Yes',
           onClick: () =>
-            props.setOfferApprove(
-              props.data.User.id,
-              props.data.id,
-              CONSTANTS.OFFER_APPROVED_DENIED
-            ),
+            props.setOfferApprove({
+              creatorId: props.data.User.id,
+              email: props.data.User.email,
+              offerId: props.data.id,
+              command: CONSTANTS.OFFER_APPROVED_DENIED,
+            }),
         },
         {
           label: 'No',

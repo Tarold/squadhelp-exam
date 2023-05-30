@@ -6,9 +6,16 @@ const contestController = require('../controllers/contestController');
 
 const offersRouter = Router();
 
-offersRouter
-  .route('/approve')
-  .patch(basicMiddlewares.onlyForModerator, contestController.setOfferApprove);
+offersRouter.route('/approve').patch(
+  basicMiddlewares.onlyForModerator,
+  queryParser({
+    parseNull: true,
+    parseUndefined: true,
+    parseBoolean: true,
+    parseNumber: true,
+  }),
+  contestController.setOfferApprove
+);
 
 offersRouter
   .route('/')

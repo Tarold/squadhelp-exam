@@ -150,28 +150,6 @@ const rejectOffer = async (offerId, creatorId, contestId) => {
   return rejectedOffer;
 };
 
-const acceptedOffer = async (offerId, creatorId, email) => {
-  const acceptedOffer = await contestQueries.updateOffer(
-    { isApproved: CONSTANTS.OFFER_APPROVED_ACCEPTED },
-    { id: offerId }
-  );
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was accepted');
-  return acceptedOffer;
-};
-
-const deniedOffer = async (offerId, creatorId, email) => {
-  const deniedOffer = await contestQueries.updateOffer(
-    { isApproved: CONSTANTS.OFFER_APPROVED_DENIED },
-    { id: offerId }
-  );
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was denied');
-  return deniedOffer;
-};
-
 const resolveOffer = async (
   contestId,
   creatorId,
@@ -268,35 +246,41 @@ module.exports.setOfferStatus = async (req, res, next) => {
   }
 };
 
+const acceptedOffer = async (offerId, creatorId, email) => {
+  const acceptedOffer = await contestQueries.updateOffer(
+    { isApproved: CONSTANTS.OFFER_APPROVED_ACCEPTED },
+    { id: offerId }
+  );
+  controller
+    .getNotificationController()
+    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was accepted');
+  return acceptedOffer;
+};
+
+const deniedOffer = async (offerId, creatorId, email) => {
+  const deniedOffer = await contestQueries.updateOffer(
+    { isApproved: CONSTANTS.OFFER_APPROVED_DENIED },
+    { id: offerId }
+  );
+  controller
+    .getNotificationController()
+    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was denied');
+  return deniedOffer;
+};
+
 module.exports.setOfferApprove = async (req, res, next) => {
-  let transaction;
-  if (req.body.command === CONSTANTS.OFFER_APPROVED_DENIED) {
-    try {
-      const offer = await deniedOffer(
-        req.body.offerId,
-        req.body.creatorId,
-        req.body.contestId
-      );
-      res.status(200).send(offer);
-    } catch (err) {
-      next(err);
-    }
-  } else if (req.body.command === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
-    try {
-      transaction = await db.sequelize.transaction();
-      const winningOffer = await acceptedOffer(
-        req.body.contestId,
-        req.body.creatorId,
-        req.body.orderId,
-        req.body.offerId,
-        req.body.priority,
-        transaction
-      );
-      res.status(200).send(winningOffer);
-    } catch (err) {
-      transaction.rollback();
-      next(err);
-    }
+  const { creatorId, email, offerId, command } = req.query;
+  let proccesOffer;
+  if (command === CONSTANTS.OFFER_APPROVED_DENIED) {
+    proccesOffer = deniedOffer;
+  } else if (command === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
+    proccesOffer = acceptedOffer;
+  }
+  try {
+    const offer = await proccesOffer(offerId, creatorId, email);
+    res.status(200).send(offer);
+  } catch (err) {
+    next(err);
   }
 };
 

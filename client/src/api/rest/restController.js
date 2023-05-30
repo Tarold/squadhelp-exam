@@ -26,6 +26,9 @@ export const getContestById = ({ contestId }) =>
 
 export const setNewOffer = data => http.post('offers', data);
 export const setOfferStatus = data => http.patch('offers', data);
+export const setOfferApprove = data =>
+  http.patch(`offers/approve?${queryString.stringify(data)}`);
+
 export const getNoVerifyingOffers = data =>
   http.get(`offers?${queryString.stringify(data)}`);
 
