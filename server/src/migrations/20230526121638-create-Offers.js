@@ -41,9 +41,9 @@ module.exports = {
         defaultValue: 'pending',
       },
       isApproved: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-        defaultValue: false,
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'verifying',
       },
     });
   },

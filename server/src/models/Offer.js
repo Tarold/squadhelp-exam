@@ -34,9 +34,9 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 'pending',
       },
       isApproved: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-        defaultValue: false,
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'verifying',
       },
     },
     {
