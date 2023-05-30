@@ -88,13 +88,28 @@ const OfferBox = props => {
           className={classNames('fas fa-times-circle reject', styles.reject)}
         />
       );
-    }
-    if (status === CONSTANTS.OFFER_STATUS_WON) {
+    } else if (status === CONSTANTS.OFFER_STATUS_WON) {
       return (
         <i
           className={classNames('fas fa-check-circle resolve', styles.resolve)}
         />
       );
+    }
+    return offerApproved();
+  };
+
+  const offerApproved = () => {
+    const { isApproved } = props.data;
+
+    if (isApproved === CONSTANTS.OFFER_APPROVED_VERIFYING) {
+      return (
+        <i className={classNames('fas fa-search reject', styles.verifying)} />
+      );
+    } else if (isApproved === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
+      return <i className={classNames('fas fa-eye', styles.accepted)} />;
+    } else if (isApproved === CONSTANTS.OFFER_APPROVED_DENIED) {
+      return <i className={classNames('fas fa-eye-slash', styles.denied)} />;
+    } else {
     }
     return null;
   };
