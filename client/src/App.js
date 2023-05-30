@@ -22,6 +22,7 @@ import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatCo
 import Events from './pages/Events/Events';
 import ModeratorHoc from './components/ModeratorHoc/ModeratorHoc';
 import OffersPage from './pages/OffersPage/OffersPage';
+import CustomerCreatorHoc from './components/CustomerCreatorHoc/CustomerCreatorHoc';
 
 class App extends Component {
   render () {
@@ -61,12 +62,12 @@ class App extends Component {
           <Route
             exact
             path='/startContest'
-            component={PrivateHoc(StartContestPage)}
+            component={CustomerCreatorHoc(StartContestPage)}
           />
           <Route
             exact
             path='/startContest/nameContest'
-            component={PrivateHoc(ContestCreationPage, {
+            component={CustomerCreatorHoc(ContestCreationPage, {
               contestType: CONSTANTS.NAME_CONTEST,
               title: 'Company Name',
             })}
@@ -74,7 +75,7 @@ class App extends Component {
           <Route
             exact
             path='/startContest/taglineContest'
-            component={PrivateHoc(ContestCreationPage, {
+            component={CustomerCreatorHoc(ContestCreationPage, {
               contestType: CONSTANTS.TAGLINE_CONTEST,
               title: 'TAGLINE',
             })}
@@ -82,16 +83,20 @@ class App extends Component {
           <Route
             exact
             path='/startContest/logoContest'
-            component={PrivateHoc(ContestCreationPage, {
+            component={CustomerCreatorHoc(ContestCreationPage, {
               contestType: CONSTANTS.LOGO_CONTEST,
               title: 'LOGO',
             })}
           />
-          <Route exact path='/dashboard' component={PrivateHoc(Dashboard)} />
+          <Route
+            exact
+            path='/dashboard'
+            component={CustomerCreatorHoc(Dashboard)}
+          />
           <Route
             exact
             path='/contest/:id'
-            component={PrivateHoc(ContestPage)}
+            component={CustomerCreatorHoc(ContestPage)}
           />
           <Route exact path='/account' component={PrivateHoc(UserProfile)} />
           <Route component={NotFound} />
