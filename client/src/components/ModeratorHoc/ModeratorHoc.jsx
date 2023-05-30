@@ -17,7 +17,7 @@ const ModeratorHoc = (Component, props) => {
         return <Spinner />;
       }
 
-      if (this.props.data.role === CONSTANTS.MODERATOR) {
+      if (this.props.data && this.props.data.role === CONSTANTS.MODERATOR) {
         return (
           <Component
             history={this.props.history}
