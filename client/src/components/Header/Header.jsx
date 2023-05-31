@@ -23,6 +23,14 @@ class Header extends React.Component {
     this.props.history.push('/startContest');
   };
 
+  startApproving = () => {
+    this.props.history.push('/offersApprove');
+  };
+
+  startCreare = () => {
+    this.props.history.push('/createModerator');
+  };
+
   renderLoginButtons = () => {
     if (this.props.data) {
       return (
@@ -262,12 +270,30 @@ class Header extends React.Component {
                 </li>
               </ul>
             </div>
-            {this.props.data && this.props.data.role !== CONSTANTS.CREATOR && (
+            {this.props.data && this.props.data.role === CONSTANTS.CUSTOMER && (
               <div
                 className={styles.startContestBtn}
                 onClick={this.startContests}
               >
                 START CONTEST
+              </div>
+            )}
+            {this.props.data &&
+              this.props.location.pathname !== '/offersApprove' &&
+              this.props.data.role === CONSTANTS.MODERATOR && (
+                <div
+                  className={styles.startContestBtn}
+                  onClick={this.startApproving}
+                >
+                  START OFFERS APPROVE
+                </div>
+              )}
+            {this.props.data && this.props.data.role === CONSTANTS.ADMIN && (
+              <div
+                className={styles.startContestBtn}
+                onClick={this.startCreare}
+              >
+                CREATE MODERATOR
               </div>
             )}
           </div>

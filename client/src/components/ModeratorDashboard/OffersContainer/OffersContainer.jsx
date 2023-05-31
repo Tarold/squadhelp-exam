@@ -1,9 +1,8 @@
 import React from 'react';
-import { withRouter } from 'react-router';
-import styles from './ContestContainer.module.sass';
-import Spinner from '../Spinner/Spinner';
+import styles from './OffersContainer.module.sass';
+import Spinner from '../../Spinner/Spinner';
 
-class ContestsContainer extends React.Component {
+class OffersContainer extends React.Component {
   componentDidMount () {
     window.addEventListener('scroll', this.scrollHandler);
   }
@@ -26,10 +25,10 @@ class ContestsContainer extends React.Component {
   render () {
     const { isFetching } = this.props;
     if (!isFetching && this.props.children.length === 0) {
-      return <div className={styles.notFound}>Nothing not found</div>;
+      return <div className={styles.notFound}>Nothing found</div>;
     }
     return (
-      <div>
+      <div className={styles.childrenContainer}>
         {this.props.children}
         {isFetching && (
           <div className={styles.spinnerContainer}>
@@ -41,4 +40,4 @@ class ContestsContainer extends React.Component {
   }
 }
 
-export default ContestsContainer;
+export default OffersContainer;

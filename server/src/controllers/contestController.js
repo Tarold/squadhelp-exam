@@ -3,15 +3,14 @@ const ServerError = require('../errors/ServerError');
 const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
+const emailController = require('../controllers/emailController');
 const UtilFunctions = require('../utils/functions');
 const CONSTANTS = require('../constants');
 
 module.exports.dataForContest = async (req, res, next) => {
+  const { characteristic1, characteristic2 } = req.query;
   const response = {};
   try {
-    const {
-      body: { characteristic1, characteristic2 },
-    } = req;
     const types = [characteristic1, characteristic2, 'industry'].filter(
       Boolean
     );
@@ -57,7 +56,7 @@ module.exports.getContestById = async (req, res, next) => {
           where:
             req.tokenData.role === CONSTANTS.CREATOR
               ? { userId: req.tokenData.userId }
-              : {},
+              : { approvedStatus: CONSTANTS.OFFER_APPROVED_ACCEPTED },
           attributes: { exclude: ['userId', 'contestId'] },
           include: [
             {
@@ -137,7 +136,6 @@ module.exports.setNewOffer = async (req, res, next) => {
     return next(new ServerError());
   }
 };
-
 const rejectOffer = async (offerId, creatorId, contestId) => {
   const rejectedOffer = await contestQueries.updateOffer(
     { status: CONSTANTS.OFFER_STATUS_REJECTED },
@@ -249,6 +247,53 @@ module.exports.setOfferStatus = async (req, res, next) => {
   }
 };
 
+const acceptedOffer = async (offerId, creatorId, email) => {
+  const acceptedOffer = await contestQueries.updateOffer(
+    { approvedStatus: CONSTANTS.OFFER_APPROVED_ACCEPTED },
+    { id: offerId }
+  );
+  controller
+    .getNotificationController()
+    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was accepted');
+  emailController.sendOfferMessage({
+    email,
+    offer: acceptedOffer,
+  });
+  return acceptedOffer;
+};
+
+const deniedOffer = async (offerId, creatorId, email) => {
+  const deniedOffer = await contestQueries.updateOffer(
+    { approvedStatus: CONSTANTS.OFFER_APPROVED_DENIED },
+    { id: offerId }
+  );
+  controller
+    .getNotificationController()
+    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was denied');
+  emailController.sendOfferMessage({
+    email,
+    offer: deniedOffer,
+  });
+
+  return deniedOffer;
+};
+
+module.exports.setOfferApprove = async (req, res, next) => {
+  const { creatorId, email, offerId, command } = req.query;
+  let proccesOffer;
+  if (command === CONSTANTS.OFFER_APPROVED_DENIED) {
+    proccesOffer = deniedOffer;
+  } else if (command === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
+    proccesOffer = acceptedOffer;
+  }
+  try {
+    const offer = await proccesOffer(offerId, creatorId, email);
+    res.status(200).send(offer);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports.getCustomersContests = (req, res, next) => {
   db.Contests.findAll({
     where: { status: req.query.contestStatus, userId: req.tokenData.userId },
@@ -322,19 +367,57 @@ module.exports.getContests = (req, res, next) => {
     });
 };
 
-module.exports.getAllOffers = async (req, res, next) => {
+module.exports.getOffers = (req, res, next) => {
   const {
-    query: { limit = 10, offset = 0 },
-  } = req;
-
-  try {
-    const foundOffers = await db.Offers.findAll(
-      { limit, offset },
-      { raw: true }
-    );
-
-    res.status(200).send(foundOffers);
-  } catch (err) {
-    next(new ServerError());
-  }
+    limit = 10,
+    offset = 0,
+    typeIndex,
+    contestId,
+    industry,
+    awardSort,
+  } = req.query;
+  const predicates = UtilFunctions.createWhereForAllContests(
+    typeIndex,
+    contestId,
+    industry,
+    awardSort
+  );
+  db.Offers.findAll({
+    where: {
+      approvedStatus: CONSTANTS.OFFER_APPROVED_VERIFYING,
+      status: CONSTANTS.OFFER_STATUS_PENDING,
+    },
+    limit,
+    offset,
+    include: [
+      {
+        model: db.Contests,
+        where: predicates.where,
+        order: predicates.order,
+        attributes: ['contestType', 'industry'],
+      },
+      {
+        model: db.Users,
+        attributes: [
+          'id',
+          'firstName',
+          'lastName',
+          'displayName',
+          'email',
+          'avatar',
+          'rating',
+        ],
+      },
+    ],
+  })
+    .then(offers => {
+      let haveMore = true;
+      if (offers.length === 0) {
+        haveMore = false;
+      }
+      res.status(200).send({ offers, haveMore });
+    })
+    .catch(err => {
+      next(new ServerError());
+    });
 };

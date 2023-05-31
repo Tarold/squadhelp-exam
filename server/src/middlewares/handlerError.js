@@ -1,6 +1,7 @@
 const logger = require('../utils/logger');
 
 module.exports = (err, req, res, next) => {
+  console.log('err :>> ', err);
   logger.error(err, err.stack);
   if (
     err.message ===

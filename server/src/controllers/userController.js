@@ -64,7 +64,20 @@ module.exports.registration = async (req, res, next) => {
     }
   }
 };
-
+module.exports.create = async (req, res, next) => {
+  try {
+    await userQueries.userCreation(
+      Object.assign(req.body, { password: req.hashPass })
+    );
+    res.status(200).send();
+  } catch (err) {
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      next(new NotUniqueEmail());
+    } else {
+      next(err);
+    }
+  }
+};
 function getQuery (offerId, userId, mark, isFirst, transaction) {
   const getCreateQuery = () =>
     ratingQueries.createRating(

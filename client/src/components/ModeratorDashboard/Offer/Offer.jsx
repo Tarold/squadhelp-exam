@@ -5,18 +5,19 @@ import { withRouter } from 'react-router-dom';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 import { confirmAlert } from 'react-confirm-alert';
-import { goToExpandedDialog } from '../../store/slices/chatSlice';
+import { goToExpandedDialog } from '../../../store/slices/chatSlice';
 import {
   changeMark,
   clearChangeMarkError,
   changeShowImage,
-} from '../../store/slices/contestByIdSlice';
-import CONSTANTS from '../../constants';
-import styles from './OfferBox.module.sass';
+} from '../../../store/slices/contestByIdSlice';
+import CONSTANTS from '../../../constants';
+import styles from './Offer.module.sass';
+import { Link } from 'react-router-dom';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './confirmStyle.css';
 
-const OfferBox = props => {
+const Offer = props => {
   const findConversationInfo = () => {
     const { messagesPreview, id } = props;
     const participants = [id, props.data.User.id];
@@ -36,7 +37,7 @@ const OfferBox = props => {
     return null;
   };
 
-  const resolveOffer = () => {
+  const passsedOffer = () => {
     confirmAlert({
       title: 'confirm',
       message: 'Are u sure?',
@@ -44,7 +45,12 @@ const OfferBox = props => {
         {
           label: 'Yes',
           onClick: () =>
-            props.setOfferStatus(props.data.User.id, props.data.id, 'resolve'),
+            props.setOfferApprove({
+              creatorId: props.data.User.id,
+              email: props.data.User.email,
+              offerId: props.data.id,
+              command: CONSTANTS.OFFER_APPROVED_ACCEPTED,
+            }),
         },
         {
           label: 'No',
@@ -53,7 +59,7 @@ const OfferBox = props => {
     });
   };
 
-  const rejectOffer = () => {
+  const deniedOffer = () => {
     confirmAlert({
       title: 'confirm',
       message: 'Are u sure?',
@@ -61,22 +67,17 @@ const OfferBox = props => {
         {
           label: 'Yes',
           onClick: () =>
-            props.setOfferStatus(props.data.User.id, props.data.id, 'reject'),
+            props.setOfferApprove({
+              creatorId: props.data.User.id,
+              email: props.data.User.email,
+              offerId: props.data.id,
+              command: CONSTANTS.OFFER_APPROVED_DENIED,
+            }),
         },
         {
           label: 'No',
         },
       ],
-    });
-  };
-
-  const changeMark = value => {
-    props.clearError();
-    props.changeMark({
-      mark: value,
-      offerId: props.data.id,
-      isFirst: !props.data.mark,
-      creatorId: props.data.User.id,
     });
   };
 
@@ -88,28 +89,13 @@ const OfferBox = props => {
           className={classNames('fas fa-times-circle reject', styles.reject)}
         />
       );
-    } else if (status === CONSTANTS.OFFER_STATUS_WON) {
+    }
+    if (status === CONSTANTS.OFFER_STATUS_WON) {
       return (
         <i
           className={classNames('fas fa-check-circle resolve', styles.resolve)}
         />
       );
-    }
-    if (role === CONSTANTS.CREATOR) return offerApproved();
-  };
-
-  const offerApproved = () => {
-    const { approvedStatus } = props.data;
-
-    if (approvedStatus === CONSTANTS.OFFER_APPROVED_VERIFYING) {
-      return (
-        <i className={classNames('fas fa-search reject', styles.verifying)} />
-      );
-    } else if (approvedStatus === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
-      return <i className={classNames('fas fa-check', styles.accepted)} />;
-    } else if (approvedStatus === CONSTANTS.OFFER_APPROVED_DENIED) {
-      return <i className={classNames('fas fa-eye-slash', styles.denied)} />;
-    } else {
     }
     return null;
   };
@@ -120,8 +106,8 @@ const OfferBox = props => {
       conversationData: findConversationInfo(),
     });
   };
-
-  const { data, role, id, contestType } = props;
+  const { data } = props;
+  const { contestType, industry } = props.data.Contest;
   const { avatar, firstName, lastName, email, rating } = props.data.User;
   return (
     <div className={styles.offerContainer}>
@@ -170,61 +156,25 @@ const OfferBox = props => {
           </div>
         </div>
         <div className={styles.responseConainer}>
-          {contestType === CONSTANTS.LOGO_CONTEST ? (
-            <img
-              onClick={() =>
-                props.changeShowImage({
-                  imagePath: data.fileName,
-                  isShowOnFull: true,
-                })
-              }
-              className={styles.responseLogo}
-              src={`${CONSTANTS.publicURL}${data.fileName}`}
-              alt='logo'
-            />
-          ) : (
-            <span className={styles.response}>{data.text}</span>
-          )}
-          {data.User.id !== id && (
-            <Rating
-              fractions={2}
-              fullSymbol={
-                <img
-                  src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
-                  alt='star'
-                />
-              }
-              placeholderSymbol={
-                <img
-                  src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
-                  alt='star'
-                />
-              }
-              emptySymbol={
-                <img
-                  src={`${CONSTANTS.STATIC_IMAGES_PATH}star-outline.png`}
-                  alt='star'
-                />
-              }
-              onClick={changeMark}
-              placeholderRating={data.mark}
-            />
-          )}
+          <span className={styles.response}>Offer text: {data.text}</span>
+          <div className={styles.contestData}>
+            <p>Contest type: {contestType}</p>
+            <p>Contest industry: {industry}</p>
+          </div>
         </div>
-        {role !== CONSTANTS.CREATOR && (
-          <i onClick={goChat} className='fas fa-comments' />
-        )}
+
+        <i onClick={goChat} className='fas fa-comments' />
       </div>
-      {props.needButtons(data.status) && (
+      {
         <div className={styles.btnsContainer}>
-          <div onClick={resolveOffer} className={styles.resolveBtn}>
-            Resolve
+          <div onClick={passsedOffer} className={styles.resolveBtn}>
+            Pass
           </div>
-          <div onClick={rejectOffer} className={styles.rejectBtn}>
-            Reject
+          <div onClick={deniedOffer} className={styles.rejectBtn}>
+            Denied
           </div>
         </div>
-      )}
+      }
     </div>
   );
 };
@@ -248,6 +198,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(OfferBox)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Offer));

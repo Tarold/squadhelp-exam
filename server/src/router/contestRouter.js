@@ -9,6 +9,21 @@ const contestController = require('../controllers/contestController');
 const contestsRouter = Router();
 
 contestsRouter.get(
+  '/data',
+  queryParser({
+    parseNull: true,
+    parseUndefined: true,
+    parseBoolean: true,
+    parseNumber: true,
+  }),
+  contestController.dataForContest
+);
+
+contestsRouter.get('/file/:fileName', contestController.downloadFile);
+
+contestsRouter.use(basicMiddlewares.onlyForCustomerOrCreator);
+
+contestsRouter.get(
   '/byCustomer',
   queryParser({
     parseNull: true,
@@ -42,23 +57,6 @@ contestsRouter
       parseNumber: true,
     }),
     contestController.getContests
-  );
-
-contestsRouter.post('/data', contestController.dataForContest);
-
-contestsRouter.get('/file/:fileName', contestController.downloadFile);
-
-contestsRouter
-  .route('/offers')
-  .get(contestController.getAllOffers)
-  .post(
-    upload.uploadLogoFiles,
-    basicMiddlewares.canSendOffer,
-    contestController.setNewOffer
-  )
-  .patch(
-    basicMiddlewares.onlyForCustomerWhoCreateContest,
-    contestController.setOfferStatus
   );
 
 module.exports = contestsRouter;

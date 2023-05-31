@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { getUser } from '../../store/slices/userSlice';
 import Spinner from '../Spinner/Spinner';
+import CONSTANTS from '../../constants';
+import NotFound from '../NotFound/NotFound';
 
-const PrivateHoc = (Component, props) => {
+const ModeratorHoc = (Component, props) => {
   class Hoc extends React.Component {
     componentDidMount () {
       if (!this.props.data) {
@@ -15,7 +16,9 @@ const PrivateHoc = (Component, props) => {
     render () {
       if (this.props.isFetching) {
         return <Spinner />;
-      } else if (this.props.data) {
+      }
+
+      if (this.props.data && this.props.data.role === CONSTANTS.MODERATOR) {
         return (
           <Component
             history={this.props.history}
@@ -23,9 +26,8 @@ const PrivateHoc = (Component, props) => {
             {...props}
           />
         );
-      } else {
-        return <Redirect to='/login' />;
       }
+      return NotFound();
     }
   }
 
@@ -38,4 +40,4 @@ const PrivateHoc = (Component, props) => {
   return connect(mapStateToProps, mapDispatchToProps)(Hoc);
 };
 
-export default PrivateHoc;
+export default ModeratorHoc;

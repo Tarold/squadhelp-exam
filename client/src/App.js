@@ -20,6 +20,11 @@ import CONSTANTS from './constants';
 import browserHistory from './browserHistory';
 import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatContainer';
 import Events from './pages/Events/Events';
+import ModeratorHoc from './components/ModeratorHoc/ModeratorHoc';
+import OffersPage from './pages/OffersPage/OffersPage';
+import CustomerOrCreatorHoc from './components/CustomerOrCreatorHoc/CustomerOrCreatorHoc';
+import RegistrationModeratorPage from './pages/RegistrationModeratorPage/RegistrationModeratorPage';
+import AdminHoc from './components/AdminHoc/AdminHoc';
 
 class App extends Component {
   render () {
@@ -50,16 +55,26 @@ class App extends Component {
           />
           <Route exact path='/howItWorks' component={HowItWorksPage} />
           <Route exact path='/events' component={PrivateHoc(Events)} />
+          <Route
+            exact
+            path='/offersApprove'
+            component={ModeratorHoc(OffersPage)}
+          />{' '}
+          <Route
+            exact
+            path='/createModerator'
+            component={AdminHoc(RegistrationModeratorPage)}
+          />
           <Route exact path='/payment' component={PrivateHoc(Payment)} />
           <Route
             exact
             path='/startContest'
-            component={PrivateHoc(StartContestPage)}
+            component={CustomerOrCreatorHoc(StartContestPage)}
           />
           <Route
             exact
             path='/startContest/nameContest'
-            component={PrivateHoc(ContestCreationPage, {
+            component={CustomerOrCreatorHoc(ContestCreationPage, {
               contestType: CONSTANTS.NAME_CONTEST,
               title: 'Company Name',
             })}
@@ -67,7 +82,7 @@ class App extends Component {
           <Route
             exact
             path='/startContest/taglineContest'
-            component={PrivateHoc(ContestCreationPage, {
+            component={CustomerOrCreatorHoc(ContestCreationPage, {
               contestType: CONSTANTS.TAGLINE_CONTEST,
               title: 'TAGLINE',
             })}
@@ -75,16 +90,20 @@ class App extends Component {
           <Route
             exact
             path='/startContest/logoContest'
-            component={PrivateHoc(ContestCreationPage, {
+            component={CustomerOrCreatorHoc(ContestCreationPage, {
               contestType: CONSTANTS.LOGO_CONTEST,
               title: 'LOGO',
             })}
           />
-          <Route exact path='/dashboard' component={PrivateHoc(Dashboard)} />
+          <Route
+            exact
+            path='/dashboard'
+            component={CustomerOrCreatorHoc(Dashboard)}
+          />
           <Route
             exact
             path='/contest/:id'
-            component={PrivateHoc(ContestPage)}
+            component={CustomerOrCreatorHoc(ContestPage)}
           />
           <Route exact path='/account' component={PrivateHoc(UserProfile)} />
           <Route component={NotFound} />

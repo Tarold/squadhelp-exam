@@ -29,12 +29,13 @@ module.exports.findUserByPk = async interlocutorId => {
   }
   return result;
 };
-module.exports.findUserByPk = async interlocutorId => {
-  const result = await db.Users.findByPk(interlocutorId);
-  if (!result) {
-    throw new NotFound('user with this data didn`t exist');
+module.exports.userCreation = async data => {
+  const newUser = await db.Users.create(data);
+  if (!newUser) {
+    throw new ServerError('server error on user creation');
+  } else {
+    return newUser.get({ plain: true });
   }
-  return result;
 };
 module.exports.findUsers = async interlocutors => {
   const result = await db.Users.findAll({
