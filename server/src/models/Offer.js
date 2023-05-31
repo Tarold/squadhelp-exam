@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 'pending',
       },
-      isApproved: {
+      approvedStatus: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: 'verifying',

@@ -45,7 +45,7 @@ const mailOptions = ({ email, offer }) => {
     
     Offer ID: ${offer.id}
     Text: ${offer.text}
-    Approval Status: ${offer.isApproved}
+    Approval Status: ${offer.approvedStatus}
     
     We appreciate your contribution and value your participation. Your approved offer will now be processed accordingly.
     
@@ -73,7 +73,7 @@ const mailOptions = ({ email, offer }) => {
       <ul>
         <li><strong>Offer ID:</strong> ${offer.id}</li>
         <li><strong>Text:</strong> ${offer.userId}</li>
-        <li><strong>Approval Status:</strong> ${offer.isApproved}</li>
+        <li><strong>Approval Status:</strong> ${offer.approvedStatus}</li>
       </ul>
       
       <p>We appreciate your contribution and value your participation. Your approved offer will now be processed accordingly.</p>

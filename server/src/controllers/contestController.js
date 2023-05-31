@@ -56,7 +56,7 @@ module.exports.getContestById = async (req, res, next) => {
           where:
             req.tokenData.role === CONSTANTS.CREATOR
               ? { userId: req.tokenData.userId }
-              : { isApproved: CONSTANTS.OFFER_APPROVED_ACCEPTED },
+              : { approvedStatus: CONSTANTS.OFFER_APPROVED_ACCEPTED },
           attributes: { exclude: ['userId', 'contestId'] },
           include: [
             {
@@ -249,7 +249,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
 
 const acceptedOffer = async (offerId, creatorId, email) => {
   const acceptedOffer = await contestQueries.updateOffer(
-    { isApproved: CONSTANTS.OFFER_APPROVED_ACCEPTED },
+    { approvedStatus: CONSTANTS.OFFER_APPROVED_ACCEPTED },
     { id: offerId }
   );
   controller
@@ -264,7 +264,7 @@ const acceptedOffer = async (offerId, creatorId, email) => {
 
 const deniedOffer = async (offerId, creatorId, email) => {
   const deniedOffer = await contestQueries.updateOffer(
-    { isApproved: CONSTANTS.OFFER_APPROVED_DENIED },
+    { approvedStatus: CONSTANTS.OFFER_APPROVED_DENIED },
     { id: offerId }
   );
   controller
@@ -384,7 +384,7 @@ module.exports.getOffers = (req, res, next) => {
   );
   db.Offers.findAll({
     where: {
-      isApproved: CONSTANTS.OFFER_APPROVED_VERIFYING,
+      approvedStatus: CONSTANTS.OFFER_APPROVED_VERIFYING,
       status: CONSTANTS.OFFER_STATUS_PENDING,
     },
     limit,

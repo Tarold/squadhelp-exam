@@ -99,15 +99,15 @@ const OfferBox = props => {
   };
 
   const offerApproved = () => {
-    const { isApproved } = props.data;
+    const { approvedStatus } = props.data;
 
-    if (isApproved === CONSTANTS.OFFER_APPROVED_VERIFYING) {
+    if (approvedStatus === CONSTANTS.OFFER_APPROVED_VERIFYING) {
       return (
         <i className={classNames('fas fa-search reject', styles.verifying)} />
       );
-    } else if (isApproved === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
+    } else if (approvedStatus === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
       return <i className={classNames('fas fa-eye', styles.accepted)} />;
-    } else if (isApproved === CONSTANTS.OFFER_APPROVED_DENIED) {
+    } else if (approvedStatus === CONSTANTS.OFFER_APPROVED_DENIED) {
       return <i className={classNames('fas fa-eye-slash', styles.denied)} />;
     } else {
     }

@@ -40,7 +40,7 @@ module.exports = {
         allowNull: true,
         defaultValue: 'pending',
       },
-      isApproved: {
+      approvedStatus: {
         type: Sequelize.STRING,
         allowNull: false,
         defaultValue: 'verifying',
