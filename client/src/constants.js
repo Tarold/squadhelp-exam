@@ -2,6 +2,7 @@ const env = process.env.NODE_ENV || 'development';
 const serverIP = 'localhost';
 const serverPort = 5000;
 export default {
+  ADMIN: 'ADMIN',
   CUSTOMER: 'customer',
   CREATOR: 'creator',
   MODERATOR: 'moderator',
