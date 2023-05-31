@@ -28,7 +28,7 @@ class OffersContainer extends React.Component {
       return <div className={styles.notFound}>Nothing found</div>;
     }
     return (
-      <div>
+      <div className={styles.childrenContainer}>
         {this.props.children}
         {isFetching && (
           <div className={styles.spinnerContainer}>
