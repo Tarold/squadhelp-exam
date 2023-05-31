@@ -95,7 +95,7 @@ const OfferBox = props => {
         />
       );
     }
-    return offerApproved();
+    if (role === CONSTANTS.CREATOR) return offerApproved();
   };
 
   const offerApproved = () => {
@@ -106,7 +106,7 @@ const OfferBox = props => {
         <i className={classNames('fas fa-search reject', styles.verifying)} />
       );
     } else if (approvedStatus === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
-      return <i className={classNames('fas fa-eye', styles.accepted)} />;
+      return <i className={classNames('fas fa-check', styles.accepted)} />;
     } else if (approvedStatus === CONSTANTS.OFFER_APPROVED_DENIED) {
       return <i className={classNames('fas fa-eye-slash', styles.denied)} />;
     } else {
