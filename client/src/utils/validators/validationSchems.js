@@ -60,6 +60,49 @@ export default {
       .oneOf([true], 'Must Accept Terms and Conditions')
       .required('Must Accept Terms and Conditions'),
   }),
+  RegistrationModeratorSchem: yup.object().shape({
+    email: yup.string().email('check email').required('Email is required'),
+    password: yup
+      .string()
+      .test(
+        'test-password',
+        'min 6 symbols',
+        value => value && value.trim().length >= 6
+      )
+      .required('required'),
+    confirmPassword: yup
+      .string()
+      .required('confirm password is required')
+      .oneOf([yup.ref('password')], 'confirmation pass must match password'),
+    firstName: yup
+      .string()
+      .test(
+        'test-firstName',
+        'required',
+        value => value && value.trim().length >= 1
+      )
+      .required('First Name is required'),
+    lastName: yup
+      .string()
+      .test(
+        'test-lastName',
+        'required',
+        value => value && value.trim().length >= 1
+      )
+      .required('Last Name is required'),
+    displayName: yup
+      .string()
+      .test(
+        'test-displayName',
+        'required',
+        value => value && value.trim().length >= 1
+      )
+      .required('Display Name is required'),
+    role: yup
+      .string()
+      .matches(/moderator/)
+      .required('Role is required'),
+  }),
   ContestSchem: yup.object({
     nameVenture: yup.string().min(3),
     contestType: yup
