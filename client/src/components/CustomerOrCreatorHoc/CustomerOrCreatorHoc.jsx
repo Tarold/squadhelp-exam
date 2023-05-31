@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { getUser } from '../../store/slices/userSlice';
 import Spinner from '../Spinner/Spinner';
 import CONSTANTS from '../../constants';
-import NotFound from '../NotFound/NotFound';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import NotAccess from '../NotAccess/NotAccess';
 
 const CustomerOrCreatorHoc = (Component, props) => {
   class Hoc extends React.Component {
@@ -30,8 +31,10 @@ const CustomerOrCreatorHoc = (Component, props) => {
             {...props}
           />
         );
+      } else if (this.props.data.role === CONSTANTS.MODERATOR) {
+        return NotAccess();
       }
-      return NotFound();
+      return <Redirect to='/login' />;
     }
   }
 
