@@ -23,6 +23,8 @@ import Events from './pages/Events/Events';
 import ModeratorHoc from './components/ModeratorHoc/ModeratorHoc';
 import OffersPage from './pages/OffersPage/OffersPage';
 import CustomerOrCreatorHoc from './components/CustomerOrCreatorHoc/CustomerOrCreatorHoc';
+import RegistrationModeratorPage from './pages/RegistrationModeratorPage/RegistrationModeratorPage';
+import AdminHoc from './components/AdminHoc/AdminHoc';
 
 class App extends Component {
   render () {
@@ -57,6 +59,11 @@ class App extends Component {
             exact
             path='/offersApprove'
             component={ModeratorHoc(OffersPage)}
+          />{' '}
+          <Route
+            exact
+            path='/createModerator'
+            component={AdminHoc(RegistrationModeratorPage)}
           />
           <Route exact path='/payment' component={PrivateHoc(Payment)} />
           <Route

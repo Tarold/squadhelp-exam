@@ -27,6 +27,10 @@ class Header extends React.Component {
     this.props.history.push('/offersApprove');
   };
 
+  startCreare = () => {
+    this.props.history.push('/createModerator');
+  };
+
   renderLoginButtons = () => {
     if (this.props.data) {
       return (
@@ -284,6 +288,14 @@ class Header extends React.Component {
                   START OFFERS APPROVE
                 </div>
               )}
+            {this.props.data && this.props.data.role === CONSTANTS.ADMIN && (
+              <div
+                className={styles.startContestBtn}
+                onClick={this.startCreare}
+              >
+                CREATE MODERATOR
+              </div>
+            )}
           </div>
         </div>
       </div>
