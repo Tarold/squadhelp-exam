@@ -4,6 +4,7 @@ import http from '../interceptor';
 export const getUser = () => http.get('user');
 export const registerRequest = data => http.post('user/registration', data);
 export const loginRequest = data => http.post('user/login', data);
+export const createRequest = data => http.post('user/create', data);
 export const changeMark = data => http.patch('user/changeMark', data);
 export const cashOut = data => http.post('user/cashout', data);
 export const updateUser = data => http.patch('user', data);

@@ -16,6 +16,13 @@ userRouter.post(
 
 userRouter.post('/login', validators.validateLogin, userController.login);
 
+userRouter.post(
+  '/create',
+  validators.validateRegistrationData,
+  hashPass,
+  userController.create
+);
+
 userRouter.use(checkToken.checkToken);
 
 userRouter.post(

@@ -128,7 +128,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   register: ({ data, history }) =>
     dispatch(
-      checkAuth({ data, history, authMode: CONSTANTS.AUTH_MODE.REGISTER })
+      checkAuth({ data, history, authMode: CONSTANTS.AUTH_MODE.CREATE })
     ),
   authClear: () => dispatch(clearAuth()),
 });
