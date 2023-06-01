@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Logo from '../../components/Logo';
+import Logo from '../../components/Logo/Logo';
 import RegistrationModeratorForm from '../../components/RegistrationModeratorForm/RegistrationModeratorForm';
 import styles from './RegistrationModeratorPage.module.sass';
 import { clearAuthError } from '../../store/slices/authSlice';

@@ -31,12 +31,20 @@ const HowItWorksPage = () => {
               data-fancybox=''
               href='https://vimeo.com/368584367'
             >
-              <img className={styles.play} src={`${IMAGES_PATH}play.png`} />
+              <img
+                alt=''
+                className={styles.play}
+                src={`${IMAGES_PATH}play.png`}
+              />
               Play Video
             </a>
           </div>
 
-          <img className={styles.banerImg} src={`${IMAGES_PATH}phoneguy.png`} />
+          <img
+            alt=''
+            className={styles.banerImg}
+            src={`${IMAGES_PATH}phoneguy.png`}
+          />
         </div>
         <div className={styles.servicesSection}>
           <div className={styles.services}>
@@ -50,7 +58,7 @@ const HowItWorksPage = () => {
 
           <div className={styles.cardContainer}>
             <div className={styles.card}>
-              <img src={`${IMAGES_PATH}contest.png`} />
+              <img alt='contest' src={`${IMAGES_PATH}contest.png`} />
               <h3 className=''>Launch a Contest</h3>
               <p>
                 Work with hundreds of creative experts to get custom name
@@ -61,7 +69,7 @@ const HowItWorksPage = () => {
             </div>
 
             <div className={styles.card}>
-              <img src={`${IMAGES_PATH}computer.png`} />
+              <img alt='' src={`${IMAGES_PATH}computer.png`} />
 
               <h3 className=''>Explore Names For Sale</h3>
               <p>
@@ -74,7 +82,7 @@ const HowItWorksPage = () => {
             </div>
 
             <div className={styles.card}>
-              <img src={`${IMAGES_PATH}idea.png`} />
+              <img alt='' src={`${IMAGES_PATH}idea.png`} />
 
               <h3 className=''>Agency-level Managed Contests</h3>
               <p>

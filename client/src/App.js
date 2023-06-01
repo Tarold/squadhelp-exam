@@ -59,7 +59,7 @@ class App extends Component {
             exact
             path='/offersApprove'
             component={ModeratorHoc(OffersPage)}
-          />{' '}
+          />
           <Route
             exact
             path='/createModerator'

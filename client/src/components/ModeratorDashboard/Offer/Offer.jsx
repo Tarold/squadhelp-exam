@@ -13,7 +13,6 @@ import {
 } from '../../../store/slices/contestByIdSlice';
 import CONSTANTS from '../../../constants';
 import styles from './Offer.module.sass';
-import { Link } from 'react-router-dom';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './confirmStyle.css';
 

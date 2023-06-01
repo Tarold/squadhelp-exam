@@ -8,11 +8,7 @@ const SelectInput = ({
   valueArray,
   ...props
 }) => {
-  const {
-    form: { setFieldValue },
-    meta: { initialValue },
-    field,
-  } = props;
+  const { field } = props;
 
   const getOptionsArray = () => {
     const array = [];
@@ -33,9 +29,15 @@ const SelectInput = ({
   };
 
   useLayoutEffect(() => {
+    const {
+      form: { setFieldValue },
+      meta: { initialValue },
+    } = props;
+
     if (!initialValue && optionsArray) {
       setFieldValue(field.name, valueArray ? valueArray[0] : optionsArray[0]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
