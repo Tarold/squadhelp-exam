@@ -23,9 +23,8 @@ const PrivateHoc = (Component, props) => {
             {...props}
           />
         );
-      } else {
-        return <Redirect to='/login' />;
       }
+      return null;
     }
   }
 
