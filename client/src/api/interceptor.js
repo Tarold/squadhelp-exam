@@ -32,7 +32,7 @@ instance.interceptors.response.use(
       history.location.pathname !== '/howItWorks' &&
       history.location.pathname !== '/'
     ) {
-      history.replace('/login');
+      history.push('/login');
     }
     return Promise.reject(err);
   }
