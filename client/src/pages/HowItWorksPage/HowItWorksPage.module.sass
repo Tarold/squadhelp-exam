@@ -76,9 +76,8 @@
       @include button
       @include flexContainer
 
-      img
-        height: 20px
-        filter: invert(1)
+      .play
+        padding-right:10px
       
   .banerImg
     height: 350px
@@ -125,3 +124,47 @@
       a
         @include button($br: 5px)
 
+
+.namingContestsSection
+  box-sizing: border-box
+  .namingContestsGrid
+    display: grid
+    grid-template-columns: 1fr 1fr
+    gap: 20px
+    .namingImg
+      width: 50px
+.namingList
+  list-style: none
+  counter-reset: my-awesome-counter
+  li 
+    counter-increment: my-awesome-count
+  li::before 
+    content: counter(my-awesome-counter) ". "
+    color: #377dff
+    font-weight: bold
+
+
+// .grid-container {
+//   
+// }
+
+// .grid-container img {
+//   width: 100%;
+//   height: auto;
+// }
+
+// .grid-container ul {
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+// }
+
+// .grid-container li {
+//   margin-bottom: 10px;
+// }
+
+// @media (max-width: 1000px) {
+//   .grid-container {
+//     grid-template-columns: 1fr;
+//   }
+// }
