@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import CONSTANTS from '../../../constants';
 
 const ImageUpload = props => {
   const { uploadContainer, inputContainer, imgStyle } = props.classes;
   const [imgLink, setImgLink] = useState(
-    `${CONSTANTS.publicURL}${props.values[props.name]}`
+    props.defaultValue ? props.defaultValue : ''
   );
   const onChange = e => {
     const file = e.target.files[0];
