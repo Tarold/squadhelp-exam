@@ -31,7 +31,10 @@ const CustomerOrCreatorHoc = (Component, props) => {
             {...props}
           />
         );
-      } else if (this.props.data.role === CONSTANTS.MODERATOR) {
+      } else if (
+        this.props.data &&
+        this.props.data.role === CONSTANTS.MODERATOR
+      ) {
         return NotAccess();
       }
       return <Redirect to='/login' />;
