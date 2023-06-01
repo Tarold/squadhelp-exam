@@ -139,6 +139,7 @@ const validatorSchemas = {
     typeOfTagline: yup.string().min(1),
     brandStyle: yup.string().min(1),
     file: yup.mixed(),
+    fileName: yup.string(),
   }),
   filterSchem: yup.object().shape({
     typeIndex: yup.number().oneOf[(1, 2, 3, 4, 5, 6, 7)],

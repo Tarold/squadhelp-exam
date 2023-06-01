@@ -5,8 +5,11 @@ const upload = require('../utils/fileUpload');
 const validators = require('../middlewares/validators');
 const userController = require('../controllers/userController');
 const contestController = require('../controllers/contestController');
+const checkToken = require('../middlewares/checkToken');
 
 const contestsRouter = Router();
+
+contestsRouter.use(checkToken.checkToken);
 
 contestsRouter.get(
   '/data',

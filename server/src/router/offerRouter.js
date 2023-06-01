@@ -3,8 +3,11 @@ const { queryParser } = require('express-query-parser');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
 const upload = require('../utils/fileUpload');
 const offerController = require('../controllers/offerController');
+const checkToken = require('../middlewares/checkToken');
 
 const offersRouter = Router();
+
+offersRouter.use(checkToken.checkToken);
 
 offersRouter.route('/approve').patch(
   basicMiddlewares.onlyForModerator,
@@ -16,7 +19,6 @@ offersRouter.route('/approve').patch(
   }),
   offerController.setOfferApprove
 );
-
 offersRouter
   .route('/')
   .get(

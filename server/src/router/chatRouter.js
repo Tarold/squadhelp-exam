@@ -1,6 +1,9 @@
 const { Router } = require('express');
 const chatController = require('../controllers/chatController');
+const checkToken = require('../middlewares/checkToken');
 const chatRouter = Router();
+
+chatRouter.use(checkToken.checkToken);
 
 chatRouter
   .route('/')

@@ -7,7 +7,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/public', express.static('public'));
+app.use('/public/images', express.static('public/images'));
 app.use(router);
 app.use(handlerError);
 

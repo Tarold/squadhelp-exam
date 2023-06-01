@@ -18,9 +18,38 @@ const initialState = {
   focusOnElement: 'number',
 };
 
+const blobToFile = (theBlob, fileName) => {
+  theBlob.lastModifiedDate = new Date();
+  theBlob.name = fileName;
+  return theBlob;
+};
+
 export const pay = decorateAsyncThunk({
   key: `${PAYMENT_SLICE_NAME}/pay`,
   thunk: async ({ data, history }, { dispatch }) => {
+    const contests = JSON.parse(data.formData.get('contests'));
+
+    const files = [];
+
+    if (contests && Array.isArray(contests)) {
+      await Promise.all(
+        contests.map(async contest => {
+          console.log('contest :>> ', contest);
+          if (contest.file) {
+            const imgBlob = await fetch(contest.file).then(r => r.blob());
+
+            files.push(blobToFile(imgBlob, contest.fileName));
+          }
+        })
+      );
+    } else {
+      console.log('contests is not defined or not an array');
+    }
+
+    if (files.length > 0) {
+      files.forEach(file => data.formData.append('files', file, file.name));
+    }
+
     await restController.payMent(data);
     history.replace('dashboard');
     dispatch(clearContestStore());
