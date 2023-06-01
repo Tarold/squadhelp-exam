@@ -1,7 +1,11 @@
 const CONSTANTS = require('../constants');
+const ServerError = require('../errors/ServerError');
 const db = require('../models');
 const controller = require('../socketInit');
+const emailController = require('../controllers/emailController');
+const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');
+const UtilFunctions = require('../utils/functions');
 
 module.exports.setOfferApprove = async (req, res, next) => {
   const { creatorId, email, offerId, command } = req.query;
