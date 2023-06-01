@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { queryParser } = require('express-query-parser');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
 const upload = require('../utils/fileUpload');
-const contestController = require('../controllers/contestController');
+const offerController = require('../controllers/offerController');
 
 const offersRouter = Router();
 
@@ -14,7 +14,7 @@ offersRouter.route('/approve').patch(
     parseBoolean: true,
     parseNumber: true,
   }),
-  contestController.setOfferApprove
+  offerController.setOfferApprove
 );
 
 offersRouter
@@ -27,16 +27,16 @@ offersRouter
       parseBoolean: true,
       parseNumber: true,
     }),
-    contestController.getOffers
+    offerController.getOffers
   )
   .post(
     upload.uploadLogoFiles,
     basicMiddlewares.canSendOffer,
-    contestController.setNewOffer
+    offerController.setNewOffer
   )
   .patch(
     basicMiddlewares.onlyForCustomerWhoCreateContest,
-    contestController.setOfferStatus
+    offerController.setOfferStatus
   );
 
 module.exports = offersRouter;
