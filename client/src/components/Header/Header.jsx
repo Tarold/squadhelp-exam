@@ -30,6 +30,9 @@ class Header extends React.Component {
   startCreare = () => {
     this.props.history.push('/createModerator');
   };
+  startEvents = () => {
+    this.props.history.push('/events');
+  };
 
   renderLoginButtons = () => {
     if (this.props.data) {
@@ -74,6 +77,11 @@ class Header extends React.Component {
                   style={{ textDecoration: 'none' }}
                 >
                   <span>Affiliate Dashboard</span>
+                </Link>
+              </li>
+              <li>
+                <Link to='/events' style={{ textDecoration: 'none' }}>
+                  <span>Events</span>
                 </Link>
               </li>
               <li>
