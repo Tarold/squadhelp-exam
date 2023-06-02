@@ -22,8 +22,16 @@ module.exports.contestSchem = yup.object().shape({
     .string()
     .matches(/(name|logo|tagline)/)
     .required(),
-  fileName: yup.string().min(1),
-  originalFileName: yup.string().min(1),
+  fileName: yup.string().when('haveFile', {
+    is: true,
+    then: yup.string().min(1),
+    otherwise: yup.string().notRequired(),
+  }),
+  originalFileName: yup.string().when('haveFile', {
+    is: true,
+    then: yup.string().min(1),
+    otherwise: yup.string().notRequired(),
+  }),
   title: yup.string().required().min(1),
   typeOfName: yup.string().min(1),
   industry: yup.string().required().min(1),
