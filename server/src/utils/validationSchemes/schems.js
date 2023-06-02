@@ -25,12 +25,12 @@ module.exports.contestSchem = yup.object().shape({
   fileName: yup.string().when('haveFile', {
     is: true,
     then: yup.string().min(1),
-    otherwise: yup.string().notRequired(),
+    otherwise: yup.string().nullable(),
   }),
   originalFileName: yup.string().when('haveFile', {
     is: true,
     then: yup.string().min(1),
-    otherwise: yup.string().notRequired(),
+    otherwise: yup.string().nullable(),
   }),
   title: yup.string().required().min(1),
   typeOfName: yup.string().min(1),
