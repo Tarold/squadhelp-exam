@@ -28,17 +28,13 @@ export const pay = decorateAsyncThunk({
     if (contests && Array.isArray(contests)) {
       await Promise.all(
         contests.map(async contest => {
-          console.log('contest :>> ', contest);
           if (contest.file) {
             const imgBlob = await fetch(contest.file).then(r => r.blob());
-            imgBlob.name = contest.fileName;
 
             files.push(imgBlob);
           }
         })
       );
-    } else {
-      console.log('contests is not defined or not an array');
     }
 
     if (files.length > 0) {

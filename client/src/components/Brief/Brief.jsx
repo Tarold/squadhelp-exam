@@ -12,49 +12,29 @@ import ContestInfo from '../Contest/ContestInfo/ContestInfo';
 import Error from '../Error/Error';
 
 const Brief = props => {
-  const setNewContestData = values => {
+  const setNewContestData = async values => {
     const data = new FormData();
     Object.keys(values).forEach(key => {
       if (key !== 'file' && values[key]) data.append(key, values[key]);
     });
-    if (values.file instanceof File) {
-      data.append('file', values.file);
+
+    if (values.file) {
+      const imgBlob = await fetch(values.file).then(r => r.blob());
+
+      data.append('file', imgBlob, values.fileName);
     }
     props.update(props.contestData.id, data);
   };
 
   const getContestObjInfo = () => {
-    const {
-      focusOfWork,
-      industry,
-      nameVenture,
-      styleName,
-      targetCustomer,
-      title,
-      brandStyle,
-      typeOfName,
-      typeOfTagline,
-      originalFileName,
-      contestType,
-    } = props.contestData;
-    const data = {
-      focusOfWork,
-      industry,
-      nameVenture,
-      styleName,
-      targetCustomer,
-      title,
-      brandStyle,
-      typeOfName,
-      typeOfTagline,
-      originalFileName,
-      contestType,
-    };
+    const data = { ...props.contestData };
     const defaultData = {};
+
     Object.keys(data).forEach(key => {
       if (data[key]) {
+        console.log(key, ' :>> ', data[key]);
         if (key === 'originalFileName') {
-          defaultData.file = { name: data[key] };
+          defaultData.fileName = data[key];
         } else {
           defaultData[key] = data[key];
         }
