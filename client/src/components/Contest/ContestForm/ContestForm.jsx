@@ -63,7 +63,7 @@ class ContestForm extends React.Component {
 
     const formSubmit = values => {
       if (values.file) {
-        if (!(values.file instanceof Blob))
+        if (values.file instanceof File)
           values.file = window.URL.createObjectURL(values.file);
       }
       this.props.handleSubmit(values);
