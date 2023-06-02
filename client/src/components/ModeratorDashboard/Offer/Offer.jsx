@@ -155,7 +155,26 @@ const Offer = props => {
           </div>
         </div>
         <div className={styles.responseConainer}>
-          <span className={styles.response}>Offer text: {data.text}</span>
+          {CONSTANTS.LOGO_CONTEST !== contestType ? (
+            <span className={styles.response}>Offer text: {data.text}</span>
+          ) : (
+            <div>
+              <img
+                className={styles.responseImg}
+                src={`${CONSTANTS.publicImagesURL}${data.fileName}`}
+                alt='offer'
+              />
+              <a
+                target='_blank'
+                className={styles.file}
+                href={`${CONSTANTS.publicImagesURL}${data.fileName}`}
+                download={data.originalFileName}
+                rel='noreferrer'
+              >
+                Open file
+              </a>
+            </div>
+          )}
           <div className={styles.contestData}>
             <p>Contest type: {contestType}</p>
             <p>Contest industry: {industry}</p>
