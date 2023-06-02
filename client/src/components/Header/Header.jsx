@@ -133,7 +133,7 @@ class Header extends React.Component {
           </div>
         </div>
         <div className={styles.navContainer}>
-          <Logo />
+          <Logo className={styles.logo} />
           <div className={styles.leftNav}>
             <div className={styles.nav}>
               <ul>
