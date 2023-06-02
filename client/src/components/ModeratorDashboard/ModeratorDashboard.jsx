@@ -88,13 +88,14 @@ class ModeratorDashboard extends React.Component {
     );
   };
 
-  UNSAFE_componentWillReceiveProps (nextProps, nextContext) {
-    if (nextProps.location.search !== this.props.location.search) {
-      this.parseUrlForParams(nextProps.location.search);
+  componentDidUpdate (prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.parseUrlForParams(this.props.location.search);
     }
   }
 
   componentDidMount () {
+    this.props.clearContestsList();
     this.props.getDataForContest();
     if (
       this.parseUrlForParams(this.props.location.search) &&
