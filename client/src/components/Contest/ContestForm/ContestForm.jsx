@@ -85,7 +85,7 @@ class ContestForm extends React.Component {
               focusOfWork: '',
               targetCustomer: '',
               file: null,
-              fileName: '',
+              fileName: null,
               ...variableOptions[this.props.contestType],
               ...this.props.initialValues,
             }}

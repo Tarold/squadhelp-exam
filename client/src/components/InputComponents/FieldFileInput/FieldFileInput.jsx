@@ -33,8 +33,8 @@ const FieldFileInput = ({ classes, setFieldValue, fileName, ...rest }) => {
       <div
         className={clearButton}
         onClick={() => {
-          setFieldValue('file', '');
-          setFieldValue('fileName', '');
+          setFieldValue('file', null);
+          setFieldValue('fileName', null);
         }}
       >
         Clear
