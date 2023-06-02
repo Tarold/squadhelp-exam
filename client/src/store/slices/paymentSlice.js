@@ -50,7 +50,7 @@ export const pay = decorateAsyncThunk({
       files.forEach(file => data.formData.append('files', file, file.name));
     }
 
-    await restController.payMent(data);
+    await restController.payMent(data.formData);
     history.replace('dashboard');
     dispatch(clearContestStore());
   },
