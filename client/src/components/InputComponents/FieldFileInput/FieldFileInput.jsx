@@ -22,11 +22,14 @@ const FieldFileInput = ({ classes, setFieldValue, fileName, ...rest }) => {
         id='fileInput'
         onChange={event => {
           if (event.target.files.length > 0) {
-            setFieldValue('file', event.target.files[0]);
+            setFieldValue(
+              'file',
+              window.URL.createObjectURL(event.target.files[0])
+            );
             setFieldValue('fileName', event.target.files[0].name);
           } else {
-            setFieldValue('file', event.target.files[0]);
-            setFieldValue('fileName', '');
+            setFieldValue('file', null);
+            setFieldValue('fileName', null);
           }
         }}
       />
@@ -34,7 +37,7 @@ const FieldFileInput = ({ classes, setFieldValue, fileName, ...rest }) => {
         className={clearButton}
         onClick={() => {
           setFieldValue('file', null);
-          setFieldValue('fileName', '');
+          setFieldValue('fileName', null);
         }}
       >
         Clear

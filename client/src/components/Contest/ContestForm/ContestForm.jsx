@@ -16,16 +16,22 @@ import OptionalSelects from '../../OptionalSelects/OptionalSelects';
 
 const variableOptions = {
   [CONSTANTS.NAME_CONTEST]: {
-    styleName: '',
-    typeOfName: '',
+    values: { styleName: '', typeOfName: '' },
+    shema: Schems.ContestSchem.concat(Schems.ContestNameSchem),
   },
   [CONSTANTS.LOGO_CONTEST]: {
-    nameVenture: '',
-    brandStyle: '',
+    values: {
+      nameVenture: '',
+      brandStyle: '',
+    },
+    shema: Schems.ContestSchem.concat(Schems.ContestLogoSchem),
   },
   [CONSTANTS.TAGLINE_CONTEST]: {
-    nameVenture: '',
-    typeOfTagline: '',
+    values: {
+      nameVenture: '',
+      typeOfTagline: '',
+    },
+    shema: Schems.ContestSchem.concat(Schems.ContestTaglineSchem),
   },
 };
 
@@ -61,18 +67,6 @@ class ContestForm extends React.Component {
   render () {
     const { isFetching, error } = this.props.dataForContest;
 
-    const formSubmit = values => {
-      const data = Object.assign({}, values);
-
-      if (data.file) {
-        data.file = window.URL.createObjectURL(values.file);
-      } else {
-        data.fileName = null;
-      }
-
-      this.props.handleSubmit(values);
-    };
-
     if (error) {
       return <TryAgain getData={this.getPreference} />;
     }
@@ -89,16 +83,16 @@ class ContestForm extends React.Component {
               focusOfWork: '',
               targetCustomer: '',
               file: null,
-              fileName: '',
-              ...variableOptions[this.props.contestType],
+              fileName: null,
+              ...variableOptions[this.props.contestType].values,
               ...this.props.initialValues,
             }}
-            onSubmit={formSubmit}
-            validationSchema={Schems.ContestSchem}
+            onSubmit={this.props.handleSubmit}
+            validationSchema={variableOptions[this.props.contestType].shema}
             innerRef={this.props.formRef}
             enableReinitialize
           >
-            {({ values, setFieldValue }) => (
+            {({ values, setFieldValue, errors }) => (
               <Form>
                 <div className={styles.inputContainer}>
                   <span className={styles.inputHeader}>Title of contest</span>
