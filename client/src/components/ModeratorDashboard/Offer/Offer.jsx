@@ -118,7 +118,7 @@ const Offer = props => {
               src={
                 avatar === 'anon.png'
                   ? CONSTANTS.ANONYM_IMAGE_PATH
-                  : `${CONSTANTS.publicURL}${avatar}`
+                  : `${CONSTANTS.publicImagesURL}${avatar}`
               }
               alt='user'
             />

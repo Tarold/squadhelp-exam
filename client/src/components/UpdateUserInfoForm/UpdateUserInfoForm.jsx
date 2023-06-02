@@ -75,7 +75,7 @@ const UpdateUserInfoForm = props => {
             defaultValue={
               values.file === 'anon.png'
                 ? CONSTANTS.ANONYM_IMAGE_PATH
-                : `${CONSTANTS.publicURL}${values.file}`
+                : `${CONSTANTS.publicImagesURL}${values.file}`
             }
             name='file'
             classes={{

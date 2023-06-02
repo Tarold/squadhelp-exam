@@ -3,26 +3,51 @@ const path = require('path');
 const multer = require('multer');
 const ServerError = require('../errors/ServerError');
 const env = process.env.NODE_ENV || 'development';
-const devFilePath = path.resolve(__dirname, '..', '..', '..', 'public/images');
+const devImagePath = path.resolve(__dirname, '..', '..', '..', 'public/images');
+const devFilePath = path.resolve(__dirname, '..', '..', '..', 'public/files');
 
-const filePath = env === 'production' ? '/var/www/html/images/' : devFilePath;
+const fileImagesPath =
+  env === 'production' ? '/var/www/html/images/' : devImagePath;
+const fileFilesPath =
+  env === 'production' ? '/var/www/html/files/' : devFilePath;
 
-if (!fs.existsSync(filePath)) {
-  fs.mkdirSync(filePath, {
+if (!fs.existsSync(fileImagesPath)) {
+  fs.mkdirSync(fileImagesPath, {
+    recursive: true,
+  });
+}
+if (!fs.existsSync(fileFilesPath)) {
+  fs.mkdirSync(fileFilesPath, {
     recursive: true,
   });
 }
 
 const storageContestFiles = multer.diskStorage({
   destination (req, file, cb) {
-    cb(null, filePath);
+    cb(null, fileFilesPath);
+  },
+  filename (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+const storageOffersFiles = multer.diskStorage({
+  destination (req, file, cb) {
+    cb(null, fileImagesPath);
+  },
+  filename (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+const storageUserFiles = multer.diskStorage({
+  destination (req, file, cb) {
+    cb(null, fileImagesPath);
   },
   filename (req, file, cb) {
     cb(null, Date.now() + file.originalname);
   },
 });
 
-const uploadAvatars = multer({ storage: storageContestFiles }).single('file');
+const uploadAvatars = multer({ storage: storageUserFiles }).single('file');
 const uploadContestFiles = multer({ storage: storageContestFiles }).array(
   'files',
   3
@@ -30,7 +55,7 @@ const uploadContestFiles = multer({ storage: storageContestFiles }).array(
 const updateContestFile = multer({ storage: storageContestFiles }).single(
   'file'
 );
-const uploadLogoFiles = multer({ storage: storageContestFiles }).single(
+const uploadLogoFiles = multer({ storage: storageOffersFiles }).single(
   'offerData'
 );
 

@@ -8,6 +8,8 @@
 ./server/public
 
 ./server/public/images
+./server/public/files
 .server/public/images
+.server/public/files
 **server/public/*
 *server/public/*
