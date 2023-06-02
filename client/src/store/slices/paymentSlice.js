@@ -18,12 +18,6 @@ const initialState = {
   focusOnElement: 'number',
 };
 
-const blobToFile = (theBlob, fileName) => {
-  theBlob.lastModifiedDate = new Date();
-  theBlob.name = fileName;
-  return theBlob;
-};
-
 export const pay = decorateAsyncThunk({
   key: `${PAYMENT_SLICE_NAME}/pay`,
   thunk: async ({ data, history }, { dispatch }) => {
@@ -37,8 +31,9 @@ export const pay = decorateAsyncThunk({
           console.log('contest :>> ', contest);
           if (contest.file) {
             const imgBlob = await fetch(contest.file).then(r => r.blob());
+            imgBlob.name = contest.fileName;
 
-            files.push(blobToFile(imgBlob, contest.fileName));
+            files.push(imgBlob);
           }
         })
       );
