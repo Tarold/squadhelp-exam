@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import CONSTANTS from '../../constants.js';
+import styles from './Logo.module.sass';
 
 const Logo = ({ to, ...props }) => (
-  <Link to={to}>
+  <Link to={to} className={styles.logo}>
     <img alt='' {...props} />
   </Link>
 );
