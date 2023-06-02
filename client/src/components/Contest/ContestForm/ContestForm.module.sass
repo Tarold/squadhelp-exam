@@ -108,10 +108,9 @@
     justify-content: center
 
   .selectInputContainer
-    margin: 15px 0 0 0
+    margin: 15px auto 0 auto
     display: flex
     flex-direction: column
-    width: 100%
 
     .select
       width: 550px
@@ -145,8 +144,7 @@
       margin-bottom: 5px
 
 .inputContainer
-  margin: 15px 0 0 0
-  width: 100%
+  margin: 15px auto 0 auto
 
   .inputHeader
     display: inline-block
@@ -163,12 +161,12 @@
   justify-content: space-around
   height: 80px
   box-sizing: border-box
-  mix-width: 350px
-  margin: 10px 0 10px 0
+  width: 550px
+  margin: 15px auto 10px auto
   padding: 10px 15px
   background-color: #eee
   @media(max-width: 700px)
-    width: auto
+    width: min-content
   @media(max-width: 600px)
     display: flex
     flex-direction: column
