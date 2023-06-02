@@ -62,10 +62,14 @@ class ContestForm extends React.Component {
     const { isFetching, error } = this.props.dataForContest;
 
     const formSubmit = values => {
-      if (values.file) {
-        if (values.file instanceof File)
-          values.file = window.URL.createObjectURL(values.file);
+      const data = Object.assign({}, values);
+
+      if (data.file) {
+        data.file = window.URL.createObjectURL(values.file);
+      } else {
+        data.fileName = null;
       }
+
       this.props.handleSubmit(values);
     };
 
@@ -85,7 +89,7 @@ class ContestForm extends React.Component {
               focusOfWork: '',
               targetCustomer: '',
               file: null,
-              fileName: null,
+              fileName: '',
               ...variableOptions[this.props.contestType],
               ...this.props.initialValues,
             }}
