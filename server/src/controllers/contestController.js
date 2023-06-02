@@ -1,8 +1,11 @@
 const db = require('../models');
+const path = require('path');
 const ServerError = require('../errors/ServerError');
 const contestQueries = require('./queries/contestQueries');
 const UtilFunctions = require('../utils/functions');
 const CONSTANTS = require('../constants');
+const env = process.env.NODE_ENV || 'development';
+const devFilePath = path.resolve(__dirname, '..', '..', '..', 'public/files');
 
 module.exports.dataForContest = async (req, res, next) => {
   const { characteristic1, characteristic2 } = req.query;
@@ -87,8 +90,12 @@ module.exports.getContestById = async (req, res, next) => {
 };
 
 module.exports.downloadFile = async (req, res, next) => {
-  const file = CONSTANTS.CONTESTS_DEFAULT_DIR + req.params.fileName;
-  res.status(200).download(file);
+  const fileFilesPath =
+    env === 'production' ? '/var/www/html/files/' : devFilePath;
+
+  const file = fileFilesPath + req.params.fileName;
+
+  res.download(file);
 };
 
 module.exports.updateContest = async (req, res, next) => {
