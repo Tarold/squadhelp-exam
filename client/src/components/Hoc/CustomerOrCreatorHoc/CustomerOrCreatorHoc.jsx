@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUser } from '../../store/slices/userSlice';
-import Spinner from '../Spinner/Spinner';
-import CONSTANTS from '../../constants';
+import { getUser } from '../../../store/slices/userSlice';
+import Spinner from '../../Spinner/Spinner';
+import CONSTANTS from '../../../constants';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
-import NotAccess from '../NotAccess/NotAccess';
+import NotAccess from '../../NotAccess/NotAccess';
 
 const CustomerOrCreatorHoc = (Component, props) => {
   class Hoc extends React.Component {
