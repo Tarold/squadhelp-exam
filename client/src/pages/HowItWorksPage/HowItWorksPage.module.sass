@@ -6,6 +6,9 @@
   text-align: center
   border-radius: 6.1875rem
 
+$borderStyle: 1px solid #e5e7eb
+$blueColor: #377dff
+
 @mixin flexContainer($jc: center, $ai: center, $fd: row, $gap: 0px)
   display: flex
   justify-content: $jc
@@ -13,20 +16,20 @@
   flex-direction: $fd
   gap: $gap
   
-@mixin button($br: 99px)
+@mixin button($br: 99px, $c: white , $bc: $blueColor, $bsh: rgba(55, 125, 255, 0.5))
   box-sizing: border-box
   transition: all 0.2s ease-in-out
   margin: 5px 0 0
   border-radius: 99px
-  background-color: rgb(55, 125, 255)
-  color: rgb(255, 255, 255)
+  background-color: $bc
+  color: $c
   padding: 12px 16px
   border-radius: $br
   text-decoration: none
 
   &:hover 
     margin: 0 0 5px
-    box-shadow: rgba(55, 125, 255, 0.5) 0px 5px 15px 
+    box-shadow: $bsh 0px 5px 15px 
 
   @media screen and (max-width: 480px)
     padding: 12px auto
@@ -55,8 +58,8 @@
     line-height: 27.2px
 
 .greyContainer
-  border-top: 1px solid #e5e7eb
-  border-bottom: 1px solid #e5e7eb
+  border-top: $borderStyle
+  border-bottom: $borderStyle
 
 .banerSection
   @include flexContainer(space-around)
@@ -111,7 +114,7 @@
     .card
       @include flexContainer($fd: column, $gap: 15px)
 
-      border: 1px solid #e5e7eb
+      border: $borderStyle
       border-radius: 5px
       padding: 64px 16px
       max-width: 360px
@@ -153,21 +156,21 @@
     .namingList
       list-style: none
       display: grid
-      gap:20px
       grid-template-rows: repeat(4, 1fr)
+      gap:20px
       counter-reset: my-counter
       
       li 
         @include flexContainer($jc:flex-start, $gap: 15px)
 
         padding: 32px
-        border: 1px solid #e5e7eb
+        border: $borderStyle
         border-radius: 5px
         counter-increment: my-count
 
       li::before 
         content: counter(my-count) ". "
-        color: #377dff
+        color: $blueColor
         font-size: 56px
         font-weight: bold
   
@@ -192,12 +195,8 @@
   
   .link
     z-index: 1
-    box-sizing: border-box
-    padding: 15px 20px
-    color: black
-    text-decoration: none
-    background-color: white
-    border-radius: 0.2rem
+    @include button($br: 0.2rem, $c: black, $bc: white, $bsh: #ffffffb6)
+
   
   .bgFirstImg
     z-index: 0
@@ -256,11 +255,11 @@
       @include flexContainer($ai: flex-start, $gap: 40px)
       &:first-child
         padding-bottom: 20px
-        border-bottom: 1px solid #e5e7eb
+        border-bottom: $borderStyle
 
       &::before
         content: '>'
-        color: #377dff
+        color: $blueColor
         background-color: rgba(55, 125, 255, 0.1)
         font-size: 24px
         padding: 6px 10px
@@ -271,7 +270,7 @@
       a
         text-decoration: none
         margin-left: 5px 
-        color: #377dff
+        color: $blueColor
 
 
         
@@ -283,7 +282,7 @@
     padding: 64px
     font-size: 20px
     color: white
-    background-color: #377dff
+    background-color: $blueColor
     @media screen and (max-width: 900px)
       width: 100%
     h4
@@ -293,12 +292,10 @@
       color: white
     
     .callConsultation
-      background-color: white
-      color: #377dff
+      @include button($br: 100px, $c: $blueColor, $bc: white, $bsh: #ffffffb6)
       font-weight: 400
-      text-decoration: none
       padding: 20px
-      border-radius: 100px
+
 
     .telephoneConsultation
       text-decoration: none
@@ -324,7 +321,7 @@
     @include flexContainer($ai:flex-start , $gap: 100px)
     flex-wrap: wrap
     padding-top: 20px 
-    border-top: 1px solid #e5e7eb
+    border-top: $borderStyle
 
     @media screen and (max-width: 1000px)
       gap: 40px
