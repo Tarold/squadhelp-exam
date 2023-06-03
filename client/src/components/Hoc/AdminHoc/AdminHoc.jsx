@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUser } from '../../store/slices/userSlice';
-import Spinner from '../Spinner/Spinner';
-import CONSTANTS from '../../constants';
-import NotFound from '../NotFound/NotFound';
+import { getUser } from '../../../store/slices/userSlice';
+import Spinner from '../../Spinner/Spinner';
+import CONSTANTS from '../../../constants';
+import NotFound from '../../NotFound/NotFound';
 
 const AdminHoc = (Component, props) => {
   class Hoc extends React.Component {

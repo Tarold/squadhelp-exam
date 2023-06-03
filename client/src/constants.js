@@ -1,7 +1,8 @@
 const env = process.env.NODE_ENV || 'development';
 const serverIP = 'localhost';
 const serverPort = 5000;
-export default {
+
+const CONSTANTS = {
   ADMIN: 'ADMIN',
   CUSTOMER: 'customer',
   CREATOR: 'creator',
@@ -22,10 +23,14 @@ export default {
   ANONYM_IMAGE_PATH: '/staticImages/anonym.png',
   BASE_URL: `http://${serverIP}:${serverPort}/`,
   ACCESS_TOKEN: 'accessToken',
-  publicURL:
+  publicImagesURL:
     env === 'production'
       ? `http://${serverIP}:80/images/`
       : `http://${serverIP}:${serverPort}/public/images/`,
+  publicFileURL:
+    env === 'production'
+      ? `http://${serverIP}:80/files/`
+      : `http://${serverIP}:${serverPort}/public/files/`,
   NORMAL_PREVIEW_CHAT_MODE: 'NORMAL_PREVIEW_CHAT_MODE',
   FAVORITE_PREVIEW_CHAT_MODE: 'FAVORITE_PREVIEW_CHAT_MODE',
   BLOCKED_PREVIEW_CHAT_MODE: 'BLOCKED_PREVIEW_CHAT_MODE',
@@ -88,3 +93,5 @@ export default {
     },
   ],
 };
+
+export default CONSTANTS;

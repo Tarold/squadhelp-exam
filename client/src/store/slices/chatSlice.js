@@ -334,7 +334,10 @@ const reducers = {
       }
     });
     if (isNew) {
-      messagesPreview.push(preview.preview);
+      messagesPreview.push({
+        ...preview.preview,
+        interlocutor: preview.interlocutor,
+      });
     }
     state.messagesPreview = messagesPreview;
     state.messages = [...state.messages, payload.message];

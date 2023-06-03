@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import styles from './ContestSideBar.module.sass';
 import CONSTANTS from '../../../constants';
@@ -69,7 +68,7 @@ const ContestSideBar = props => {
                 src={
                   User.avatar === 'anon.png'
                     ? CONSTANTS.ANONYM_IMAGE_PATH
-                    : `${CONSTANTS.publicURL}${User.avatar}`
+                    : `${CONSTANTS.publicImagesURL}${User.avatar}`
                 }
                 alt='user'
               />

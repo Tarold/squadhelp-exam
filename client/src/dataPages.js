@@ -1,4 +1,4 @@
-export default {
+const pages = {
   BUTTON_GROUP_TEXT: [
     {
       label: 'Yes',
@@ -15,3 +15,5 @@ export default {
     },
   ],
 };
+
+export default pages;

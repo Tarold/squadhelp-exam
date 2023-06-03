@@ -1,12 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUser } from '../../store/slices/userSlice';
-import Spinner from '../Spinner/Spinner';
-import CONSTANTS from '../../constants';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
-import NotAccess from '../NotAccess/NotAccess';
+import { getUser } from '../../../store/slices/userSlice';
+import Spinner from '../../Spinner/Spinner';
 
-const CustomerOrCreatorHoc = (Component, props) => {
+const PrivateHoc = (Component, props) => {
   class Hoc extends React.Component {
     componentDidMount () {
       if (!this.props.data) {
@@ -17,13 +14,7 @@ const CustomerOrCreatorHoc = (Component, props) => {
     render () {
       if (this.props.isFetching) {
         return <Spinner />;
-      }
-
-      if (
-        this.props.data &&
-        (this.props.data.role === CONSTANTS.CUSTOMER ||
-          this.props.data.role === CONSTANTS.CREATOR)
-      ) {
+      } else if (this.props.data) {
         return (
           <Component
             history={this.props.history}
@@ -31,10 +22,8 @@ const CustomerOrCreatorHoc = (Component, props) => {
             {...props}
           />
         );
-      } else if (this.props.data.role === CONSTANTS.MODERATOR) {
-        return NotAccess();
       }
-      return <Redirect to='/login' />;
+      return null;
     }
   }
 
@@ -47,4 +36,4 @@ const CustomerOrCreatorHoc = (Component, props) => {
   return connect(mapStateToProps, mapDispatchToProps)(Hoc);
 };
 
-export default CustomerOrCreatorHoc;
+export default PrivateHoc;

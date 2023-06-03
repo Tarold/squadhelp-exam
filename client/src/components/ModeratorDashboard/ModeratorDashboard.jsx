@@ -88,9 +88,9 @@ class ModeratorDashboard extends React.Component {
     );
   };
 
-  componentWillReceiveProps (nextProps, nextContext) {
-    if (nextProps.location.search !== this.props.location.search) {
-      this.parseUrlForParams(nextProps.location.search);
+  componentDidUpdate (prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.parseUrlForParams(this.props.location.search);
     }
   }
 
@@ -101,6 +101,9 @@ class ModeratorDashboard extends React.Component {
       !this.props.offers.length
     )
       this.getOffers(this.props.moderatorFilter);
+  }
+  componentDidUnmount () {
+    this.props.clearOffersList();
   }
 
   getOffers = filter => {

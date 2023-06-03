@@ -25,6 +25,7 @@ services:
       - mongo-prod
     volumes:
       - /var/www/html/images:/var/www/html/images
+      - /var/www/html/files:/var/www/html/files
 
   db-prod:
     image: postgres:13.2-alpine

@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import valid from 'card-validator';
 
-export default {
+const validatorSchemas = {
   LoginSchem: yup.object().shape({
     email: yup.string().email('check email').required('required'),
     password: yup
@@ -27,14 +27,7 @@ export default {
       .string()
       .required('confirm password is required')
       .oneOf([yup.ref('password')], 'confirmation pass must match password'),
-    firstName: yup
-      .string()
-      .test(
-        'test-firstName',
-        'required',
-        value => value && value.trim().length >= 1
-      )
-      .required('First Name is required'),
+    firstName: yup.string().min(1).required('First Name is required'),
     lastName: yup
       .string()
       .test(
@@ -104,7 +97,6 @@ export default {
       .required('Role is required'),
   }),
   ContestSchem: yup.object({
-    nameVenture: yup.string().min(3),
     contestType: yup
       .string()
       .matches(/(name|tagline|logo)/)
@@ -134,11 +126,34 @@ export default {
         value => value && value.trim().length >= 1
       )
       .required('target customers required'),
-    styleName: yup.string().min(1),
-    typeOfName: yup.string().min(1),
-    typeOfTagline: yup.string().min(1),
-    brandStyle: yup.string().min(1),
     file: yup.mixed(),
+    fileName: yup.string().nullable(),
+  }),
+  ContestNameSchem: yup.object().shape({
+    styleName: yup.string().required('required'),
+    typeOfName: yup.string().required('required'),
+  }),
+  ContestLogoSchem: yup.object().shape({
+    nameVenture: yup
+      .string()
+      .test(
+        'test-nameVenture',
+        'at least 3 characters',
+        value => value && value.trim().length >= 3
+      )
+      .required('required'),
+    brandStyle: yup.string().required('required'),
+  }),
+  ContestTaglineSchem: yup.object().shape({
+    nameVenture: yup
+      .string()
+      .test(
+        'test-nameVenture',
+        'at least 3 characters',
+        value => value && value.trim().length >= 3
+      )
+      .required('required'),
+    typeOfTagline: yup.string().required('required'),
   }),
   filterSchem: yup.object().shape({
     typeIndex: yup.number().oneOf[(1, 2, 3, 4, 5, 6, 7)],
@@ -269,3 +284,5 @@ export default {
       .required('Date is required'),
   }),
 };
+
+export default validatorSchemas;

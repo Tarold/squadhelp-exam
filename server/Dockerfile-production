@@ -5,6 +5,7 @@ ARG NODE_ENV="production"
 RUN mkdir ./server
 
 RUN mkdir -p /var/www/html/images/
+RUN mkdir -p /var/www/html/files/
 
 WORKDIR /server
 

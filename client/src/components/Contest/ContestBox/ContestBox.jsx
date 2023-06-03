@@ -23,11 +23,14 @@ const ContestBox = props => {
   const ucFirstLetter = string =>
     string.charAt(0).toUpperCase() + string.slice(1);
 
-  const { id, title, contestType, prize, count, goToExtended } = props.data;
+  const {
+    goToExtended,
+    data: { id, title, contestType, prize, count },
+  } = props;
   return (
     <div
       className={styles.contestBoxContainer}
-      onClick={() => props.goToExtended(id)}
+      onClick={() => goToExtended(id)}
     >
       <div className={styles.mainContestInfo}>
         <div className={styles.titleAndIdContainer}>

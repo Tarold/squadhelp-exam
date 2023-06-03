@@ -9,7 +9,7 @@ export const changeMark = data => http.patch('user/changeMark', data);
 export const cashOut = data => http.post('user/cashout', data);
 export const updateUser = data => http.patch('user', data);
 
-export const payMent = data => http.post('contests', data.formData);
+export const payMent = data => http.post('contests', data);
 export const dataForContest = data =>
   http.get(`contests/data?${queryString.stringify(data)}`);
 
@@ -19,11 +19,10 @@ export const getCustomersContests = data =>
   http.get(`contests/byCustomer?${queryString.stringify(data)}`);
 export const getActiveContests = data =>
   http.get(`contests?${queryString.stringify(data)}`);
-export const updateContest = ({ contestId, data }) => {
-  return http.patch(`contests/${contestId}`, data);
+export const updateContest = data => {
+  return http.patch(`contests/${data.contestId}`, data.data);
 };
-export const getContestById = ({ contestId }) =>
-  http.get(`contests/${contestId}`);
+export const getContestById = data => http.get(`contests/${data.contestId}`);
 
 export const setNewOffer = data => http.post('offers', data);
 export const setOfferStatus = data => http.patch('offers', data);

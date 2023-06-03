@@ -13,7 +13,6 @@ import {
 } from '../../../store/slices/contestByIdSlice';
 import CONSTANTS from '../../../constants';
 import styles from './Offer.module.sass';
-import { Link } from 'react-router-dom';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './confirmStyle.css';
 
@@ -119,7 +118,7 @@ const Offer = props => {
               src={
                 avatar === 'anon.png'
                   ? CONSTANTS.ANONYM_IMAGE_PATH
-                  : `${CONSTANTS.publicURL}${avatar}`
+                  : `${CONSTANTS.publicImagesURL}${avatar}`
               }
               alt='user'
             />
@@ -156,7 +155,25 @@ const Offer = props => {
           </div>
         </div>
         <div className={styles.responseConainer}>
-          <span className={styles.response}>Offer text: {data.text}</span>
+          {CONSTANTS.LOGO_CONTEST !== contestType ? (
+            <span className={styles.response}>Offer text: {data.text}</span>
+          ) : (
+            <div>
+              <a
+                target='_blank'
+                className={styles.file}
+                href={`${CONSTANTS.publicImagesURL}${data.fileName}`}
+                download={data.originalFileName}
+                rel='noreferrer'
+              >
+                <img
+                  className={styles.responseImg}
+                  src={`${CONSTANTS.publicImagesURL}${data.fileName}`}
+                  alt='offer'
+                />
+              </a>
+            </div>
+          )}
           <div className={styles.contestData}>
             <p>Contest type: {contestType}</p>
             <p>Contest industry: {industry}</p>

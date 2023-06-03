@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUser } from '../../store/slices/userSlice';
-import Spinner from '../Spinner/Spinner';
-import CONSTANTS from '../../constants';
-import NotFound from '../NotFound/NotFound';
+import { getUser } from '../../../store/slices/userSlice';
+import Spinner from '../../Spinner/Spinner';
+import CONSTANTS from '../../../constants';
+import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import NotAccess from '../../NotAccess/NotAccess';
 
-const ModeratorHoc = (Component, props) => {
+const CustomerHoc = (Component, props) => {
   class Hoc extends React.Component {
     componentDidMount () {
       if (!this.props.data) {
@@ -18,7 +19,7 @@ const ModeratorHoc = (Component, props) => {
         return <Spinner />;
       }
 
-      if (this.props.data && this.props.data.role === CONSTANTS.MODERATOR) {
+      if (this.props.data && this.props.data.role === CONSTANTS.CUSTOMER) {
         return (
           <Component
             history={this.props.history}
@@ -26,8 +27,15 @@ const ModeratorHoc = (Component, props) => {
             {...props}
           />
         );
+      } else if (
+        this.props.data &&
+        (this.props.data.role === CONSTANTS.MODERATOR ||
+          this.props.data.role === CONSTANTS.CREATOR)
+      ) {
+        return NotAccess();
       }
-      return NotFound();
+
+      return <Redirect to='/login' />;
     }
   }
 
@@ -40,4 +48,4 @@ const ModeratorHoc = (Component, props) => {
   return connect(mapStateToProps, mapDispatchToProps)(Hoc);
 };
 
-export default ModeratorHoc;
+export default CustomerHoc;

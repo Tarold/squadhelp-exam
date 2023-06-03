@@ -4,8 +4,11 @@ ARG NODE_ENV="development"
 
 RUN mkdir /server \
     && mkdir -p /public/images
+RUN mkdir /server \
+    && mkdir -p /public/files
 
 RUN mkdir -p /var/www/html/images 
+RUN mkdir -p /var/www/html/files 
 
 WORKDIR /server
 

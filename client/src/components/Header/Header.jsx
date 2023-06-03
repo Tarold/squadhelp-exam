@@ -5,6 +5,7 @@ import styles from './Header.module.sass';
 import CONSTANTS from '../../constants';
 import { clearUserStore } from '../../store/slices/userSlice';
 import { getUser } from '../../store/slices/userSlice';
+import Logo from '../Logo/Logo';
 
 class Header extends React.Component {
   componentDidMount () {
@@ -30,6 +31,9 @@ class Header extends React.Component {
   startCreare = () => {
     this.props.history.push('/createModerator');
   };
+  startEvents = () => {
+    this.props.history.push('/events');
+  };
 
   renderLoginButtons = () => {
     if (this.props.data) {
@@ -40,7 +44,7 @@ class Header extends React.Component {
               src={
                 this.props.data.avatar === 'anon.png'
                   ? CONSTANTS.ANONYM_IMAGE_PATH
-                  : `${CONSTANTS.publicURL}${this.props.data.avatar}`
+                  : `${CONSTANTS.publicImagesURL}${this.props.data.avatar}`
               }
               alt='user'
             />
@@ -74,6 +78,11 @@ class Header extends React.Component {
                   style={{ textDecoration: 'none' }}
                 >
                   <span>Affiliate Dashboard</span>
+                </Link>
+              </li>
+              <li>
+                <Link to='/events' style={{ textDecoration: 'none' }}>
+                  <span>Events</span>
                 </Link>
               </li>
               <li>
@@ -124,11 +133,7 @@ class Header extends React.Component {
           </div>
         </div>
         <div className={styles.navContainer}>
-          <img
-            src={`${CONSTANTS.STATIC_IMAGES_PATH}blue-logo.png`}
-            className={styles.logo}
-            alt='blue_logo'
-          />
+          <Logo className={styles.logo} />
           <div className={styles.leftNav}>
             <div className={styles.nav}>
               <ul>
@@ -272,7 +277,7 @@ class Header extends React.Component {
             </div>
             {this.props.data && this.props.data.role === CONSTANTS.CUSTOMER && (
               <div
-                className={styles.startContestBtn}
+                className={styles.startHeaderBtn}
                 onClick={this.startContests}
               >
                 START CONTEST
@@ -282,17 +287,14 @@ class Header extends React.Component {
               this.props.location.pathname !== '/offersApprove' &&
               this.props.data.role === CONSTANTS.MODERATOR && (
                 <div
-                  className={styles.startContestBtn}
+                  className={styles.startHeaderBtn}
                   onClick={this.startApproving}
                 >
                   START OFFERS APPROVE
                 </div>
               )}
             {this.props.data && this.props.data.role === CONSTANTS.ADMIN && (
-              <div
-                className={styles.startContestBtn}
-                onClick={this.startCreare}
-              >
+              <div className={styles.startHeaderBtn} onClick={this.startCreare}>
                 CREATE MODERATOR
               </div>
             )}
