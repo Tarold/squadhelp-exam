@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
-
+import HelpList from '../../components/HelpList/HelpList';
 import styles from './HowItWorksPage.module.sass';
 import CONSTANTS from '../../constants';
 import classNames from 'classnames';
+import HELP_LIST_DATA from './helpListData';
 
 const HowItWorksPage = () => {
   const IMAGES_PATH = `${CONSTANTS.STATIC_IMAGES_PATH}how_it_works/`;
@@ -130,46 +131,7 @@ const HowItWorksPage = () => {
         </div>
       </div>
       <div className={styles.container}>
-        <nav>
-          <ul>
-            <li>
-              <a href='#contests'>Launching A Contest</a>
-            </li>
-            <li>
-              <a href='#marketplace'>Buying From Marketplace</a>
-            </li>
-            <li>
-              <a href='#managed'>Managed Contests</a>
-            </li>
-            <li>
-              <a href='#creatives'>For Creatives</a>
-            </li>
-          </ul>
-        </nav>
-        <div>
-          <div id='basicsHeadingOne'>
-            <h5>
-              <button>
-                How long does it take to start receiving submissions?
-                <span class='card-btn-arrow'></span>
-              </button>
-            </h5>
-          </div>
-          <div
-            id='basicsCollapseOne'
-            class='collapse show'
-            aria-labelledby='basicsHeadingOne'
-            data-parent='#basicsAccordion'
-          >
-            <div class='card-body'>
-              For Naming contests, you will start receiving your submissions
-              within few minutes of launching your contest. Since our creatives
-              are located across the globe, you can expect to receive
-              submissions 24 X 7 throughout the duration of the brainstorming
-              phase .
-            </div>
-          </div>
-        </div>
+        <HelpList data={HELP_LIST_DATA}></HelpList>
       </div>
       <div>
         <div className={styles.contestStartSection}>
@@ -188,7 +150,7 @@ const HowItWorksPage = () => {
           <ul className={styles.statisticList}>
             <li>
               <img src={`${IMAGES_PATH}stars.png`} alt='' />
-              <p class='mb-0'>
+              <p>
                 <span>4.9 out of 5 stars</span>
                 from 25,000+ customers.
               </p>

@@ -8,6 +8,7 @@ import Footer from '../../components/Footer/Footer';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import Header from '../../components/Header/Header';
 import ButtonGroup from '../../components/ButtonGroup/ButtonGroup';
+import BUTTON_GROUP_TEXT from './buttonData';
 const StartContestPage = props => {
   if (props.userStore.data.role !== CONSTANTS.CUSTOMER) {
     props.history.replace('/');
@@ -109,7 +110,7 @@ const StartContestPage = props => {
           />
         </div>
       </div>
-      <ButtonGroup />
+      <ButtonGroup data={BUTTON_GROUP_TEXT} />
       <Footer />
     </div>
   );
