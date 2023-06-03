@@ -95,13 +95,15 @@ class ModeratorDashboard extends React.Component {
   }
 
   componentDidMount () {
-    this.props.clearContestsList();
     this.props.getDataForContest();
     if (
       this.parseUrlForParams(this.props.location.search) &&
       !this.props.offers.length
     )
       this.getOffers(this.props.moderatorFilter);
+  }
+  componentDidUnmount () {
+    this.props.clearOffersList();
   }
 
   getOffers = filter => {

@@ -159,11 +159,6 @@ const Offer = props => {
             <span className={styles.response}>Offer text: {data.text}</span>
           ) : (
             <div>
-              <img
-                className={styles.responseImg}
-                src={`${CONSTANTS.publicImagesURL}${data.fileName}`}
-                alt='offer'
-              />
               <a
                 target='_blank'
                 className={styles.file}
@@ -171,7 +166,11 @@ const Offer = props => {
                 download={data.originalFileName}
                 rel='noreferrer'
               >
-                Open file
+                <img
+                  className={styles.responseImg}
+                  src={`${CONSTANTS.publicImagesURL}${data.fileName}`}
+                  alt='offer'
+                />
               </a>
             </div>
           )}
