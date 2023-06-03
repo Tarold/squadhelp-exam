@@ -133,6 +133,7 @@
 
   .namingContests
     @include flexContainer($fd: column, $gap: 20px)
+    text-align: center
     
     img
       width: 72px
@@ -306,7 +307,7 @@
         margin-right: 5px 
 
 .featuredInSection
-  @include flexContainer
+  @include flexContainer($jc: space-around)
   margin:40px 48px
 
   @media screen and (max-width: 900px)
@@ -320,9 +321,14 @@
     margin-bottom: 10px
   
   .clientsList
-    @include flexContainer($ai:flex-start , $gap: 20px)
+    @include flexContainer($ai:flex-start , $gap: 100px)
     flex-wrap: wrap
     padding-top: 20px 
     border-top: 1px solid #e5e7eb
+
+    @media screen and (max-width: 1000px)
+      gap: 40px
+      margin:40px 5px
+      flex-wrap: wrap
     img
       width: 100px

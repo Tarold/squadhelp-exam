@@ -1,13 +1,13 @@
 import React from 'react';
-
+import styles from './HelpListNav.module.sass';
 const HelpListNav = ({ data }) => {
-  const headerList = data.map(section => (
-    <div>
-      <a href={'#' + section.id}>
-        <p>{section.title}</p>
+  const headerListMap = (section, id) => (
+    <li key={id + 'HeaderList'}>
+      <a href={'#' + section.id} className={styles.navLink}>
+        {section.title}
       </a>
-    </div>
-  ));
-  return <div>{headerList}</div>;
+    </li>
+  );
+  return <ul className={styles.HelpListNav}>{data.map(headerListMap)}</ul>;
 };
 export default HelpListNav;

@@ -1,6 +1,8 @@
 import React from 'react';
 import CONSTANTS from '../../../constants';
 import reactStringReplace from 'react-string-replace';
+import styles from './HelpCard.module.sass';
+import classNames from 'classnames';
 
 function replaceCustomLink (text, replacementList) {
   return reactStringReplace(
@@ -14,27 +16,37 @@ function replaceCustomLink (text, replacementList) {
   );
 }
 
-const HelpList = ({ data }) => {
-  let preparedText = [data.text];
-
-  const textMap = item => item;
-
-  const listMap = item => (
-    <li>
-      <p>{item}</p>
+const HelpCard = ({ data, cardId, openCard, open, close }) => {
+  const listMap = (item, i) => (
+    <li key={i + 'CardList'}>
+      {item.link ? <a href={item.link}>{item.text}</a> : <p>{item.text}</p>}
     </li>
   );
 
+  const handleClick = () => (cardId === openCard ? close() : open());
+
+  let preparedText = data.text;
   if (data.links) preparedText = replaceCustomLink(data.text, data.links);
 
   return (
-    <li>
-      <p>{data.title}</p>
-
-      <p>{preparedText.map(textMap)}</p>
-
-      {data.list && <ul>{data.list.map(listMap)}</ul>}
+    <li className={styles.helpCard}>
+      <button className={styles.cardTitle} onClick={handleClick}>
+        {data.title}
+        <i
+          className={classNames('fas fa-arrow-right', {
+            'fa-rotate-90': cardId === openCard,
+          })}
+        ></i>
+      </button>
+      <div
+        className={classNames(styles.cardContent, {
+          [styles.isClosed]: cardId !== openCard,
+        })}
+      >
+        <p>{preparedText}</p>
+        {data.list && <ul>{data.list.map(listMap)}</ul>}
+      </div>
     </li>
   );
 };
-export default HelpList;
+export default HelpCard;

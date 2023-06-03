@@ -1,0 +1,21 @@
+.helpList
+  display: flex
+  align-items: flex-start
+  justify-content: center
+  gap: 20px
+
+  @media screen and (max-width: 1000px)
+    flex-direction: column
+
+  .helpListNavContainer
+    max-width: 250px
+    min-width: 200px
+    @media screen and (max-width: 1000px)
+      max-width: 100%
+      width: 100%
+
+  .helpSectionContainer
+    box-sizing: border-box
+    max-width: 850px
+    @media screen and (max-width: 1000px)
+      max-width: 100%

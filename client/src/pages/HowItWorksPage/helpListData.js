@@ -32,18 +32,22 @@ const HELP_LIST_DATA = [
         text: `   While it is unusually rare that you will not like any names provided, we have
           a few options in case this problem occurs:`,
         list: [
-          `If the contest ends and you have not yet found a name that you’d like to
+          {
+            text: `If the contest ends and you have not yet found a name that you’d like to
             move forward with, we can provide complimentary extension of your contest
             as well as a complimentary consultation with one of our branding
             consultants (a $99 value).`,
-
-          `      By exploring our premium domain marketplace you can apply the contest
+          },
+          {
+            text: `      By exploring our premium domain marketplace you can apply the contest
             award towards the purchase of any name listed for sale.`,
-
-          `      If you choose the Gold package or Platinum package and keep the contest as
+          },
+          {
+            text: `      If you choose the Gold package or Platinum package and keep the contest as
             "Not Guaranteed", you can request a partial refund if you choose not to
             move forward with any name from you project. (Please note that the refund
             is for the contest award). Here is a link to our Refund Policy`,
+          },
         ],
       },
       {
@@ -91,6 +95,20 @@ const HELP_LIST_DATA = [
         text: `  Our creatives have submitted more than 6 Million names and thousands of logos
           on our platform. Here are some examples of Names, Taglines, and Logos that
           were submitted in recent contests.`,
+        list: [
+          {
+            link: 'https://helpdesk.squadhelp.com/en/articles/91702-percentile-ranking-score',
+            text: 'Name Examples',
+          },
+          {
+            link: 'https://helpdesk.squadhelp.com/en/articles/91702-percentile-ranking-score',
+            text: 'Tagline Examples',
+          },
+          {
+            link: 'https://helpdesk.squadhelp.com/en/articles/91702-percentile-ranking-score',
+            text: 'Logo Examples',
+          },
+        ],
       },
     ],
   },
@@ -147,18 +165,26 @@ const HELP_LIST_DATA = [
         title: `What's a typical timeline for a Managed Contest?`,
         text: `The overall process takes 12-13 days.`,
         list: [
-          `The Managed projects start with a project kick-off call with your
+          {
+            text: `The Managed projects start with a project kick-off call with your
             Branding Consultant. You can schedule this call online immediately after
             making your payment.`,
-          `After your kick-off call, the Branding consultant will write your
+          },
+          {
+            text: `After your kick-off call, the Branding consultant will write your
             project brief and send for your approval within 1 business day.`,
-          `Upon your approval, the contest will go live. The branding consultant
+          },
+          {
+            text: `Upon your approval, the contest will go live. The branding consultant
             will help manage your project throughout the brainstorming phase
             (typically 5 days).`,
-          `Upon the completion of brainstorming phase, the branding consultant will
+          },
+          {
+            text: `Upon the completion of brainstorming phase, the branding consultant will
             work with you to test the top 6 names from your Shortlist (3-5 Days). In
             addition, the branding consultant will coordinate the detailed Trademark
             screening (1-3 days)`,
+          },
         ],
       },
       {
@@ -166,15 +192,19 @@ const HELP_LIST_DATA = [
         text: `We offer two levels of Managed Contests. Standard ($1499) and Enterprise
           ($2999). The Enterprise managed contest includes:`,
         list: [
-          `(1) a $500 award amount (instead of $300), which will attract our top
-              Creatives and provide more options to choose from;`,
-
-          `(2) we will ensure a senior member of our branding team is assigned to
-              your project and the branding team will invest about 3X more time in the
-              day-to-day management of your project;`,
-
-          `(3) you will receive more high-end trademark report and 5X more
-              responses for your audience test.`,
+          {
+            text: `(1) a $500 award amount (instead of $300), which will attract our top
+            Creatives and provide more options to choose from;`,
+          },
+          {
+            text: `(2) we will ensure a senior member of our branding team is assigned to
+            your project and the branding team will invest about 3X more time in the
+            day-to-day management of your project;`,
+          },
+          {
+            text: `(3) you will receive more high-end trademark report and 5X more
+            responses for your audience test.`,
+          },
         ],
       },
       {
