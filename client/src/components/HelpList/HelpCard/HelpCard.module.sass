@@ -1,0 +1,45 @@
+.helpCard
+  overflow: hidden
+  .cardTitle, .cardContent
+    padding: 20px
+    width: 100%
+    border: 1px solid #e5e7eb
+    background-color: inherit
+    transition: all 0.2s
+
+  .cardTitle
+    display: flex
+    justify-content: space-between
+    cursor: default
+    font: inherit
+
+    &:hover
+      color: #377dff
+      background-color: #377dff0e
+
+    i
+      transition: all 0.2s
+      color: rgb(55, 125, 255)
+  
+  .cardContent
+    box-sizing: border-box
+    transition: all 0.1s ease-in-out
+
+    p
+      color: black
+    
+    ul
+      box-sizing: border-box
+      list-style-type: disc
+      margin: 5px 0 0 25px 
+
+      li:not(:last-child) 
+        margin-bottom: 10px
+
+  .isClosed
+    height: 0
+    padding: 0 20px
+
+  a
+    color: #377dff
+    text-decoration: none
