@@ -32,11 +32,11 @@
     padding: 12px auto
     width: 100%
 
-.container
-  margin: 80px 85px
+.container, .greyContainer
+  padding:  80px 85px
  
   @media screen and (max-width: 1024px)
-    margin: 80px 10px 
+    padding: 80px 10px 
   
   h1
     font-weight: 500
@@ -54,6 +54,9 @@
     color: #77838F
     line-height: 27.2px
 
+.greyContainer
+  border-top: 1px solid #e5e7eb
+  border-bottom: 1px solid #e5e7eb
 
 .banerSection
   @include flexContainer(space-around)
@@ -126,22 +129,206 @@
 
 
 .namingContestsSection
-  box-sizing: border-box
+  @include flexContainer($fd: column, $gap: 60px)
+
+  .namingContests
+    @include flexContainer($fd: column, $gap: 20px)
+    
+    img
+      width: 72px
+      height: 72px
+      
   .namingContestsGrid
-    display: grid
-    grid-template-columns: 1fr 1fr
-    gap: 20px
-    .namingImg
-      width: 50px
-.namingList
-  list-style: none
-  counter-reset: my-awesome-counter
-  li 
-    counter-increment: my-awesome-count
-  li::before 
-    content: counter(my-awesome-counter) ". "
-    color: #377dff
-    font-weight: bold
+    @include flexContainer($gap: 60px)
+
+    @media screen and (max-width: 1000px)
+      flex-direction: column-reverse
+
+    .namingImgGrid
+      width: 40%
+      @media screen and (max-width: 1000px)
+        width: 100%
+
+    .namingList
+      list-style: none
+      display: grid
+      gap:20px
+      grid-template-rows: repeat(4, 1fr)
+      counter-reset: my-counter
+      
+      li 
+        @include flexContainer($jc:flex-start, $gap: 15px)
+
+        padding: 32px
+        border: 1px solid #e5e7eb
+        border-radius: 5px
+        counter-increment: my-count
+
+      li::before 
+        content: counter(my-count) ". "
+        color: #377dff
+        font-size: 56px
+        font-weight: bold
+  
+.contestStartSection
+  @include flexContainer($fd: column, $gap: 20px)
+  position: relative
+  text-align: center
+  padding: 32px 15px
+  background: rgb(43,35,142)
+  background: linear-gradient(120deg, rgba(43,35,142,1) 10%, rgba(32,115,213,1) 76%, rgba(28,142,238,1) 100%)
+  
+  .title
+    z-index: 1
+    font-size: 32px
+    font-weight: 500
+    color: #00dffc
+    
+  .text
+    font-size: 18px
+    z-index: 1
+    color: white
+  
+  .link
+    z-index: 1
+    box-sizing: border-box
+    padding: 15px 20px
+    color: black
+    text-decoration: none
+    background-color: white
+    border-radius: 0.2rem
+  
+  .bgFirstImg
+    z-index: 0
+    position: absolute
+    top: 0
+    height: 70%
+    left: 0
+  .bgSecondImg
+    z-index: 0
+    position: absolute
+    bottom: 0
+    right: 0
+    height: 70%
+
+.statisticSection
+  margin: 50px 0
+
+  .statisticList
+    @include flexContainer($jc: space-evenly, $gap:40px)
+    
+    @media screen and (max-width: 700px)
+      flex-direction: column
+
+    li
+      @include flexContainer($fd: column, $gap: 20px)
+      text-align: center
+      max-width: 220px
+      
+      img
+        height: 100px
+        
+      span
+        font-weight: 600
+        color: black
+        margin: 0 5px
+
+.factSection
+  @include flexContainer
+  padding: 0 20px
+  margin: 100px 0
+  @media screen and (max-width: 900px)
+    padding: 0 5px
+    flex-direction: column
+
+  .facts
+    @include flexContainer($fd: column, $gap: 40px)
+    box-sizing: border-box
+    width: 600px
+    padding: 64px
+    background-color: white
+    font-size: 20px
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px
+    @media screen and (max-width: 900px)
+      width: 100%
+    .arrow
+      @include flexContainer($ai: flex-start, $gap: 40px)
+      &:first-child
+        padding-bottom: 20px
+        border-bottom: 1px solid #e5e7eb
+
+      &::before
+        content: '>'
+        color: #377dff
+        background-color: rgba(55, 125, 255, 0.1)
+        font-size: 24px
+        padding: 6px 10px
+        border-radius: 100%
+
+    .fact
+      @include flexContainer($fd: column, $ai: flex-start, $gap: 10px)
+      a
+        text-decoration: none
+        margin-left: 5px 
+        color: #377dff
+
+
+        
+
+  .questions
+    @include flexContainer($fd: column, $ai: flex-start, $gap: 20px)
+    box-sizing: border-box
+    width: 500px
+    padding: 64px
+    font-size: 20px
+    color: white
+    background-color: #377dff
+    @media screen and (max-width: 900px)
+      width: 100%
+    h4
+      font-size: 28px
+      font-weight: 500
+    p
+      color: white
+    
+    .callConsultation
+      background-color: white
+      color: #377dff
+      font-weight: 400
+      text-decoration: none
+      padding: 20px
+      border-radius: 100px
+
+    .telephoneConsultation
+      text-decoration: none
+      color: white
+      i
+        margin-right: 5px 
+
+.featuredInSection
+  @include flexContainer
+  margin:40px 48px
+
+  @media screen and (max-width: 900px)
+    margin:40px 5px
+    flex-wrap: wrap
+
+  .title
+    font-size: 28px
+    margin-right: 48px
+    white-space: nowrap
+    margin-bottom: 10px
+  
+  .clientsList
+    @include flexContainer($ai:flex-start , $gap: 20px)
+    flex-wrap: wrap
+    padding-top: 20px 
+    border-top: 1px solid #e5e7eb
+    img
+      width: 100px
+
+
+
 
 
 // .grid-container {
