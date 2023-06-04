@@ -1,23 +1,24 @@
 FROM node:16.15.1-alpine3.16
 
-ARG NODE_ENV="development"
+ARG NODE_ENV="production"
 
-RUN mkdir /server \
-    && mkdir -p /public/images \
-    && mkdir -p /public/files \
-    && mkdir -p /var/www/html/images \    
-    && mkdir -p /var/www/html/files 
+RUN mkdir ./server
+
+RUN mkdir -p /var/www/html/images/
+RUN mkdir -p /var/www/html/files/
 
 WORKDIR /server
 
-COPY package*.json ./
+COPY package\*.json ./
 
-RUN npm install -g nodemon \
-    && npm install -g sequelize-cli \
-    && npm install
+RUN npm install -g sequelize-cli
+
+RUN npm install
 
 COPY . .
 
 EXPOSE 3000
 
-CMD sequelize db:migrate && sequelize db:seed:all && npm start
+RUN npm run build
+
+CMD node ./dist/index.js
