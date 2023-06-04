@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { compareAsc } from 'date-fns';
+import { compareAsc, parseISO } from 'date-fns';
 import { v4 as uuid } from 'uuid';
 
 const EVENT_SLICE_NAME = 'event';
@@ -14,7 +14,7 @@ const reducers = {
     payload.startDate = String(new Date());
     payload.notification = '';
     state.events = [...state.events, payload].sort((a, b) =>
-      compareAsc(a.eventDate, b.eventDate)
+      compareAsc(parseISO(a.eventDate), parseISO(b.eventDate))
     );
   },
   removeEvent: (state, { payload }) => {
@@ -23,7 +23,7 @@ const reducers = {
   updateEvent: (state, { payload }) => {
     state.events = state.events
       .map(event => (event.id === payload.id ? payload : event))
-      .sort((a, b) => compareAsc(a.eventDate, b.eventDate));
+      .sort((a, b) => compareAsc(parseISO(a.eventDate), parseISO(b.eventDate)));
   },
   setNotification: (state, { payload }) => {
     state.events = state.events.map(event => {

@@ -9,6 +9,7 @@ module.exports = {
   CONTACT_EMAIL: 'SquadHelpContact@gmail.com',
   CONTACT_EMAIL_HOST: 'host',
   CONTACT_EMAIL_PASSWORD: 'password',
+  CONTACT_CONTEST_FRONT_ADDRESS: 'http://localhost:5000/contest/',
   ADMIN: 'ADMIN',
   MODERATOR: 'moderator',
   CUSTOMER: 'customer',

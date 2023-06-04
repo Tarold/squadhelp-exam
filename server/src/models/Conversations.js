@@ -33,10 +33,12 @@ module.exports = (sequelize, DataTypes) => {
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false,
     },
     updatedAt: {
       type: DataTypes.DATE,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false,
     },
   });
   Conversations.associate = function (models) {

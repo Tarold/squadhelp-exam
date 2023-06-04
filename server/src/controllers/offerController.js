@@ -221,9 +221,6 @@ const acceptedOffer = async (offerId, creatorId, email) => {
     { approvedStatus: CONSTANTS.OFFER_APPROVED_ACCEPTED },
     { id: offerId }
   );
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was accepted');
   emailController.sendOfferMessage({
     email,
     offer: acceptedOffer,
@@ -236,9 +233,6 @@ const deniedOffer = async (offerId, creatorId, email) => {
     { approvedStatus: CONSTANTS.OFFER_APPROVED_DENIED },
     { id: offerId }
   );
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(creatorId, 'Someone of yours offers was denied');
   emailController.sendOfferMessage({
     email,
     offer: deniedOffer,
