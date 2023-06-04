@@ -1,8 +1,6 @@
 const nodemailer = require('nodemailer');
 const CONSTANTS = require('../constants');
 
-const address = 'http://localhost:3000/contest/';
-
 async function getTestTransporter () {
   const testAccount = await nodemailer.createTestAccount();
 
@@ -50,7 +48,7 @@ const mailOptions = ({ email, offer }) => {
     We appreciate your contribution and value your participation. Your approved offer will now be processed accordingly.
     
     To access the Squadhelp contest page, click on the following link: 
-      ${address}${offer.contestId}
+      ${CONSTANTS.CONTACT_CONTEST_FRONT_ADDRESS}${offer.contestId}
     
     If you have any further questions or concerns, please don't hesitate to reach out to us. We are here to assist you.
     
@@ -80,7 +78,7 @@ const mailOptions = ({ email, offer }) => {
       
       <!-- Button with link to Squadhelp contest page -->
       <p>
-        <a href="${address}${offer.contestId}" style="display: inline-block; background-color: #3f51b5; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+        <a href="${CONSTANTS.CONTACT_CONTEST_FRONT_ADDRESS}${offer.contestId}" style="display: inline-block; background-color: #3f51b5; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
           Go to Contest Page
         </a>
       </p>
@@ -88,7 +86,7 @@ const mailOptions = ({ email, offer }) => {
       <p>If the button above doesn't work, you can manually copy and paste the following link into your web browser:</p>
       
       <!-- Link in case the button doesn't work -->
-      <p><a href="${address}${offer.contestId}">${address}${offer.contestId}</a></p>
+      <p><a href="${CONSTANTS.CONTACT_CONTEST_FRONT_ADDRESS}${offer.contestId}">${CONSTANTS.CONTACT_CONTEST_FRONT_ADDRESS}${offer.contestId}</a></p>
       
       <p>If you have any further questions or concerns, please don't hesitate to reach out to us. We are here to assist you.</p>
       
