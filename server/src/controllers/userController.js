@@ -180,7 +180,6 @@ module.exports.payment = async (req, res, next) => {
 
     res.status(204).send();
   } catch (err) {
-    console.log('err :>> ', err);
     transaction.rollback();
     next(err);
   }
