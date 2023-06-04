@@ -95,6 +95,7 @@ class ModeratorDashboard extends React.Component {
   }
 
   componentDidMount () {
+    this.props.clearOffersList();
     this.props.getDataForContest();
     if (
       this.parseUrlForParams(this.props.location.search) &&
@@ -102,7 +103,7 @@ class ModeratorDashboard extends React.Component {
     )
       this.getOffers(this.props.moderatorFilter);
   }
-  componentDidUnmount () {
+  componentWillUnmount () {
     this.props.clearOffersList();
   }
 
