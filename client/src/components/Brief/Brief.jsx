@@ -32,7 +32,6 @@ const Brief = props => {
 
     Object.keys(data).forEach(key => {
       if (data[key]) {
-        console.log(key, ' :>> ', data[key]);
         if (key === 'originalFileName') {
           defaultData.fileName = data[key];
         } else {
