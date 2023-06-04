@@ -97,7 +97,7 @@ const HowItWorksPage = () => {
       <div className={styles.greyContainer}>
         <div className={styles.namingContestsSection}>
           <div className={styles.namingContests}>
-            <img src={`${IMAGES_PATH}reward.png`} />
+            <img src={`${IMAGES_PATH}reward.png`} alt='' />
             <h2>How Do Naming Contests Work?</h2>
           </div>
 
@@ -105,6 +105,7 @@ const HowItWorksPage = () => {
             <img
               className={styles.namingImgGrid}
               src={`${IMAGES_PATH}chairguy.png`}
+              alt=''
             />
             <ol className={styles.namingList}>
               <li>
@@ -147,8 +148,16 @@ const HowItWorksPage = () => {
           <a className={styles.link} href='/start-contest'>
             Start A Contest
           </a>
-          <img className={styles.bgFirstImg} src={`${IMAGES_PATH}teeth.png`} />
-          <img className={styles.bgSecondImg} src={`${IMAGES_PATH}apple.png`} />
+          <img
+            className={styles.bgFirstImg}
+            src={`${IMAGES_PATH}teeth.png`}
+            alt=''
+          />
+          <img
+            className={styles.bgSecondImg}
+            src={`${IMAGES_PATH}apple.png`}
+            alt=''
+          />
         </div>
         <div className={styles.statisticSection}>
           <ul className={styles.statisticList}>
