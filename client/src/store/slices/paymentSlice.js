@@ -30,7 +30,7 @@ export const pay = decorateAsyncThunk({
         contests.map(async contest => {
           if (contest.file) {
             const imgBlob = await fetch(contest.file).then(r => r.blob());
-
+            imgBlob.name = contest.fileName;
             files.push(imgBlob);
           }
         })
