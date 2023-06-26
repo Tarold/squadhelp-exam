@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { getUser } from '../../../store/slices/userSlice';
 import Spinner from '../../Spinner/Spinner';
 import CONSTANTS from '../../../constants';
-import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
 import NotAccess from '../../NotAccess/NotAccess';
 
 const CustomerHoc = (Component, props) => {
@@ -35,7 +34,7 @@ const CustomerHoc = (Component, props) => {
         return NotAccess();
       }
 
-      return <Redirect to='/login' />;
+      return null;
     }
   }
 
