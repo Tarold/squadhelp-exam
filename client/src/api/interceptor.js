@@ -1,6 +1,6 @@
 import axios from 'axios';
 import CONTANTS from '../constants';
-import history from '../browserHistory';
+import { createBrowserHistory } from 'history';
 
 const instance = axios.create({
   baseURL: CONTANTS.BASE_URL,
@@ -25,6 +25,7 @@ instance.interceptors.response.use(
     return response;
   },
   err => {
+    const history = createBrowserHistory();
     if (
       err.response.status === 408 &&
       history.location.pathname !== '/login' &&
@@ -33,6 +34,7 @@ instance.interceptors.response.use(
       history.location.pathname !== '/'
     ) {
       history.replace('/login');
+      history.go();
     }
     return Promise.reject(err);
   }
