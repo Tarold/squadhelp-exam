@@ -36,7 +36,7 @@ const Offer = props => {
     return null;
   };
 
-  const passsedOffer = () => {
+  const approveOffer = command => {
     confirmAlert({
       title: 'confirm',
       message: 'Are u sure?',
@@ -48,29 +48,7 @@ const Offer = props => {
               creatorId: props.data.User.id,
               email: props.data.User.email,
               offerId: props.data.id,
-              command: CONSTANTS.OFFER_APPROVED_ACCEPTED,
-            }),
-        },
-        {
-          label: 'No',
-        },
-      ],
-    });
-  };
-
-  const deniedOffer = () => {
-    confirmAlert({
-      title: 'confirm',
-      message: 'Are u sure?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () =>
-            props.setOfferApprove({
-              creatorId: props.data.User.id,
-              email: props.data.User.email,
-              offerId: props.data.id,
-              command: CONSTANTS.OFFER_APPROVED_DENIED,
+              command,
             }),
         },
         {
@@ -184,10 +162,16 @@ const Offer = props => {
       </div>
       {
         <div className={styles.btnsContainer}>
-          <div onClick={passsedOffer} className={styles.resolveBtn}>
+          <div
+            onClick={() => approveOffer(CONSTANTS.OFFER_APPROVED_ACCEPTED)}
+            className={styles.resolveBtn}
+          >
             Pass
           </div>
-          <div onClick={deniedOffer} className={styles.rejectBtn}>
+          <div
+            onClick={() => approveOffer(CONSTANTS.OFFER_APPROVED_DENIED)}
+            className={styles.rejectBtn}
+          >
             Denied
           </div>
         </div>
