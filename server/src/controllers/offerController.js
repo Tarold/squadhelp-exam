@@ -5,7 +5,6 @@ const controller = require('../socketInit');
 const emailController = require('../controllers/emailController');
 const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');
-const UtilFunctions = require('../utils/functions');
 
 module.exports.setOfferApprove = async (req, res, next) => {
   const { creatorId, email, offerId, command } = req.query;
@@ -24,48 +23,8 @@ module.exports.setOfferApprove = async (req, res, next) => {
 };
 
 module.exports.getOffers = (req, res, next) => {
-  const {
-    limit = 10,
-    offset = 0,
-    typeIndex,
-    contestId,
-    industry,
-    awardSort,
-  } = req.query;
-  const predicates = UtilFunctions.createWhereForAllContests(
-    typeIndex,
-    contestId,
-    industry,
-    awardSort
-  );
-  db.Offers.findAll({
-    where: {
-      approvedStatus: CONSTANTS.OFFER_APPROVED_VERIFYING,
-      status: CONSTANTS.OFFER_STATUS_PENDING,
-    },
-    limit,
-    offset,
-    include: [
-      {
-        model: db.Contests,
-        where: predicates.where,
-        order: predicates.order,
-        attributes: ['contestType', 'industry'],
-      },
-      {
-        model: db.Users,
-        attributes: [
-          'id',
-          'firstName',
-          'lastName',
-          'displayName',
-          'email',
-          'avatar',
-          'rating',
-        ],
-      },
-    ],
-  })
+  contestQueries
+    .findOffers(req.query)
     .then(offers => {
       let haveMore = true;
       if (offers.length === 0) {
@@ -92,9 +51,6 @@ module.exports.setNewOffer = async (req, res, next) => {
     const result = await contestQueries.createOffer(obj);
     delete result.contestId;
     delete result.userId;
-    controller
-      .getNotificationController()
-      .emitEntryCreated(req.body.customerId);
     const User = Object.assign({}, req.tokenData, { id: req.tokenData.userId });
     res.status(201).send(Object.assign({}, result, { User }));
   } catch (e) {
@@ -171,13 +127,14 @@ const resolveOffer = async (
       arrayRoomsId.push(offer.userId);
     }
   });
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(
-      arrayRoomsId,
-      'Someone of yours offers was rejected',
-      contestId
-    );
+  if (arrayRoomsId.length)
+    controller
+      .getNotificationController()
+      .emitChangeOfferStatus(
+        arrayRoomsId,
+        'Someone of yours offers was rejected',
+        contestId
+      );
   controller
     .getNotificationController()
     .emitChangeOfferStatus(creatorId, 'Someone of your offers WIN', contestId);
@@ -225,6 +182,10 @@ const acceptedOffer = async (offerId, creatorId, email) => {
     email,
     offer: acceptedOffer,
   });
+
+  const contest = await contestQueries.findContest(acceptedOffer.contestId);
+  controller.getNotificationController().emitEntryCreated(contest.userId);
+
   return acceptedOffer;
 };
 
