@@ -80,7 +80,9 @@ const ContestBox = props => {
         </div>
         <div className={styles.timeContainer}>
           <span className={styles.timeContest}>{getTimeStr()}</span>
-          <span>Going</span>
+          {(props.data.status === CONSTANTS.CONTEST_STATUS_ACTIVE && (
+            <span>Going</span>
+          )) || <span>Finished</span>}
         </div>
       </div>
     </div>
