@@ -118,13 +118,17 @@ const resolveOffer = async (
     transaction
   );
   transaction.commit();
+
   const arrayRoomsId = [];
+  let winOffer;
   updatedOffers.forEach(offer => {
     if (
       offer.status === CONSTANTS.OFFER_STATUS_REJECTED &&
       creatorId !== offer.userId
     ) {
       arrayRoomsId.push(offer.userId);
+    } else if (offer.status === CONSTANTS.OFFER_STATUS_WON) {
+      winOffer = offer.dataValues;
     }
   });
   if (arrayRoomsId.length)
@@ -138,7 +142,8 @@ const resolveOffer = async (
   controller
     .getNotificationController()
     .emitChangeOfferStatus(creatorId, 'Someone of your offers WIN', contestId);
-  return updatedOffers[0].dataValues;
+
+  return winOffer;
 };
 
 module.exports.setOfferStatus = async (req, res, next) => {
