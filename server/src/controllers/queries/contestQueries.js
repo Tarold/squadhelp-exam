@@ -16,8 +16,8 @@ module.exports.updateContest = async (data, predicate, transaction) => {
   return updatedContest.dataValues;
 };
 
-module.exports.updateContestStatus = async (data, predicate, transaction) => {
-  const [updatedCount, [updateResult]] = await db.Contests.update(data, {
+module.exports.updateContestsStatus = async (data, predicate, transaction) => {
+  const [updatedCount, updateResult] = await db.Contests.update(data, {
     where: predicate,
     returning: true,
     transaction,
@@ -25,7 +25,7 @@ module.exports.updateContestStatus = async (data, predicate, transaction) => {
   if (updatedCount < 1) {
     throw new ServerError('cannot update Contest');
   }
-  return updateResult.dataValues;
+  return updateResult;
 };
 
 module.exports.findContest = async data => {
