@@ -81,25 +81,25 @@ const resolveOffer = async (
   priority,
   transaction
 ) => {
-  const finishedContest = await contestQueries.updateContestStatus(
+  const updatedContests = await contestQueries.updateContestsStatus(
     {
       status: db.sequelize.literal(`
         CASE
-          WHEN "id"=${contestId} AND "orderId"='${orderId}' 
-            THEN '${CONSTANTS.CONTEST_STATUS_FINISHED}'
           WHEN "orderId"='${orderId}' AND "priority"=${priority + 1} 
             THEN '${CONSTANTS.CONTEST_STATUS_ACTIVE}' 
-          WHEN "orderId"='${orderId}' AND "priority">${priority + 1} 
-            THEN '${CONSTANTS.CONTEST_STATUS_PENDING}' 
-          WHEN "orderId"='${orderId}' AND "priority"<${priority} 
-            THEN '${CONSTANTS.CONTEST_STATUS_FINISHED}'END
+          WHEN "orderId"='${orderId}' AND "priority"<=${priority} 
+            THEN '${CONSTANTS.CONTEST_STATUS_FINISHED}' 
+          ELSE '${CONSTANTS.CONTEST_STATUS_PENDING}' END
     `),
     },
     { orderId },
     transaction
   );
+  const finishedContestPrize = updatedContests.find(
+    contest => contest.id === contestId
+  ).prize;
   await userQueries.updateUser(
-    { balance: db.sequelize.literal('balance + ' + finishedContest.prize) },
+    { balance: db.sequelize.literal('balance + ' + finishedContestPrize) },
     creatorId,
     transaction
   );
