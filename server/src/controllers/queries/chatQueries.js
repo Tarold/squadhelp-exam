@@ -42,6 +42,7 @@ module.exports.findChats = async (catalogId, conversationId) => {
 
   return chats;
 };
+
 module.exports.removeChats = async (catalogId, conversationId) => {
   const whereParams = conversationId
     ? {
