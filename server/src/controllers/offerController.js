@@ -1,10 +1,11 @@
-const CONSTANTS = require('../constants');
-const ServerError = require('../errors/ServerError');
 const db = require('../models');
 const controller = require('../socketInit');
 const emailController = require('../controllers/emailController');
 const contestQueries = require('./queries/contestQueries');
 const userQueries = require('./queries/userQueries');
+const offerQueries = require('./queries/offerQueries');
+const ServerError = require('../errors/ServerError');
+const CONSTANTS = require('../constants');
 
 module.exports.setOfferApprove = async (req, res, next) => {
   const { creatorId, email, offerId, command } = req.query;
@@ -23,7 +24,7 @@ module.exports.setOfferApprove = async (req, res, next) => {
 };
 
 module.exports.getOffers = (req, res, next) => {
-  contestQueries
+  offerQueries
     .findOffers(req.query)
     .then(offers => {
       let haveMore = true;
@@ -48,7 +49,7 @@ module.exports.setNewOffer = async (req, res, next) => {
   obj.userId = req.tokenData.userId;
   obj.contestId = req.body.contestId;
   try {
-    const result = await contestQueries.createOffer(obj);
+    const result = await offerQueries.createOffer(obj);
     delete result.contestId;
     delete result.userId;
     const User = Object.assign({}, req.tokenData, { id: req.tokenData.userId });
@@ -59,7 +60,7 @@ module.exports.setNewOffer = async (req, res, next) => {
 };
 
 const rejectOffer = async (offerId, creatorId, contestId) => {
-  const rejectedOffer = await contestQueries.updateOffer(
+  const rejectedOffer = await offerQueries.updateOffer(
     { status: CONSTANTS.OFFER_STATUS_REJECTED },
     { id: offerId }
   );
@@ -103,7 +104,7 @@ const resolveOffer = async (
     creatorId,
     transaction
   );
-  const updatedOffers = await contestQueries.updateOfferStatus(
+  const updatedOffers = await offerQueries.updateOfferStatus(
     {
       status: db.sequelize.literal(` 
       CASE
@@ -179,7 +180,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
 };
 
 const acceptedOffer = async (offerId, creatorId, email) => {
-  const acceptedOffer = await contestQueries.updateOffer(
+  const acceptedOffer = await offerQueries.updateOffer(
     { approvedStatus: CONSTANTS.OFFER_APPROVED_ACCEPTED },
     { id: offerId }
   );
@@ -195,7 +196,7 @@ const acceptedOffer = async (offerId, creatorId, email) => {
 };
 
 const deniedOffer = async (offerId, creatorId, email) => {
-  const deniedOffer = await contestQueries.updateOffer(
+  const deniedOffer = await offerQueries.updateOffer(
     { approvedStatus: CONSTANTS.OFFER_APPROVED_DENIED },
     { id: offerId }
   );
