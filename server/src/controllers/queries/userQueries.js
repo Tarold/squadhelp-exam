@@ -1,7 +1,7 @@
 const db = require('../../models');
+const bcrypt = require('bcrypt');
 const NotFound = require('../../errors/UserNotFoundError');
 const ServerError = require('../../errors/ServerError');
-const bcrypt = require('bcrypt');
 
 module.exports.updateUser = async (data, userId, transaction) => {
   const [updatedCount, [updatedUser]] = await db.Users.update(data, {
@@ -22,6 +22,7 @@ module.exports.findUser = async (predicate, transaction) => {
   }
   return result.get({ plain: true });
 };
+
 module.exports.findUserByPk = async interlocutorId => {
   const result = await db.Users.findByPk(interlocutorId);
   if (!result) {
@@ -29,6 +30,7 @@ module.exports.findUserByPk = async interlocutorId => {
   }
   return result;
 };
+
 module.exports.userCreation = async data => {
   const newUser = await db.Users.create(data);
   if (!newUser) {
@@ -37,6 +39,7 @@ module.exports.userCreation = async data => {
     return newUser.get({ plain: true });
   }
 };
+
 module.exports.findUsers = async interlocutors => {
   const result = await db.Users.findAll({
     where: {
