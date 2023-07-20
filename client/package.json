@@ -13,6 +13,7 @@
     "history": "^5.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "prop-types": "^15.8.1",
     "query-string": "^7.0.0",
     "react": "^17.0.2",
     "react-confirm": "^0.1.23",
@@ -31,9 +32,8 @@
     "react-string-replace": "^1.1.0",
     "react-toastify": "^7.0.4",
     "redux": "^4.1.0",
-    "require-context": "^1.1.0",
     "socket.io-client": "^4.1.1",
-    "validator": "^13.6.0",
+    "uuid": "^9.0.0",
     "yup": "^0.32.9"
   },
   "scripts": {
