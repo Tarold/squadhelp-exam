@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Event.module.sass';
 import Notification from './Notification/Notification';
 import formatDuration from 'date-fns/formatDuration';
@@ -7,20 +7,32 @@ import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
 import variables from './progressBarColors.json';
 import classNames from 'classnames';
 
-class Event extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      countDays: '',
-      progressStyle: null,
-      isFinish: false,
+const Event = props => {
+  const {
+    eventName,
+    del,
+    enableEdit,
+    notification,
+    setNotification,
+    eventsCount,
+    eventDate,
+    notificationDate,
+    startDate,
+  } = props;
+
+  const [countDays, setCountDays] = useState('');
+  const [progressStyle, setProgressStyle] = useState(null);
+  const [isFinish, setIsFinish] = useState(false);
+
+  useEffect(() => {
+    const updateEvent = () => {
+      setCountDays(getDateBefore(eventDate));
+      setProgressStyle(
+        progressBarHelper(eventDate, notificationDate, startDate)
+      );
     };
-  }
 
-  componentDidMount () {
-    this.updateEvent();
-
-    const { eventDate, notificationDate, setNotification } = this.props;
+    updateEvent();
 
     const millisecondsToFinish = differenceInMilliseconds(
       new Date(eventDate),
@@ -32,7 +44,7 @@ class Event extends Component {
     );
 
     const interval = setInterval(() => {
-      this.updateEvent();
+      updateEvent();
     }, Math.round(new Date(eventDate).getTime() * 0.01));
 
     const timeoutNotification =
@@ -45,43 +57,26 @@ class Event extends Component {
     const timeoutFinish =
       millisecondsToFinish > 0
         ? setTimeout(() => {
-            this.updateEvent();
-            this.setState({ isFinish: true });
+            updateEvent();
+            setIsFinish(true);
             setNotification('timer finish');
             clearInterval(interval);
           }, millisecondsToFinish)
         : '';
 
     if (millisecondsToFinish <= 0) {
-      this.setState({ isFinish: true });
+      setIsFinish(true);
       clearInterval(interval);
     }
 
-    this.interval = interval;
-    this.timeoutFinish = timeoutFinish;
-    this.timeoutNotification = timeoutNotification;
-  }
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeoutFinish);
+      clearTimeout(timeoutNotification);
+    };
+  }, [eventDate, notificationDate, startDate, setNotification]);
 
-  componentWillUnmount () {
-    clearInterval(this.interval);
-    clearTimeout(this.timeoutFinish);
-    clearTimeout(this.timeoutNotification);
-  }
-
-  updateEvent = () => {
-    const { eventDate, notificationDate, startDate } = this.props;
-
-    this.setState({
-      countDays: this.getDateBefore(eventDate),
-      progressStyle: this.progressBarHelper(
-        eventDate,
-        notificationDate,
-        startDate
-      ),
-    });
-  };
-
-  getDateBefore (date) {
+  const getDateBefore = date => {
     const start = new Date();
     const end = new Date(date);
 
@@ -104,9 +99,9 @@ class Event extends Component {
     }
 
     return formattedDuration;
-  }
+  };
 
-  progressBarHelper (eventDate, notificationDate, startDate) {
+  const progressBarHelper = (eventDate, notificationDate, startDate) => {
     const getBetweenTime = (startDate, eventDate) => {
       return differenceInMilliseconds(new Date(startDate), new Date(eventDate));
     };
@@ -126,50 +121,38 @@ class Event extends Component {
       background: `linear-gradient(to right, ${green} 0%, ${green} ${procentNow}%, ${variables.bg} ${procentNow}%, ${variables.bg} ${procentTriger}%, ${variables.triger} ${procentTriger}%,  ${variables.triger} 100%)`,
     };
     return gradientStyle;
-  }
+  };
 
-  render () {
-    const {
-      eventName,
-      del,
-      enableEdit,
-      notification,
-      setNotification,
-      eventsCount,
-    } = this.props;
-    const { countDays, progressStyle, isFinish } = this.state;
+  return (
+    <li className={styles.event} style={progressStyle}>
+      <span className={styles.name}>{eventName}</span>
 
-    return (
-      <li className={styles.event} style={progressStyle}>
-        <span className={styles.name}>{eventName}</span>
+      {isFinish ? (
+        <>
+          <span className={styles.badge}>eventsCount:{eventsCount}</span>
+          <Notification
+            notification={notification}
+            setNotification={() => setNotification('')}
+          />
+        </>
+      ) : (
+        <>
+          <span className={styles.countDays}>{countDays}</span>
+          <Notification
+            notification={notification}
+            setNotification={() => setNotification('')}
+          />
+          <button onClick={enableEdit} className={styles.buttonEdit}>
+            Edit
+          </button>
+        </>
+      )}
 
-        {isFinish ? (
-          <>
-            <span className={styles.badge}>eventsCount:{eventsCount}</span>
-            <Notification
-              notification={notification}
-              setNotification={() => setNotification('')}
-            />
-          </>
-        ) : (
-          <>
-            <span className={styles.countDays}>{countDays}</span>
-            <Notification
-              notification={notification}
-              setNotification={() => setNotification('')}
-            />
-            <button onClick={enableEdit} className={styles.buttonEdit}>
-              Edit
-            </button>
-          </>
-        )}
-
-        <button className={styles.buttonRemove} onClick={del}>
-          Delete
-        </button>
-      </li>
-    );
-  }
-}
+      <button className={styles.buttonRemove} onClick={del}>
+        Delete
+      </button>
+    </li>
+  );
+};
 
 export default Event;
