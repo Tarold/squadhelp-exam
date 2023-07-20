@@ -1,12 +1,9 @@
 import * as yup from 'yup';
 import valid from 'card-validator';
 
-export default {
+const validatorSchemas = {
   LoginSchem: yup.object().shape({
-    email: yup
-      .string()
-      .email('check email')
-      .required('required'),
+    email: yup.string().email('check email').required('required'),
     password: yup
       .string()
       .test(
@@ -17,10 +14,47 @@ export default {
       .required('required'),
   }),
   RegistrationSchem: yup.object().shape({
-    email: yup
+    email: yup.string().email('check email').required('Email is required'),
+    password: yup
       .string()
-      .email('check email')
-      .required('Email is required'),
+      .test(
+        'test-password',
+        'min 6 symbols',
+        value => value && value.trim().length >= 6
+      )
+      .required('required'),
+    confirmPassword: yup
+      .string()
+      .required('confirm password is required')
+      .oneOf([yup.ref('password')], 'confirmation pass must match password'),
+    firstName: yup.string().min(1).required('First Name is required'),
+    lastName: yup
+      .string()
+      .test(
+        'test-lastName',
+        'required',
+        value => value && value.trim().length >= 1
+      )
+      .required('Last Name is required'),
+    displayName: yup
+      .string()
+      .test(
+        'test-displayName',
+        'required',
+        value => value && value.trim().length >= 1
+      )
+      .required('Display Name is required'),
+    role: yup
+      .string()
+      .matches(/(customer|creator)/)
+      .required('Role is required'),
+    agreeOfTerms: yup
+      .boolean()
+      .oneOf([true], 'Must Accept Terms and Conditions')
+      .required('Must Accept Terms and Conditions'),
+  }),
+  RegistrationModeratorSchem: yup.object().shape({
+    email: yup.string().email('check email').required('Email is required'),
     password: yup
       .string()
       .test(
@@ -59,15 +93,10 @@ export default {
       .required('Display Name is required'),
     role: yup
       .string()
-      .matches(/(customer|creator)/)
+      .matches(/moderator/)
       .required('Role is required'),
-    agreeOfTerms: yup
-      .boolean()
-      .oneOf([true], 'Must Accept Terms and Conditions')
-      .required('Must Accept Terms and Conditions'),
   }),
   ContestSchem: yup.object({
-    nameVenture: yup.string().min(3),
     contestType: yup
       .string()
       .matches(/(name|tagline|logo)/)
@@ -97,11 +126,34 @@ export default {
         value => value && value.trim().length >= 1
       )
       .required('target customers required'),
-    styleName: yup.string().min(1),
-    typeOfName: yup.string().min(1),
-    typeOfTagline: yup.string().min(1),
-    brandStyle: yup.string().min(1),
     file: yup.mixed(),
+    fileName: yup.string().nullable(),
+  }),
+  ContestNameSchem: yup.object().shape({
+    styleName: yup.string().required('required'),
+    typeOfName: yup.string().required('required'),
+  }),
+  ContestLogoSchem: yup.object().shape({
+    nameVenture: yup
+      .string()
+      .test(
+        'test-nameVenture',
+        'at least 3 characters',
+        value => value && value.trim().length >= 3
+      )
+      .required('required'),
+    brandStyle: yup.string().required('required'),
+  }),
+  ContestTaglineSchem: yup.object().shape({
+    nameVenture: yup
+      .string()
+      .test(
+        'test-nameVenture',
+        'at least 3 characters',
+        value => value && value.trim().length >= 3
+      )
+      .required('required'),
+    typeOfTagline: yup.string().required('required'),
   }),
   filterSchem: yup.object().shape({
     typeIndex: yup.number().oneOf[(1, 2, 3, 4, 5, 6, 7)],
@@ -149,10 +201,7 @@ export default {
       .required('required'),
   }),
   CashoutSchema: yup.object().shape({
-    sum: yup
-      .number()
-      .min(5, 'min sum is 5$')
-      .required('required'),
+    sum: yup.number().min(5, 'min sum is 5$').required('required'),
     number: yup
       .string()
       .test(
@@ -161,10 +210,7 @@ export default {
         value => valid.number(value).isValid
       )
       .required('required'),
-    name: yup
-      .string()
-      .min(1)
-      .required('required'),
+    name: yup.string().min(1).required('required'),
     cvc: yup
       .string()
       .test('test-cvc', 'cvc is invalid', value => valid.cvv(value).isValid)
@@ -225,4 +271,18 @@ export default {
       )
       .required('required'),
   }),
+  EventSchema: yup.object().shape({
+    eventName: yup.string().required('Event Name is required'),
+    eventDate: yup
+      .date()
+      .min(new Date(), 'Date must be after current date')
+      .required('Event Date is required'),
+    notificationDate: yup
+      .date()
+      .min(new Date(), 'Date must be after current date')
+      .max(yup.ref('eventDate'), 'Date must be before or equal to Event Date')
+      .required('Date is required'),
+  }),
 };
+
+export default validatorSchemas;

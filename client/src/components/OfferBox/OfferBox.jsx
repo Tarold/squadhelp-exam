@@ -16,7 +16,7 @@ import styles from './OfferBox.module.sass';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './confirmStyle.css';
 
-const OfferBox = (props) => {
+const OfferBox = props => {
   const findConversationInfo = () => {
     const { messagesPreview, id } = props;
     const participants = [id, props.data.User.id];
@@ -27,8 +27,8 @@ const OfferBox = (props) => {
       if (isEqual(participants, messagesPreview[i].participants)) {
         return {
           participants: messagesPreview[i].participants,
-          _id: messagesPreview[i]._id,
-          blackList: messagesPreview[i].blackList,
+          id: messagesPreview[i].id,
+          blockList: messagesPreview[i].blockList,
           favoriteList: messagesPreview[i].favoriteList,
         };
       }
@@ -70,7 +70,7 @@ const OfferBox = (props) => {
     });
   };
 
-  const changeMark = (value) => {
+  const changeMark = value => {
     props.clearError();
     props.changeMark({
       mark: value,
@@ -88,13 +88,28 @@ const OfferBox = (props) => {
           className={classNames('fas fa-times-circle reject', styles.reject)}
         />
       );
-    }
-    if (status === CONSTANTS.OFFER_STATUS_WON) {
+    } else if (status === CONSTANTS.OFFER_STATUS_WON) {
       return (
         <i
           className={classNames('fas fa-check-circle resolve', styles.resolve)}
         />
       );
+    }
+    if (role === CONSTANTS.CREATOR) return offerApproved();
+  };
+
+  const offerApproved = () => {
+    const { approvedStatus } = props.data;
+
+    if (approvedStatus === CONSTANTS.OFFER_APPROVED_VERIFYING) {
+      return (
+        <i className={classNames('fas fa-search reject', styles.verifying)} />
+      );
+    } else if (approvedStatus === CONSTANTS.OFFER_APPROVED_ACCEPTED) {
+      return <i className={classNames('fas fa-check', styles.accepted)} />;
+    } else if (approvedStatus === CONSTANTS.OFFER_APPROVED_DENIED) {
+      return <i className={classNames('fas fa-eye-slash', styles.denied)} />;
+    } else {
     }
     return null;
   };
@@ -118,9 +133,9 @@ const OfferBox = (props) => {
               src={
                 avatar === 'anon.png'
                   ? CONSTANTS.ANONYM_IMAGE_PATH
-                  : `${CONSTANTS.publicURL}${avatar}`
+                  : `${CONSTANTS.publicImagesURL}${avatar}`
               }
-              alt="user"
+              alt='user'
             />
             <div className={styles.nameAndEmail}>
               <span>{`${firstName} ${lastName}`}</span>
@@ -135,19 +150,19 @@ const OfferBox = (props) => {
               fullSymbol={
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
-                  alt="star"
+                  alt='star'
                 />
               }
               placeholderSymbol={
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
-                  alt="star"
+                  alt='star'
                 />
               }
               emptySymbol={
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star-outline.png`}
-                  alt="star-outline"
+                  alt='star-outline'
                 />
               }
               readonly
@@ -164,8 +179,8 @@ const OfferBox = (props) => {
                 })
               }
               className={styles.responseLogo}
-              src={`${CONSTANTS.publicURL}${data.fileName}`}
-              alt="logo"
+              src={`${CONSTANTS.publicImagesURL}${data.fileName}`}
+              alt='logo'
             />
           ) : (
             <span className={styles.response}>{data.text}</span>
@@ -176,19 +191,19 @@ const OfferBox = (props) => {
               fullSymbol={
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
-                  alt="star"
+                  alt='star'
                 />
               }
               placeholderSymbol={
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
-                  alt="star"
+                  alt='star'
                 />
               }
               emptySymbol={
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star-outline.png`}
-                  alt="star"
+                  alt='star'
                 />
               }
               onClick={changeMark}
@@ -197,7 +212,7 @@ const OfferBox = (props) => {
           )}
         </div>
         {role !== CONSTANTS.CREATOR && (
-          <i onClick={goChat} className="fas fa-comments" />
+          <i onClick={goChat} className='fas fa-comments' />
         )}
       </div>
       {props.needButtons(data.status) && (
@@ -214,14 +229,14 @@ const OfferBox = (props) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  changeMark: (data) => dispatch(changeMark(data)),
+const mapDispatchToProps = dispatch => ({
+  changeMark: data => dispatch(changeMark(data)),
   clearError: () => dispatch(clearChangeMarkError()),
-  goToExpandedDialog: (data) => dispatch(goToExpandedDialog(data)),
-  changeShowImage: (data) => dispatch(changeShowImage(data)),
+  goToExpandedDialog: data => dispatch(goToExpandedDialog(data)),
+  changeShowImage: data => dispatch(changeShowImage(data)),
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { changeMarkError } = state.contestByIdStore;
   const { id, role } = state.userStore.data;
   const { messagesPreview } = state.chatStore;

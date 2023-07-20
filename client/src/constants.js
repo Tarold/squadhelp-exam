@@ -1,9 +1,12 @@
 const env = process.env.NODE_ENV || 'development';
 const serverIP = 'localhost';
 const serverPort = 3000;
-export default {
+
+const CONSTANTS = {
+  ADMIN: 'ADMIN',
   CUSTOMER: 'customer',
   CREATOR: 'creator',
+  MODERATOR: 'moderator',
   CONTEST_STATUS_ACTIVE: 'active',
   CONTEST_STATUS_FINISHED: 'finished',
   CONTEST_STATUS_PENDING: 'pending',
@@ -13,14 +16,21 @@ export default {
   OFFER_STATUS_REJECTED: 'rejected',
   OFFER_STATUS_WON: 'won',
   OFFER_STATUS_PENDING: 'pending',
+  OFFER_APPROVED_VERIFYING: 'verifying',
+  OFFER_APPROVED_ACCEPTED: 'accepted',
+  OFFER_APPROVED_DENIED: 'denied',
   STATIC_IMAGES_PATH: '/staticImages/',
   ANONYM_IMAGE_PATH: '/staticImages/anonym.png',
   BASE_URL: `http://${serverIP}:${serverPort}/`,
   ACCESS_TOKEN: 'accessToken',
-  publicURL:
+  publicImagesURL:
     env === 'production'
       ? `http://${serverIP}:80/images/`
       : `http://${serverIP}:${serverPort}/public/images/`,
+  publicFileURL:
+    env === 'production'
+      ? `http://${serverIP}:80/files/`
+      : `http://${serverIP}:${serverPort}/public/files/`,
   NORMAL_PREVIEW_CHAT_MODE: 'NORMAL_PREVIEW_CHAT_MODE',
   FAVORITE_PREVIEW_CHAT_MODE: 'FAVORITE_PREVIEW_CHAT_MODE',
   BLOCKED_PREVIEW_CHAT_MODE: 'BLOCKED_PREVIEW_CHAT_MODE',
@@ -30,9 +40,11 @@ export default {
   CREATE_NEW_CATALOG_AND_ADD_CHAT: 'CREATE_NEW_CATALOG_AND_ADD_CHAT',
   USER_INFO_MODE: 'USER_INFO_MODE',
   CASHOUT_MODE: 'CASHOUT_MODE',
+  CUSTOM_LINK_REPLACER: 'CUSTOM_LINK',
   AUTH_MODE: {
     REGISTER: 'REGISTER',
     LOGIN: 'LOGIN',
+    CREATE: 'CREATE',
   },
   HEADER_ANIMATION_TEXT: [
     'a Company',
@@ -82,3 +94,5 @@ export default {
     },
   ],
 };
+
+export default CONSTANTS;

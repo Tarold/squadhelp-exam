@@ -11,8 +11,8 @@ import styles from './Dialog.module.sass';
 import ChatInput from '../../ChatComponents/ChatInut/ChatInput';
 
 class Dialog extends React.Component {
-  componentDidMount() {
-    this.props.getDialog({ interlocutorId: this.props.interlocutor.id });
+  componentDidMount () {
+    this.props.getDialog(this.props.interlocutor.id);
     this.scrollToBottom();
   }
 
@@ -22,17 +22,15 @@ class Dialog extends React.Component {
     this.messagesEnd.current.scrollIntoView({ behavior: 'smooth' });
   };
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.interlocutor.id !== this.props.interlocutor.id)
-      this.props.getDialog({ interlocutorId: nextProps.interlocutor.id });
-  }
-
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.props.clearMessageList();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate (prevProps, prevState) {
     if (this.messagesEnd.current) this.scrollToBottom();
+    if (prevProps.interlocutor.id !== this.props.interlocutor.id) {
+      this.props.getDialog(this.props.interlocutor.id);
+    }
   }
 
   renderMainDialog = () => {
@@ -68,25 +66,24 @@ class Dialog extends React.Component {
 
   blockMessage = () => {
     const { userId, chatData } = this.props;
-    const { blackList, participants } = chatData;
+    const { blockList, participants } = chatData;
     const userIndex = participants.indexOf(userId);
     let message;
-    if (chatData && blackList[userIndex]) {
+    if (chatData && blockList[userIndex]) {
       message = 'You block him';
-    } else if (chatData && blackList.includes(true)) {
+    } else if (chatData && blockList.includes(true)) {
       message = 'He block you';
     }
     return <span className={styles.messageBlock}>{message}</span>;
   };
-
-  render() {
+  render () {
     const { chatData, userId } = this.props;
     return (
       <>
         <ChatHeader userId={userId} />
         {this.renderMainDialog()}
         <div ref={this.messagesEnd} />
-        {chatData && chatData.blackList.includes(true) ? (
+        {chatData && chatData.blockList.includes(true) ? (
           this.blockMessage()
         ) : (
           <ChatInput />
@@ -96,10 +93,10 @@ class Dialog extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => state.chatStore;
+const mapStateToProps = state => state.chatStore;
 
-const mapDispatchToProps = (dispatch) => ({
-  getDialog: (data) => dispatch(getDialogMessages(data)),
+const mapDispatchToProps = dispatch => ({
+  getDialog: data => dispatch(getDialogMessages(data)),
   clearMessageList: () => dispatch(clearMessageList()),
 });
 

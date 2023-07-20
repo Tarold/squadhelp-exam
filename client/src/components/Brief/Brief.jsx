@@ -6,56 +6,34 @@ import {
   clearContestUpdationStore,
 } from '../../store/slices/contestUpdationSlice';
 import { changeEditContest } from '../../store/slices/contestByIdSlice';
-import ContestForm from '../ContestForm/ContestForm';
+import ContestForm from '../Contest/ContestForm/ContestForm';
 import styles from './Brief.module.sass';
 import ContestInfo from '../Contest/ContestInfo/ContestInfo';
 import Error from '../Error/Error';
 
-const Brief = (props) => {
-  const setNewContestData = (values) => {
+const Brief = props => {
+  const setNewContestData = async values => {
     const data = new FormData();
-    Object.keys(values).forEach((key) => {
+    Object.keys(values).forEach(key => {
       if (key !== 'file' && values[key]) data.append(key, values[key]);
     });
-    if (values.file instanceof File) {
-      data.append('file', values.file);
+
+    if (values.file) {
+      const imgBlob = await fetch(values.file).then(r => r.blob());
+
+      data.append('file', imgBlob, values.fileName);
     }
-    data.append('contestId', props.contestData.id);
-    props.update(data);
+    props.update(props.contestData.id, data);
   };
 
   const getContestObjInfo = () => {
-    const {
-      focusOfWork,
-      industry,
-      nameVenture,
-      styleName,
-      targetCustomer,
-      title,
-      brandStyle,
-      typeOfName,
-      typeOfTagline,
-      originalFileName,
-      contestType,
-    } = props.contestData;
-    const data = {
-      focusOfWork,
-      industry,
-      nameVenture,
-      styleName,
-      targetCustomer,
-      title,
-      brandStyle,
-      typeOfName,
-      typeOfTagline,
-      originalFileName,
-      contestType,
-    };
+    const data = { ...props.contestData };
     const defaultData = {};
-    Object.keys(data).forEach((key) => {
+
+    Object.keys(data).forEach(key => {
       if (data[key]) {
         if (key === 'originalFileName') {
-          defaultData.file = { name: data[key] };
+          defaultData.fileName = data[key];
         } else {
           defaultData[key] = data[key];
         }
@@ -103,15 +81,15 @@ const Brief = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { isEditContest } = state.contestByIdStore;
   const { contestUpdationStore, userStore } = state;
   return { contestUpdationStore, userStore, isEditContest };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  update: (data) => dispatch(updateContest(data)),
-  changeEditContest: (data) => dispatch(changeEditContest(data)),
+const mapDispatchToProps = dispatch => ({
+  update: (contestId, data) => dispatch(updateContest({ contestId, data })),
+  changeEditContest: data => dispatch(changeEditContest(data)),
   clearContestUpdationStore: () => dispatch(clearContestUpdationStore()),
 });
 

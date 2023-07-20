@@ -13,7 +13,7 @@ import {
   changeShowImage,
 } from '../../store/slices/contestByIdSlice';
 import Header from '../../components/Header/Header';
-import ContestSideBar from '../../components/ContestSideBar/ContestSideBar';
+import ContestSideBar from '../../components/Contest/ContestSideBar/ContestSideBar';
 import styles from './ContestPage.module.sass';
 import OfferBox from '../../components/OfferBox/OfferBox';
 import OfferForm from '../../components/OfferForm/OfferForm';
@@ -25,11 +25,11 @@ import 'react-image-lightbox/style.css';
 import Error from '../../components/Error/Error';
 
 class ContestPage extends React.Component {
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.props.changeEditContest(false);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.getData();
   }
 
@@ -61,7 +61,7 @@ class ContestPage extends React.Component {
     );
   };
 
-  needButtons = (offerStatus) => {
+  needButtons = offerStatus => {
     const contestCreatorId = this.props.contestByIdStore.contestData.User.id;
     const userId = this.props.userStore.data.id;
     const contestStatus = this.props.contestByIdStore.contestData.status;
@@ -86,7 +86,7 @@ class ContestPage extends React.Component {
     this.props.setOfferStatus(obj);
   };
 
-  findConversationInfo = (interlocutorId) => {
+  findConversationInfo = interlocutorId => {
     const { messagesPreview } = this.props.chatStore;
     const { id } = this.props.userStore.data;
     const participants = [id, interlocutorId];
@@ -97,8 +97,8 @@ class ContestPage extends React.Component {
       if (isEqual(participants, messagesPreview[i].participants)) {
         return {
           participants: messagesPreview[i].participants,
-          _id: messagesPreview[i]._id,
-          blackList: messagesPreview[i].blackList,
+          id: messagesPreview[i].id,
+          blockList: messagesPreview[i].blockList,
           favoriteList: messagesPreview[i].favoriteList,
         };
       }
@@ -114,7 +114,7 @@ class ContestPage extends React.Component {
     });
   };
 
-  render() {
+  render () {
     const { role } = this.props.userStore.data;
     const {
       contestByIdStore,
@@ -138,7 +138,7 @@ class ContestPage extends React.Component {
         {/* <Chat/> */}
         {isShowOnFull && (
           <LightBox
-            mainSrc={`${CONSTANTS.publicURL}${imagePath}`}
+            mainSrc={`${CONSTANTS.publicImagesURL}${imagePath}`}
             onCloseRequest={() =>
               changeShowImage({ isShowOnFull: false, imagePath: null })
             }
@@ -212,19 +212,19 @@ class ContestPage extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { contestByIdStore, userStore, chatStore } = state;
   return { contestByIdStore, userStore, chatStore };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  getData: (data) => dispatch(getContestById(data)),
-  setOfferStatus: (data) => dispatch(setOfferStatus(data)),
+const mapDispatchToProps = dispatch => ({
+  getData: data => dispatch(getContestById(data)),
+  setOfferStatus: data => dispatch(setOfferStatus(data)),
   clearSetOfferStatusError: () => dispatch(clearSetOfferStatusError()),
-  goToExpandedDialog: (data) => dispatch(goToExpandedDialog(data)),
-  changeEditContest: (data) => dispatch(changeEditContest(data)),
-  changeContestViewMode: (data) => dispatch(changeContestViewMode(data)),
-  changeShowImage: (data) => dispatch(changeShowImage(data)),
+  goToExpandedDialog: data => dispatch(goToExpandedDialog(data)),
+  changeEditContest: data => dispatch(changeEditContest(data)),
+  changeContestViewMode: data => dispatch(changeContestViewMode(data)),
+  changeShowImage: data => dispatch(changeShowImage(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContestPage);

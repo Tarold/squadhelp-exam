@@ -9,7 +9,15 @@ const Notification = props => (
     <br />
     {props.contestId && (
       <span
-        onClick={() => props.history.push(`/contest/${props.contestId}`)}
+        onClick={() => {
+          if (
+            props.history.location.pathname === `/contest/${props.contestId}`
+          ) {
+            props.history.go();
+          } else {
+            props.history.push(`/contest/${props.contestId}`);
+          }
+        }}
         className={styles.goToContest}
       >
         Go to contest

@@ -13,11 +13,13 @@ import Schems from '../../utils/validators/validationSchems';
 import Error from '../Error/Error';
 
 const OfferForm = props => {
-  const renderOfferInput = () => {
+  const renderOfferInput = (setFieldValue, values) => {
     if (props.contestType === CONTANTS.LOGO_CONTEST) {
       return (
         <ImageUpload
           name='offerData'
+          setFieldValue={setFieldValue}
+          values={values}
           classes={{
             uploadContainer: styles.imageUploadContainer,
             inputContainer: styles.uploadInputContainer,
@@ -41,19 +43,20 @@ const OfferForm = props => {
     );
   };
 
-  const setOffer = (values, { resetForm }) => {
+  const setOffer = (values, { resetForm, validateForm }) => {
     props.clearOfferError();
     const data = new FormData();
     const { contestId, contestType, customerId } = props;
     data.append('contestId', contestId);
     data.append('contestType', contestType);
-    data.append('offerData', values.offerData);
     data.append('customerId', customerId);
+    data.append('offerData', values.offerData);
     props.setNewOffer(data);
     resetForm();
+    validateForm();
   };
 
-  const { valid, addOfferError, clearOfferError } = props;
+  const { addOfferError, clearOfferError } = props;
   const validationSchema =
     props.contestType === CONTANTS.LOGO_CONTEST
       ? Schems.LogoOfferSchema
@@ -73,15 +76,18 @@ const OfferForm = props => {
           offerData: '',
         }}
         validationSchema={validationSchema}
+        validateOnMount={true}
       >
-        <Form className={styles.form}>
-          {renderOfferInput()}
-          {valid && (
-            <button type='submit' className={styles.btnOffer}>
-              Send Offer
-            </button>
-          )}
-        </Form>
+        {({ setFieldValue, values, isValid }) => (
+          <Form className={styles.form}>
+            {renderOfferInput(setFieldValue, values)}
+            {isValid && (
+              <button type='submit' className={styles.btnOffer}>
+                Send Offer
+              </button>
+            )}
+          </Form>
+        )}
       </Formik>
     </div>
   );

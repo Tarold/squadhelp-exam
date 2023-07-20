@@ -1,0 +1,48 @@
+.eventForm
+  display: flex 
+  flex-direction: column
+
+  padding: 5px
+  border: 1px solid grey
+  border-radius: 0.75rem
+  max-width: 400px
+
+  button
+    box-sizing: border-box
+    transition: all 0.2s ease-in-out
+    margin: 5px 0 0
+    border-radius: 99px
+    background-color: rgb(55, 125, 255)
+    color: rgb(255, 255, 255)
+    padding: 12px 16px
+    border-radius: 5px
+    text-decoration: none
+
+.field
+  display: flex
+  position: relative
+  align-items: center
+
+  padding-top:5px
+  padding-bottom: 25px 
+  input
+    box-sizing: border-box
+    transition: all 0.2s ease-in-out
+    margin: 5px 0 0
+    border-radius: 99px
+    background-color: rgba(55, 125, 255, 0.1)
+    padding: 6px 8px
+    border-radius: 5px
+  &:not(:first-child)
+    border-top: 1px solid grey
+
+  label
+    margin-right: auto
+
+.error
+  position: absolute
+  bottom: 5px
+  left: 0
+  right: 0
+  text-align: center
+  color: red

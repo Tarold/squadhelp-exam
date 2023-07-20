@@ -1,39 +1,48 @@
 import React from 'react';
-import { Field } from 'formik';
 
-const FieldFileInput = ({ classes, ...rest }) => {
-  const { fileUploadContainer, labelClass, fileNameClass, fileInput } = classes;
-
+const FieldFileInput = ({ classes, setFieldValue, fileName, ...rest }) => {
+  const {
+    fileUploadContainer,
+    labelClass,
+    fileNameClass,
+    fileInput,
+    clearButton,
+  } = classes;
   return (
-    <Field name={rest.name}>
-      {props => {
-        const { field } = props;
-
-        const getFileName = () => {
-          if (props.field.value) {
-            return props.field.value.name;
+    <div className={fileUploadContainer}>
+      <label htmlFor='fileInput' className={labelClass}>
+        Choose file
+      </label>
+      <span id='fileNameContainer' className={fileNameClass}>
+        {fileName}
+      </span>
+      <input
+        {...rest}
+        className={fileInput}
+        id='fileInput'
+        onChange={event => {
+          if (event.target.files.length > 0) {
+            setFieldValue(
+              'file',
+              window.URL.createObjectURL(event.target.files[0])
+            );
+            setFieldValue('fileName', event.target.files[0].name);
+          } else {
+            setFieldValue('file', null);
+            setFieldValue('fileName', null);
           }
-          return '';
-        };
-
-        return (
-          <div className={fileUploadContainer}>
-            <label htmlFor='fileInput' className={labelClass}>
-              Choose file
-            </label>
-            <span id='fileNameContainer' className={fileNameClass}>
-              {getFileName()}
-            </span>
-            <input
-              {...field}
-              className={fileInput}
-              id='fileInput'
-              type='file'
-            />
-          </div>
-        );
-      }}
-    </Field>
+        }}
+      />
+      <div
+        className={clearButton}
+        onClick={() => {
+          setFieldValue('file', null);
+          setFieldValue('fileName', null);
+        }}
+      >
+        Clear
+      </div>
+    </div>
   );
 };
 
