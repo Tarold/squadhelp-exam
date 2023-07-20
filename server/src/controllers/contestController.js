@@ -129,6 +129,7 @@ module.exports.getCustomersContests = (req, res, next) => {
     include: [
       {
         model: db.Offers,
+        where: { approvedStatus: CONSTANTS.OFFER_APPROVED_ACCEPTED },
         required: false,
         attributes: ['id'],
       },
