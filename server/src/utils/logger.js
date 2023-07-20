@@ -34,7 +34,7 @@ const dailyRotateTransport = new transports.DailyRotateFile({
   maxFiles: `14d`,
 });
 
-dailyRotateTransport.on('rotate', function (oldFilename, newFilename) {
+const logsToNewFile = newFilename => {
   const inputFile = path.join(CONSTANTS.LOG_DIR, CONSTANTS.LOG_FILE);
   const readFile = readline.createInterface({
     input: fs.createReadStream(inputFile),
@@ -47,9 +47,17 @@ dailyRotateTransport.on('rotate', function (oldFilename, newFilename) {
       data += dailyRotateFormat(line) + '\n';
     })
     .on('close', () => {
-      fs.writeFile(oldFilename, data, function () {});
+      fs.appendFile(newFilename, data, function () {});
       fs.truncate(inputFile, 0, function () {});
     });
+};
+
+dailyRotateTransport.on('new', function (newFilename) {
+  logsToNewFile(newFilename);
+});
+
+dailyRotateTransport.on('rotate', function (oldFilename, newFilename) {
+  logsToNewFile(newFilename);
 });
 
 const logConfiguration = {
