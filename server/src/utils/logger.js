@@ -36,20 +36,23 @@ const dailyRotateTransport = new transports.DailyRotateFile({
 
 const logsToNewFile = newFilename => {
   const inputFile = path.join(CONSTANTS.LOG_DIR, CONSTANTS.LOG_FILE);
-  const readFile = readline.createInterface({
-    input: fs.createReadStream(inputFile),
-    console: false,
-  });
-  let data = '';
 
-  readFile
-    .on('line', line => {
-      data += dailyRotateFormat(line) + '\n';
-    })
-    .on('close', () => {
-      fs.appendFile(newFilename, data, function () {});
-      fs.truncate(inputFile, 0, function () {});
+  if (fs.existsSync(inputFile)) {
+    const readFile = readline.createInterface({
+      input: fs.createReadStream(inputFile),
+      console: false,
     });
+    let data = '';
+
+    readFile
+      .on('line', line => {
+        data += dailyRotateFormat(line) + '\n';
+      })
+      .on('close', () => {
+        fs.appendFile(newFilename, data, function () {});
+        fs.truncate(inputFile, 0, function () {});
+      });
+  }
 };
 
 dailyRotateTransport.on('new', function (newFilename) {
